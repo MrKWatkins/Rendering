@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nana", "nana-1.4.1\build\vc2015\nana.vcxproj", "{25B21068-491B-4A9F-B99F-6C27BF31BAAD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MrKWatkins.Rendering.UI", "MrKWatkins.Rendering.UI\MrKWatkins.Rendering.UI.vcxproj", "{EB4A3119-9100-467E-B756-A456194E4460}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C705654-3B6E-49C4-B6F5-0A79E02B1ED7}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x64.ActiveCfg = Debug|x64
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x64.Build.0 = Debug|x64
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x86.ActiveCfg = Debug|Win32
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x86.Build.0 = Debug|Win32
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x64.ActiveCfg = Release|x64
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x64.Build.0 = Release|x64
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x86.ActiveCfg = Release|Win32
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x86.Build.0 = Release|Win32
+		{EB4A3119-9100-467E-B756-A456194E4460}.Debug|x64.ActiveCfg = Debug|x64
+		{EB4A3119-9100-467E-B756-A456194E4460}.Debug|x64.Build.0 = Debug|x64
+		{EB4A3119-9100-467E-B756-A456194E4460}.Debug|x86.ActiveCfg = Debug|Win32
+		{EB4A3119-9100-467E-B756-A456194E4460}.Debug|x86.Build.0 = Debug|Win32
+		{EB4A3119-9100-467E-B756-A456194E4460}.Release|x64.ActiveCfg = Release|x64
+		{EB4A3119-9100-467E-B756-A456194E4460}.Release|x64.Build.0 = Release|x64
+		{EB4A3119-9100-467E-B756-A456194E4460}.Release|x86.ActiveCfg = Release|Win32
+		{EB4A3119-9100-467E-B756-A456194E4460}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
