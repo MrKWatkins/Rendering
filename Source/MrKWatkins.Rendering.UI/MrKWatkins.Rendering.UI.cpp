@@ -4,6 +4,7 @@
 #include "MrKWatkins.Rendering.UI.h"
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
+#include "../MrKWatkins.Rendering/Renderer.h"
 
 using namespace nana;
 
@@ -19,6 +20,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     lb.caption("Hello from the Rendering project!");
 
     fm.show();
+
+    MrKWatkins::Rendering::Renderer renderer;
+    renderer.render();
 
     exec();
 
