@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering
 {
-    void Renderer::render()
+    void Renderer::Render()
     {
     }
 }

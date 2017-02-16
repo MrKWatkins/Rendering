@@ -5,6 +5,6 @@ namespace MrKWatkins::Rendering
     class Renderer
     {
     public:
-        void render();
+        void Render();
     };
 }
