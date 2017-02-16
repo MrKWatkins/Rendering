@@ -12,6 +12,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\.gitignore = ..\.gitignore
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blog", "Blog", "{E432DE66-136B-4D2E-A681-3AE03EA8CA8F}"
+	ProjectSection(SolutionItems) = preProject
+		..\Blog\1 - Setting up the Application.md = ..\Blog\1 - Setting up the Application.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -39,5 +44,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E432DE66-136B-4D2E-A681-3AE03EA8CA8F} = {6C705654-3B6E-49C4-B6F5-0A79E02B1ED7}
 	EndGlobalSection
 EndGlobal
