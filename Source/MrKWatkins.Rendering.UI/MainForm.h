@@ -9,7 +9,8 @@ namespace MrKWatkins::Rendering::UI
     class MainForm :
         public form
     {
-        label text;
+        place   layout{ *this };
+        label   text{ *this };
     public:
         MainForm();
     };

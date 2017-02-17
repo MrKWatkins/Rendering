@@ -2,6 +2,7 @@
 #include "MainForm.h"
 #include <nana/gui.hpp>
 #include <nana/gui/widgets/label.hpp>
+#include "PlaceHelper.h"
 
 using namespace nana;
 
@@ -11,7 +12,11 @@ namespace MrKWatkins::Rendering::UI
     {
         caption("Rendering");
 
-        text.create(*this, rectangle(nana::size(400, 100)));
+        layout.div(PlaceHelper::EncloseWithPadding("<text>", 10).c_str());
+
         text.caption("Hello from the Rendering project!");
+        layout["text"] << text;
+
+        layout.collocate();
     }
 }
