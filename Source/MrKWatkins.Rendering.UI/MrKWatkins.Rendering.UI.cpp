@@ -15,11 +15,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow)
 {
     MainForm mainForm;
-
     mainForm.show();
-
-    MrKWatkins::Rendering::Renderer renderer;
-    renderer.Render();
 
     exec();
 

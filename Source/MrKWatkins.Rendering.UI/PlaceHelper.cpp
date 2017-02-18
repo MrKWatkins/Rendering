@@ -3,6 +3,7 @@
 
 namespace MrKWatkins::Rendering::UI::PlaceHelper
 {
+    // TODO: Delete - use margin instead.
     std::string EncloseWithPadding(const std::string div, const int paddingPixels)
     {
         // To give padding we:
