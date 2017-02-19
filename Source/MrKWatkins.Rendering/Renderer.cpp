@@ -3,8 +3,19 @@
 
 namespace MrKWatkins::Rendering
 {
-    Renderer::Renderer(Algorithm algorithm, int width, int height, std::function<void()> onFinished) : image(width, height)
+    template <class TAlgorithm>
+    Renderer Renderer::Start(int width, int height, std::function<void()> onFinished)
     {
+        return Renderer(std::make_unique(new TAlgorithm), width, height, onFinished);
+    }
+
+    Renderer::Renderer(std::unique_ptr<Algorithm> algorithm, int width, int height, std::function<void()> onFinished) : 
+        algorithm{move(algorithm)}, 
+        image{width, height}, 
+        onFinished{onFinished},
+        status{ InProgress }
+    {
+        thread = std::thread(&Renderer::RenderingLoop, this);
     }
 
     void Renderer::Cancel()
@@ -24,6 +35,10 @@ namespace MrKWatkins::Rendering
     }
 
     // Render loop:
+
+    void Renderer::RenderingLoop()
+    {
+    }
 
     /*
     for (unsigned int x = 0; x < image.Width(); x++)

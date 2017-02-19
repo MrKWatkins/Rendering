@@ -2,6 +2,9 @@
 #include "Algorithm.h"
 #include "Image.h"
 #include <functional>
+#include <memory>
+#include <mutex>
+#include <thread>
 
 namespace MrKWatkins::Rendering
 {
@@ -25,17 +28,30 @@ namespace MrKWatkins::Rendering
         /// <summary>
         /// <see cref="Renderer::Cancel" /> has been called and rendering has stopped. 
         /// </summary>
-        Cancelled
+        Cancelled,
+
+        /// <summary>
+        /// An exception occurred whilst rendering.
+        /// </summary>
+        Error
     };
 
     class Renderer
     {
-        Algorithm algorithm;
-        std::function<void()> onFinished;
+        std::unique_ptr<Algorithm> algorithm;
         MutableImage image;
+        std::function<void()> onFinished;
+        std::mutex lock;
+        RendererStatus status;
+        std::thread thread;
+
+        Renderer(std::unique_ptr<Algorithm> algorithm, int width, int height, std::function<void()> onFinished);
+
+        void RenderingLoop();
 
     public:
-        Renderer(Algorithm algorithm, int width, int height, std::function<void()> onFinished);
+        template<class TAlgorithm> 
+        static Renderer Start(int width, int height, std::function<void()> onFinished);
 
         Renderer(const Renderer& toCopy) = delete;
 
