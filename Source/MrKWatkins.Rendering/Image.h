@@ -12,7 +12,6 @@ namespace MrKWatkins::Rendering
         std::vector<std::vector<Colour>> image;
     public:
         Image(unsigned int width, unsigned int height);
-        Image(const Image& that) = delete;
 
         unsigned int Width() const noexcept { return width; }
         unsigned int Height() const noexcept { return height; }

@@ -36,6 +36,9 @@ namespace MrKWatkins::Rendering::UI
             viewDrawing.update();
         });
         timer.start();
+
+        // TODO: Create Renderer on demand and run in std::thread.
+        // TODO: Timer check progress - if not changed do nothing, otherwise take a snapshot and update.
     }
 
     void MainForm::UpdateBuffer()
