@@ -1,10 +1,7 @@
 #pragma once
-#include "Algorithm.h"
 #include "Image.h"
 #include <functional>
 #include <memory>
-#include <mutex>
-#include <thread>
 
 namespace MrKWatkins::Rendering
 {
@@ -38,28 +35,23 @@ namespace MrKWatkins::Rendering
 
     class Renderer
     {
-        std::unique_ptr<Algorithm> algorithm;
-        MutableImage image;
-        std::function<void()> onFinished;
-        std::mutex lock;
-        RendererStatus status;
-        std::thread thread;
+        class Implementation;
+        std::unique_ptr<Implementation> implementation;
 
-        Renderer(std::unique_ptr<Algorithm> algorithm, int width, int height, std::function<void()> onFinished);
-
-        void RenderingLoop();
+        Renderer(std::unique_ptr<Implementation> implementation);
 
     public:
-        template<class TAlgorithm> 
-        static Renderer Start(int width, int height, std::function<void()> onFinished);
+        //template<typename TAlgorithm>
+        static std::unique_ptr<Renderer> Start(int size);
 
         Renderer(const Renderer& toCopy) = delete;
+        ~Renderer();
 
         /// <summary>
         /// Sends a cancellation to the renderer. Will return immediately but rendering might not stop immediately.
         /// </summary>
         void Cancel();
-
+        
         /// <summary>
         /// Current progress, 0 = not started, 1 = complete.
         /// </summary>

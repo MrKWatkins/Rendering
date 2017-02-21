@@ -4,13 +4,16 @@
 #include <nana/paint/pixel_buffer.hpp>
 #include <nana/gui/widgets/picture.hpp>
 #include <nana/gui/detail/inner_fwd_implement.hpp>
+#include "../MrKWatkins.Rendering/RandomAlgorithm.h"
 
 using namespace nana;
 
 namespace MrKWatkins::Rendering::UI
 {
-    MainForm::MainForm() : form(API::make_center(1280, 720), appear::decorate<appear::taskbar>())
+    MainForm::MainForm() : form(API::make_center(720, 745), appear::decorate<appear::taskbar>())
     {
+        buffer = { nana::size{ 700, 700 } };
+        renderer = Renderer::Start(700);
         caption("Rendering");
 
         layout.div("margin=10 gap=10 vert<text weight=25><picture>");
@@ -29,22 +32,25 @@ namespace MrKWatkins::Rendering::UI
             buffer.stretch(graphics, rectangle(graphics.size()));
         });
 
-        timer.interval(100);
+        timer.interval(25);
         timer.elapse([&]()
         {
-            UpdateBuffer();
-            viewDrawing.update();
+            auto progress = renderer->Progress();
+            if (progress > lastProgress)
+            {
+                lastProgress = progress;
+                UpdateBuffer();
+                viewDrawing.update();
+            }
         });
         timer.start();
 
-        // TODO: Create Renderer on demand and run in std::thread.
         // TODO: Timer check progress - if not changed do nothing, otherwise take a snapshot and update.
     }
 
     void MainForm::UpdateBuffer()
     {
-        renderer.Render();
-        const auto& image = renderer.Image();
+        const auto& image = renderer->TakeSnapshot();
 
         for (unsigned int x = 0; x < image.Width(); x++)
         {
