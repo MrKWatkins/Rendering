@@ -1,6 +1,5 @@
 #pragma once
 #include "Image.h"
-#include <functional>
 #include <memory>
 
 namespace MrKWatkins::Rendering
@@ -60,5 +59,7 @@ namespace MrKWatkins::Rendering
         RendererStatus Status() const;
 
         Image TakeSnapshot() const;
+        
+        void SnapshotTo(MutableImage& target) const;
     };
 }

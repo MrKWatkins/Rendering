@@ -22,7 +22,8 @@ namespace MrKWatkins::Rendering::UI
         timer timer;
 
         double lastProgress = 0;
-        graphics buffer;
+        MutableImage imageBuffer;
+        graphics graphicsBuffer;
         std::unique_ptr<Renderer> renderer;
 
         void UpdateBuffer();

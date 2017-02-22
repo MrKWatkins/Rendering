@@ -19,7 +19,7 @@ namespace MrKWatkins::Rendering
         {
             std::lock_guard<std::mutex> take(lock);
 
-            image.Pixel(x, y, colour);
+            image.SetPixel(x, y, colour);
 
             double totalOperations = image.Width() * image.Height();
             double operationsSoFar = x * image.Height() + y;
@@ -36,7 +36,7 @@ namespace MrKWatkins::Rendering
                     auto point = algorithm->RenderPoint(x == 0 ? 0 : 1 / x, y == 0 ? 0 : 1 / y);
 
                     SetPixel(x, y, point);
-                    std::this_thread::sleep_for(std::chrono::microseconds(10));
+                    //std::this_thread::sleep_for(std::chrono::microseconds(10));
                 }
             }
         }
@@ -69,6 +69,13 @@ namespace MrKWatkins::Rendering
             std::lock_guard<std::mutex> take(lock);
 
             return Image(image);
+        }
+
+        void SnapshotTo(MutableImage& target)
+        {
+            std::lock_guard<std::mutex> take(lock);
+
+            image.CopyTo(target);
         }
     };
 
@@ -106,5 +113,10 @@ namespace MrKWatkins::Rendering
     Image Renderer::TakeSnapshot() const
     {
         return implementation->TakeSnapshot();
+    }
+
+    void Renderer::SnapshotTo(MutableImage& target) const
+    {
+        implementation->SnapshotTo(target);
     }
 }

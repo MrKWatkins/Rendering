@@ -10,9 +10,9 @@ using namespace nana;
 
 namespace MrKWatkins::Rendering::UI
 {
-    MainForm::MainForm() : form(API::make_center(720, 745), appear::decorate<appear::taskbar>())
+    MainForm::MainForm() : form(API::make_center(720, 745), appear::decorate<appear::taskbar>()), imageBuffer { 700, 700 }
     {
-        buffer = { nana::size{ 700, 700 } };
+        graphicsBuffer = { nana::size{ 700, 700 } };
         renderer = Renderer::Start(700);
         caption("Rendering");
 
@@ -29,10 +29,10 @@ namespace MrKWatkins::Rendering::UI
 
         viewDrawing.draw_diehard([&](graphics& graphics)
         {
-            buffer.stretch(graphics, rectangle(graphics.size()));
+            graphicsBuffer.stretch(graphics, rectangle(graphics.size()));
         });
 
-        timer.interval(25);
+        timer.interval(100);
         timer.elapse([&]()
         {
             auto progress = renderer->Progress();
@@ -50,15 +50,15 @@ namespace MrKWatkins::Rendering::UI
 
     void MainForm::UpdateBuffer()
     {
-        const auto& image = renderer->TakeSnapshot();
+        renderer->SnapshotTo(imageBuffer);
 
-        for (unsigned int x = 0; x < image.Width(); x++)
+        for (unsigned int x = 0; x < imageBuffer.Width(); x++)
         {
-            for (unsigned int y = 0; y < image.Height(); y++)
+            for (unsigned int y = 0; y < imageBuffer.Height(); y++)
             {
-                auto colour = image.Pixel(x, y);
+                auto colour = imageBuffer.GetPixel(x, y);
                 color nanaColour{ static_cast<unsigned int>(255 * colour.R()), static_cast<unsigned int>(255 * colour.G()), static_cast<unsigned int>(255 * colour.B()) };
-                buffer.set_pixel(x, y, nanaColour);
+                graphicsBuffer.set_pixel(x, y, nanaColour);
             }
         }
     }
