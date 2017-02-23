@@ -137,8 +137,9 @@
   <ItemGroup>
     <ClInclude Include="Algorithm.h" />
     <ClInclude Include="Colour.h" />
+    <ClInclude Include="Gradient.h" />
     <ClInclude Include="Image.h" />
-    <ClInclude Include="RandomAlgorithm.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -146,8 +147,9 @@
   <ItemGroup>
     <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="Colour.cpp" />
+    <ClCompile Include="Gradient.cpp" />
     <ClCompile Include="Image.cpp" />
-    <ClCompile Include="RandomAlgorithm.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

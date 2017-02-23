@@ -4,7 +4,8 @@
 #include <nana/paint/pixel_buffer.hpp>
 #include <nana/gui/widgets/picture.hpp>
 #include <nana/gui/detail/inner_fwd_implement.hpp>
-#include "../MrKWatkins.Rendering/RandomAlgorithm.h"
+#include "../MrKWatkins.Rendering/Random.h"
+#include "../MrKWatkins.Rendering/Gradient.h"
 
 using namespace nana;
 
@@ -30,7 +31,7 @@ namespace MrKWatkins::Rendering::UI
         graphicsBuffer = { nana::size{ 700, 700 } };
         graphicsBuffer.make(nana::size{ 700, 700 });
 
-        renderer = Renderer::Start<RandomAlgorithm>(700);
+        renderer = Renderer::Start<Algorithms::Gradient>(700);
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));

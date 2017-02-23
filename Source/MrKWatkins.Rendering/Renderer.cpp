@@ -2,13 +2,12 @@
 #include "Renderer.h"
 #include "Algorithm.h"
 #include <mutex>
-#include "RandomAlgorithm.h"
 
 namespace MrKWatkins::Rendering
 {
     class Renderer::Implementation
     {
-        std::unique_ptr<Algorithm> algorithm;
+        std::unique_ptr<Algorithms::Algorithm> algorithm;
         MutableImage image;
         std::mutex lock {};
         RendererStatus status{ InProgress };
@@ -29,11 +28,14 @@ namespace MrKWatkins::Rendering
 
         void RenderingLoop()
         {
-            for (unsigned int x = 0; x < image.Width(); x++)
+            const double width = image.Width();
+            const double height = image.Height();
+
+            for (unsigned int x = 0; x < width; x++)
             {
-                for (unsigned int y = 0; y < image.Height(); y++)
+                for (unsigned int y = 0; y < height; y++)
                 {
-                    auto point = algorithm->RenderPoint(x == 0 ? 0 : 1 / x, y == 0 ? 0 : 1 / y);
+                    auto point = algorithm->RenderPoint(x / width, y / height);
 
                     SetPixel(x, y, point);
 
@@ -51,7 +53,7 @@ namespace MrKWatkins::Rendering
 
     public:
 
-        Implementation(std::unique_ptr<Algorithm> algorithm, int size) :
+        Implementation(std::unique_ptr<Algorithms::Algorithm> algorithm, int size) :
             algorithm{ move(algorithm) },
             image{ size, size }
         {
@@ -104,7 +106,7 @@ namespace MrKWatkins::Rendering
         }
     };
 
-    std::unique_ptr<Renderer> Renderer::StartInternal(std::unique_ptr<Algorithm> algorithm, int size)
+    std::unique_ptr<Renderer> Renderer::StartInternal(std::unique_ptr<Algorithms::Algorithm> algorithm, int size)
     {
         auto implementation = std::make_unique<Implementation>(move(algorithm), size);
         return std::unique_ptr<Renderer>(new Renderer(move(implementation)));

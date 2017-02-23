@@ -40,13 +40,13 @@ namespace MrKWatkins::Rendering
 
         Renderer(std::unique_ptr<Implementation> implementation);
 
-        static std::unique_ptr<Renderer> StartInternal(std::unique_ptr<Algorithm> algorithm, int size);
+        static std::unique_ptr<Renderer> StartInternal(std::unique_ptr<Algorithms::Algorithm> algorithm, int size);
 
     public:
         template<typename TAlgorithm>
         static std::unique_ptr<Renderer> Start(int size)
         {
-            auto algorithm = std::unique_ptr<Algorithm>(new TAlgorithm);
+            auto algorithm = std::unique_ptr<Algorithms::Algorithm>(new TAlgorithm);
             return StartInternal(move(algorithm), size);
         }
 

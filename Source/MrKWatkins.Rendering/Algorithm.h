@@ -1,7 +1,7 @@
 #pragma once
 #include "Colour.h"
 
-namespace MrKWatkins::Rendering
+namespace MrKWatkins::Rendering::Algorithms
 {
     class Algorithm
     {
