@@ -6,7 +6,7 @@
 #include <nana/gui/timer.hpp>
 #include <nana/threads/pool.hpp>
 #include <nana/gui/drawing.hpp>
-#include "../MrKWatkins.Rendering/RandomAlgorithm.h"
+#include <nana/gui/widgets/button.hpp>
 
 using namespace nana;
 using namespace paint;
@@ -15,17 +15,19 @@ namespace MrKWatkins::Rendering::UI
 {
     class MainForm : public form
     {
-        place layout{ *this };
-        label text{ *this };
+        label progressText{ *this };
+        button cancel{ *this };
         panel<true> view{ *this };
         drawing viewDrawing { view };
-        timer timer;
+        timer updateTimer;
 
         double lastProgress = 0;
         MutableImage imageBuffer;
         graphics graphicsBuffer;
         std::unique_ptr<Renderer> renderer;
 
+        void Layout() const;
+        static std::string BuildProgressMessage(double progress);
         void UpdateBuffer();
 
     public:

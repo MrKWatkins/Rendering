@@ -10,40 +10,66 @@ using namespace nana;
 
 namespace MrKWatkins::Rendering::UI
 {
-    MainForm::MainForm() : form(API::make_center(720, 745), appear::decorate<appear::taskbar>()), imageBuffer { 700, 700 }
+    void MainForm::Layout() const
+    {
+        place layout{ *this };
+        layout.div("margin=10 gap=10 vert<weight=35 <margin=[5,0,0,0] progressText><weight=100 margin=[0,0,10,10] cancel>><view>");
+        layout["progressText"] << progressText;
+        layout["view"] << view;
+        layout["cancel"] << cancel;
+        layout.collocate();
+    }
+
+    std::string MainForm::BuildProgressMessage(double progress)
+    {
+        return "Progress: " + std::to_string(progress * 100) + "%";
+    }
+
+    MainForm::MainForm() : form(API::make_center(720, 755), appear::decorate<appear::taskbar>()), imageBuffer { 700, 700 }
     {
         graphicsBuffer = { nana::size{ 700, 700 } };
         renderer = Renderer::Start(700);
+
         caption("Rendering");
-
-        layout.div("margin=10 gap=10 vert<text weight=25><picture>");
-
-        text.caption("Hello from the Rendering project!");
-        layout["text"] << text;
+        progressText.caption(BuildProgressMessage(0));
+        cancel.caption("Cancel");
 
         view.bgcolor(colors::black);
-
-        layout["picture"] << view;
-
-        layout.collocate();
-
         viewDrawing.draw_diehard([&](graphics& graphics)
         {
             graphicsBuffer.stretch(graphics, rectangle(graphics.size()));
         });
 
-        timer.interval(250);
-        timer.elapse([&]()
+        Layout();
+
+        updateTimer.interval(1000);
+        updateTimer.elapse([&]()
         {
+            auto status = renderer->Status();
+            if (status != InProgress)
+            {
+                // Disable cancel if we're no longer in progress.
+                cancel.enabled(false);
+
+                // If we're not still in the process of cancelling then we can stop the timer too; after the next
+                // update it won't get any more new pixels.
+                if (status != Cancelling)
+                {
+                    updateTimer.stop();
+                }
+            }
+
             auto progress = renderer->Progress();
             if (progress > lastProgress)
             {
                 lastProgress = progress;
+                progressText.caption(BuildProgressMessage(lastProgress));
                 UpdateBuffer();
                 viewDrawing.update();
             }
         });
-        timer.start();
+
+        updateTimer.start();
     }
 
     void MainForm::UpdateBuffer()
