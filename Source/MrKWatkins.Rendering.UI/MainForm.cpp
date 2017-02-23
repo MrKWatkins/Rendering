@@ -44,8 +44,6 @@ namespace MrKWatkins::Rendering::UI
             }
         });
         timer.start();
-
-        // TODO: Timer check progress - if not changed do nothing, otherwise take a snapshot and update.
     }
 
     void MainForm::UpdateBuffer()
