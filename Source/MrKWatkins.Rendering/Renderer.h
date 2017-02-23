@@ -1,6 +1,7 @@
 #pragma once
 #include "Image.h"
 #include <memory>
+#include "Algorithm.h"
 
 namespace MrKWatkins::Rendering
 {
@@ -39,9 +40,15 @@ namespace MrKWatkins::Rendering
 
         Renderer(std::unique_ptr<Implementation> implementation);
 
+        static std::unique_ptr<Renderer> StartInternal(std::unique_ptr<Algorithm> algorithm, int size);
+
     public:
-        //template<typename TAlgorithm>
-        static std::unique_ptr<Renderer> Start(int size);
+        template<typename TAlgorithm>
+        static std::unique_ptr<Renderer> Start(int size)
+        {
+            auto algorithm = std::unique_ptr<Algorithm>(new TAlgorithm);
+            return StartInternal(move(algorithm), size);
+        }
 
         Renderer(const Renderer& toCopy) = delete;
         ~Renderer();

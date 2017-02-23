@@ -30,7 +30,7 @@ namespace MrKWatkins::Rendering::UI
         graphicsBuffer = { nana::size{ 700, 700 } };
         graphicsBuffer.make(nana::size{ 700, 700 });
 
-        renderer = Renderer::Start(700);
+        renderer = Renderer::Start<RandomAlgorithm>(700);
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));

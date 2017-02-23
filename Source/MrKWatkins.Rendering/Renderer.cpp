@@ -8,7 +8,7 @@ namespace MrKWatkins::Rendering
 {
     class Renderer::Implementation
     {
-        std::unique_ptr<RandomAlgorithm> algorithm;
+        std::unique_ptr<Algorithm> algorithm;
         MutableImage image;
         std::mutex lock {};
         RendererStatus status{ InProgress };
@@ -22,7 +22,7 @@ namespace MrKWatkins::Rendering
             image.SetPixel(x, y, colour);
 
             double totalOperations = image.Width() * image.Height();
-            double operationsSoFar = x * image.Height() + y;
+            double operationsSoFar = x * image.Height() + y + 1;
 
             progress = operationsSoFar / totalOperations;
         }
@@ -36,7 +36,6 @@ namespace MrKWatkins::Rendering
                     auto point = algorithm->RenderPoint(x == 0 ? 0 : 1 / x, y == 0 ? 0 : 1 / y);
 
                     SetPixel(x, y, point);
-                    std::this_thread::sleep_for(std::chrono::microseconds(10));
 
                     if (Status() == Cancelling)
                     {
@@ -44,11 +43,15 @@ namespace MrKWatkins::Rendering
                     }
                 }
             }
+
+            std::lock_guard<std::mutex> take(lock);
+
+            status = Finished;
         }
 
     public:
 
-        Implementation(std::unique_ptr<RandomAlgorithm> algorithm, int size) :
+        Implementation(std::unique_ptr<Algorithm> algorithm, int size) :
             algorithm{ move(algorithm) },
             image{ size, size }
         {
@@ -101,10 +104,8 @@ namespace MrKWatkins::Rendering
         }
     };
 
-    //template <typename TAlgorithm>
-    std::unique_ptr<Renderer> Renderer::Start(int size)
+    std::unique_ptr<Renderer> Renderer::StartInternal(std::unique_ptr<Algorithm> algorithm, int size)
     {
-        auto algorithm = std::make_unique<RandomAlgorithm>();
         auto implementation = std::make_unique<Implementation>(move(algorithm), size);
         return std::unique_ptr<Renderer>(new Renderer(move(implementation)));
     }
