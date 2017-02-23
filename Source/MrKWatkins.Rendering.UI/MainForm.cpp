@@ -32,7 +32,7 @@ namespace MrKWatkins::Rendering::UI
             graphicsBuffer.stretch(graphics, rectangle(graphics.size()));
         });
 
-        timer.interval(100);
+        timer.interval(250);
         timer.elapse([&]()
         {
             auto progress = renderer->Progress();

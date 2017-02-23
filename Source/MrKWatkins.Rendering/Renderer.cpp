@@ -36,7 +36,12 @@ namespace MrKWatkins::Rendering
                     auto point = algorithm->RenderPoint(x == 0 ? 0 : 1 / x, y == 0 ? 0 : 1 / y);
 
                     SetPixel(x, y, point);
-                    //std::this_thread::sleep_for(std::chrono::microseconds(10));
+                    std::this_thread::sleep_for(std::chrono::microseconds(10));
+
+                    if (Status() == Cancelling)
+                    {
+                        return;
+                    }
                 }
             }
         }
@@ -48,6 +53,12 @@ namespace MrKWatkins::Rendering
             image{ size, size }
         {
             thread = std::thread(&Implementation::RenderingLoop, this);
+        }
+
+        ~Implementation()
+        {
+            status = Cancelling;
+            thread.join();
         }
 
         double Progress()
