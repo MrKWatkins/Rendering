@@ -14,7 +14,7 @@ namespace MrKWatkins::Rendering
     Colour Image::GetPixel(unsigned int x, unsigned int y) const
     {
         // TODO: Parameter validation. Could use at() of course but we want a better error message.
-        return image[x * width + y];
+        return image[x + y * height];
     }
 
     void Image::CopyTo(MutableImage& target)
@@ -31,6 +31,6 @@ namespace MrKWatkins::Rendering
     void MutableImage::SetPixel(unsigned x, unsigned y, Colour colour)
     {
         // TODO: Parameter validation. Could use at() of course but we want a better error message.
-        image[x * width + y] = colour;
+        image[x + y * height] = colour;
     }
 }
