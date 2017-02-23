@@ -57,8 +57,19 @@ namespace MrKWatkins::Rendering
 
         ~Implementation()
         {
-            status = Cancelling;
+            Cancel();
+
             thread.join();
+        }
+
+        void Cancel()
+        {
+            std::lock_guard<std::mutex> take(lock);
+
+            if (status == InProgress)
+            {
+                status = Cancelling;
+            }
         }
 
         double Progress()
@@ -93,9 +104,9 @@ namespace MrKWatkins::Rendering
     //template <typename TAlgorithm>
     std::unique_ptr<Renderer> Renderer::Start(int size)
     {
-        auto algorithm = std::unique_ptr<RandomAlgorithm>(new RandomAlgorithm());
-        auto implementation = std::unique_ptr<Implementation>(new Implementation(std::move(algorithm), size));
-        return std::unique_ptr<Renderer>(new Renderer(std::move(implementation)));
+        auto algorithm = std::make_unique<RandomAlgorithm>();
+        auto implementation = std::make_unique<Implementation>(move(algorithm), size);
+        return std::unique_ptr<Renderer>(new Renderer(move(implementation)));
     }
 
     Renderer::Renderer(std::unique_ptr<Implementation> implementation) :
@@ -107,8 +118,10 @@ namespace MrKWatkins::Rendering
     {
     }
 
+    // ReSharper disable once CppMemberFunctionMayBeConst
     void Renderer::Cancel()
     {
+        implementation->Cancel();
     }
 
     double Renderer::Progress() const

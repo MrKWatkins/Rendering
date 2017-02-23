@@ -28,11 +28,19 @@ namespace MrKWatkins::Rendering::UI
     MainForm::MainForm() : form(API::make_center(720, 755), appear::decorate<appear::taskbar>()), imageBuffer { 700, 700 }
     {
         graphicsBuffer = { nana::size{ 700, 700 } };
+        graphicsBuffer.make(nana::size{ 700, 700 });
+
         renderer = Renderer::Start(700);
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));
         cancel.caption("Cancel");
+
+        cancel.events().click([&]
+        {
+            renderer->Cancel();
+        });
+
 
         view.bgcolor(colors::black);
         viewDrawing.draw_diehard([&](graphics& graphics)
@@ -76,6 +84,7 @@ namespace MrKWatkins::Rendering::UI
     {
         renderer->SnapshotTo(imageBuffer);
 
+        // TODO: Just draw pixels that are new.
         for (unsigned int x = 0; x < imageBuffer.Width(); x++)
         {
             for (unsigned int y = 0; y < imageBuffer.Height(); y++)
