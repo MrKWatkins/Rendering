@@ -43,10 +43,12 @@ namespace MrKWatkins::Rendering
         static std::unique_ptr<Renderer> StartInternal(std::unique_ptr<Algorithms::Algorithm> algorithm, int size);
 
     public:
-        template<typename TAlgorithm>
-        static std::unique_ptr<Renderer> Start(int size)
+        template<typename TAlgorithm, class... TConstructorArguments>
+        static std::unique_ptr<Renderer> Start(int size, TConstructorArguments&&... constructorArguments)
         {
-            auto algorithm = std::unique_ptr<Algorithms::Algorithm>(new TAlgorithm);
+            static_assert(std::is_base_of<Algorithms::Algorithm, TAlgorithm>::value, "TAlgorithm is not an instance of Algorithm.");
+
+            auto algorithm = std::unique_ptr<Algorithms::Algorithm>(new TAlgorithm(std::forward<TConstructorArguments>(constructorArguments)...));
             return StartInternal(move(algorithm), size);
         }
 
