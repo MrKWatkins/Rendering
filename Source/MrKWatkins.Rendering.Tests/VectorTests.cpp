@@ -2,7 +2,7 @@
 #include "catch.hpp"
 #include "../MrKWatkins.Rendering/Vector.h"
 
-namespace MrKWatkins::Rendering::Tests::Point
+namespace MrKWatkins::Rendering::Tests::Vector
 {
     TEST_CASE("Addition")
     {

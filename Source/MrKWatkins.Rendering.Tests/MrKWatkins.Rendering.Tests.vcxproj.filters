@@ -38,7 +38,7 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Vector.cpp">
+    <ClCompile Include="VectorTests.cpp">
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
