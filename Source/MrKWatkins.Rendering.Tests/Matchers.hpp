@@ -20,9 +20,9 @@ namespace MrKWatkins::Rendering::Tests
 
         bool match(Geometry::Vector const& other) const override
         {
-            return vector.X() == other.X() &&
-                vector.Y() == other.Y() &&
-                vector.Z() == other.Z();
+            return vector.X() == Approx(other.X()) &&
+                vector.Y() == Approx(other.Y()) &&
+                vector.Z() == Approx(other.Z());
         }
 
         std::string toString() const override

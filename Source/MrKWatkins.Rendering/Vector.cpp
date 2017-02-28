@@ -45,7 +45,7 @@ namespace MrKWatkins::Rendering::Geometry
         {
             throw std::invalid_argument("scalar cannot be 0.");
         }
-        return Vector(x/ scalar, y/ scalar, z/ scalar);
+        return Vector(x / scalar, y / scalar, z / scalar);
     }
 
     double Vector::Dot(const Vector& other) const
