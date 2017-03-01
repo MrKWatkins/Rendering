@@ -5,7 +5,6 @@
 #include "../MrKWatkins.Rendering/Vector.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
-using Equals = MrKWatkins::Rendering::Tests::VectorEquals;
 
 namespace MrKWatkins::Rendering::Tests::VectorTests
 {

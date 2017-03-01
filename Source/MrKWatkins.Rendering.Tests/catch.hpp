@@ -1,6 +1,6 @@
 /*
-*  Catch v1.7.2
-*  Generated: 2017-02-13 15:57:33.350226
+*  Catch v1.8.0
+*  Generated: 2017-02-28 14:16:45.289179
 *  ----------------------------------------------------------
 *  This file has been merged from multiple headers. Please don't edit it directly
 *  Copyright (c) 2012 Two Blue Cubes Ltd. All rights reserved.
@@ -40,6 +40,12 @@
 #elif defined __GNUC__
 #    pragma GCC diagnostic ignored "-Wvariadic-macros"
 #    pragma GCC diagnostic ignored "-Wunused-variable"
+
+// For newer version we can use __Pragma to disable the warnings locally
+#    if __GNUC__ == 4 && __GNUC_MINOR__ >= 4 && __GNUC_MINOR__ <= 7
+#        pragma GCC diagnostic ignored "-Wparentheses"
+#    endif
+
 #    pragma GCC diagnostic push
 #    pragma GCC diagnostic ignored "-Wpadded"
 #endif
@@ -82,6 +88,7 @@
 // CATCH_CONFIG_VARIADIC_MACROS : are variadic macros supported?
 // CATCH_CONFIG_COUNTER : is the __COUNTER__ macro supported?
 // CATCH_CONFIG_WINDOWS_SEH : is Windows SEH supported?
+// CATCH_CONFIG_POSIX_SIGNALS : are POSIX signals supported?
 // ****************
 // Note to maintainers: if new toggles are added please document them
 // in configuration.md, too
@@ -117,10 +124,24 @@
 #  endif
 
 #   if defined(CATCH_CPP11_OR_GREATER)
-#       define CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS _Pragma( "clang diagnostic ignored \"-Wparentheses\"" )
+#       define CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS \
+            _Pragma( "clang diagnostic push" ) \
+            _Pragma( "clang diagnostic ignored \"-Wparentheses\"" )
+#       define CATCH_INTERNAL_UNSUPPRESS_PARENTHESES_WARNINGS \
+            _Pragma( "clang diagnostic pop" )
 #   endif
 
 #endif // __clang__
+
+////////////////////////////////////////////////////////////////////////////////
+// Cygwin
+#ifdef __CYGWIN__
+
+#   if !defined(CATCH_CONFIG_POSIX_SIGNALS)
+#       define CATCH_INTERNAL_CONFIG_NO_POSIX_SIGNALS
+#   endif
+
+#endif // __CYGWIN__
 
 ////////////////////////////////////////////////////////////////////////////////
 // Borland
@@ -144,12 +165,20 @@
 // GCC
 #ifdef __GNUC__
 
+#   if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)
+#       define CATCH_GCC_HAS_NEW_PRAGMA
+#   endif
+
 #   if __GNUC__ == 4 && __GNUC_MINOR__ >= 6 && defined(__GXX_EXPERIMENTAL_CXX0X__)
 #       define CATCH_INTERNAL_CONFIG_CPP11_NULLPTR
 #   endif
 
-#   if !defined(CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS) && defined(CATCH_CPP11_OR_GREATER)
-#       define CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS _Pragma( "GCC diagnostic ignored \"-Wparentheses\"" )
+#   if !defined(CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS) && defined(CATCH_GCC_HAS_NEW_PRAGMA)
+#       define CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS \
+            _Pragma( "GCC diagnostic push" ) \
+            _Pragma( "GCC diagnostic ignored \"-Wparentheses\"" )
+#       define CATCH_INTERNAL_UNSUPPRESS_PARENTHESES_WARNINGS \
+            _Pragma( "GCC diagnostic pop" )
 #   endif
 
 // - otherwise more recent versions define __cplusplus >= 201103L
@@ -290,9 +319,14 @@
 #if defined(CATCH_INTERNAL_CONFIG_WINDOWS_SEH) && !defined(CATCH_CONFIG_NO_WINDOWS_SEH) && !defined(CATCH_CONFIG_WINDOWS_SEH)
 #   define CATCH_CONFIG_WINDOWS_SEH
 #endif
+// This is set by default, because we assume that unix compilers are posix-signal-compatible by default.
+#if !defined(CATCH_INTERNAL_CONFIG_NO_POSIX_SIGNALS) && !defined(CATCH_CONFIG_NO_POSIX_SIGNALS) && !defined(CATCH_CONFIG_POSIX_SIGNALS)
+#   define CATCH_CONFIG_POSIX_SIGNALS
+#endif
 
 #if !defined(CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS)
 #   define CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS
+#   define CATCH_INTERNAL_UNSUPPRESS_PARENTHESES_WARNINGS
 #endif
 
 // noexcept support:
@@ -877,6 +911,9 @@ namespace Catch {
         template<typename T> STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison& operator % (T const&);
         template<typename T> STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison& operator && (T const&);
         template<typename T> STATIC_ASSERT_Expression_Too_Complex_Please_Rewrite_As_Binary_Comparison& operator || (T const&);
+
+    private:
+        DecomposedExpression& operator = (DecomposedExpression const&);
     };
 
     struct AssertionInfo
@@ -973,313 +1010,153 @@ namespace Catch {
     namespace Matchers {
         namespace Impl {
 
-            namespace Generic {
-                template<typename ExpressionT> class AllOf;
-                template<typename ExpressionT> class AnyOf;
-                template<typename ExpressionT> class Not;
-            }
+            template<typename ArgT> struct MatchAllOf;
+            template<typename ArgT> struct MatchAnyOf;
+            template<typename ArgT> struct MatchNotOf;
 
-            template<typename ExpressionT>
-            struct Matcher : SharedImpl<IShared>
-            {
-                typedef ExpressionT ExpressionType;
-
-                virtual ~Matcher() {}
-                virtual Ptr<Matcher> clone() const = 0;
-                virtual bool match(ExpressionT const& expr) const = 0;
-                virtual std::string toString() const = 0;
-
-                Generic::AllOf<ExpressionT> operator && (Matcher<ExpressionT> const& other) const;
-                Generic::AnyOf<ExpressionT> operator || (Matcher<ExpressionT> const& other) const;
-                Generic::Not<ExpressionT> operator ! () const;
-            };
-
-            template<typename DerivedT, typename ExpressionT>
-            struct MatcherImpl : Matcher<ExpressionT> {
-
-                virtual Ptr<Matcher<ExpressionT> > clone() const {
-                    return Ptr<Matcher<ExpressionT> >(new DerivedT(static_cast<DerivedT const&>(*this)));
+            class MatcherUntypedBase {
+            public:
+                std::string toString() const {
+                    if (m_cachedToString.empty())
+                        m_cachedToString = describe();
+                    return m_cachedToString;
                 }
+
+            protected:
+                virtual std::string describe() const = 0;
+                mutable std::string m_cachedToString;
+            private:
+                MatcherUntypedBase& operator = (MatcherUntypedBase const&);
             };
 
-            namespace Generic {
-                template<typename ExpressionT>
-                class Not : public MatcherImpl<Not<ExpressionT>, ExpressionT> {
-                public:
-                    explicit Not(Matcher<ExpressionT> const& matcher) : m_matcher(matcher.clone()) {}
-                    Not(Not const& other) : m_matcher(other.m_matcher) {}
+            template<typename ObjectT, typename ComparatorT = ObjectT>
+            struct MatcherBase : MatcherUntypedBase {
 
-                    virtual bool match(ExpressionT const& expr) const CATCH_OVERRIDE {
-                        return !m_matcher->match(expr);
+                virtual bool match(ObjectT const& arg) const = 0;
+
+                MatchAllOf<ComparatorT> operator && (MatcherBase const& other) const;
+                MatchAnyOf<ComparatorT> operator || (MatcherBase const& other) const;
+                MatchNotOf<ComparatorT> operator ! () const;
+            };
+
+            template<typename ArgT>
+            struct MatchAllOf : MatcherBase<ArgT> {
+                virtual bool match(ArgT const& arg) const CATCH_OVERRIDE {
+                    for (std::size_t i = 0; i < m_matchers.size(); ++i) {
+                        if (!m_matchers[i]->match(arg))
+                            return false;
                     }
-
-                    virtual std::string toString() const CATCH_OVERRIDE {
-                        return "not " + m_matcher->toString();
+                    return true;
+                }
+                virtual std::string describe() const CATCH_OVERRIDE {
+                    std::string description;
+                    description.reserve(4 + m_matchers.size() * 32);
+                    description += "( ";
+                    for (std::size_t i = 0; i < m_matchers.size(); ++i) {
+                        if (i != 0)
+                            description += " and ";
+                        description += m_matchers[i]->toString();
                     }
-                private:
-                    Ptr< Matcher<ExpressionT> > m_matcher;
-                };
+                    description += " )";
+                    return description;
+                }
 
-                template<typename ExpressionT>
-                class AllOf : public MatcherImpl<AllOf<ExpressionT>, ExpressionT> {
-                public:
+                MatchAllOf<ArgT>& operator && (MatcherBase<ArgT> const& other) {
+                    m_matchers.push_back(&other);
+                    return *this;
+                }
 
-                    AllOf() {}
-                    AllOf(AllOf const& other) : m_matchers(other.m_matchers) {}
+                std::vector<MatcherBase<ArgT> const*> m_matchers;
+            };
+            template<typename ArgT>
+            struct MatchAnyOf : MatcherBase<ArgT> {
 
-                    AllOf& add(Matcher<ExpressionT> const& matcher) {
-                        m_matchers.push_back(matcher.clone());
-                        return *this;
+                virtual bool match(ArgT const& arg) const CATCH_OVERRIDE {
+                    for (std::size_t i = 0; i < m_matchers.size(); ++i) {
+                        if (m_matchers[i]->match(arg))
+                            return true;
                     }
-                    virtual bool match(ExpressionT const& expr) const
-                    {
-                        for (std::size_t i = 0; i < m_matchers.size(); ++i)
-                            if (!m_matchers[i]->match(expr))
-                                return false;
-                        return true;
+                    return false;
+                }
+                virtual std::string describe() const CATCH_OVERRIDE {
+                    std::string description;
+                    description.reserve(4 + m_matchers.size() * 32);
+                    description += "( ";
+                    for (std::size_t i = 0; i < m_matchers.size(); ++i) {
+                        if (i != 0)
+                            description += " or ";
+                        description += m_matchers[i]->toString();
                     }
-                    virtual std::string toString() const {
-                        std::ostringstream oss;
-                        oss << "( ";
-                        for (std::size_t i = 0; i < m_matchers.size(); ++i) {
-                            if (i != 0)
-                                oss << " and ";
-                            oss << m_matchers[i]->toString();
-                        }
-                        oss << " )";
-                        return oss.str();
-                    }
+                    description += " )";
+                    return description;
+                }
 
-                    AllOf operator && (Matcher<ExpressionT> const& other) const {
-                        AllOf allOfExpr(*this);
-                        allOfExpr.add(other);
-                        return allOfExpr;
-                    }
+                MatchAnyOf<ArgT>& operator || (MatcherBase<ArgT> const& other) {
+                    m_matchers.push_back(&other);
+                    return *this;
+                }
 
-                private:
-                    std::vector<Ptr<Matcher<ExpressionT> > > m_matchers;
-                };
+                std::vector<MatcherBase<ArgT> const*> m_matchers;
+            };
 
-                template<typename ExpressionT>
-                class AnyOf : public MatcherImpl<AnyOf<ExpressionT>, ExpressionT> {
-                public:
+            template<typename ArgT>
+            struct MatchNotOf : MatcherBase<ArgT> {
 
-                    AnyOf() {}
-                    AnyOf(AnyOf const& other) : m_matchers(other.m_matchers) {}
+                MatchNotOf(MatcherBase<ArgT> const& underlyingMatcher) : m_underlyingMatcher(underlyingMatcher) {}
 
-                    AnyOf& add(Matcher<ExpressionT> const& matcher) {
-                        m_matchers.push_back(matcher.clone());
-                        return *this;
-                    }
-                    virtual bool match(ExpressionT const& expr) const
-                    {
-                        for (std::size_t i = 0; i < m_matchers.size(); ++i)
-                            if (m_matchers[i]->match(expr))
-                                return true;
-                        return false;
-                    }
-                    virtual std::string toString() const {
-                        std::ostringstream oss;
-                        oss << "( ";
-                        for (std::size_t i = 0; i < m_matchers.size(); ++i) {
-                            if (i != 0)
-                                oss << " or ";
-                            oss << m_matchers[i]->toString();
-                        }
-                        oss << " )";
-                        return oss.str();
-                    }
+                virtual bool match(ArgT const& arg) const CATCH_OVERRIDE {
+                    return !m_underlyingMatcher.match(arg);
+                }
 
-                    AnyOf operator || (Matcher<ExpressionT> const& other) const {
-                        AnyOf anyOfExpr(*this);
-                        anyOfExpr.add(other);
-                        return anyOfExpr;
-                    }
+                virtual std::string describe() const CATCH_OVERRIDE {
+                    return "not " + m_underlyingMatcher.toString();
+                }
+                MatcherBase<ArgT> const& m_underlyingMatcher;
+            };
 
-                private:
-                    std::vector<Ptr<Matcher<ExpressionT> > > m_matchers;
-                };
-
-            } // namespace Generic
-
-            template<typename ExpressionT>
-            Generic::AllOf<ExpressionT> Matcher<ExpressionT>::operator && (Matcher<ExpressionT> const& other) const {
-                Generic::AllOf<ExpressionT> allOfExpr;
-                allOfExpr.add(*this);
-                allOfExpr.add(other);
-                return allOfExpr;
+            template<typename ObjectT, typename ComparatorT>
+            MatchAllOf<ComparatorT> MatcherBase<ObjectT, ComparatorT>::operator && (MatcherBase const& other) const {
+                return MatchAllOf<ComparatorT>() && *this && other;
+            }
+            template<typename ObjectT, typename ComparatorT>
+            MatchAnyOf<ComparatorT> MatcherBase<ObjectT, ComparatorT>::operator || (MatcherBase const& other) const {
+                return MatchAnyOf<ComparatorT>() || *this || other;
+            }
+            template<typename ObjectT, typename ComparatorT>
+            MatchNotOf<ComparatorT> MatcherBase<ObjectT, ComparatorT>::operator ! () const {
+                return MatchNotOf<ComparatorT>(*this);
             }
 
-            template<typename ExpressionT>
-            Generic::AnyOf<ExpressionT> Matcher<ExpressionT>::operator || (Matcher<ExpressionT> const& other) const {
-                Generic::AnyOf<ExpressionT> anyOfExpr;
-                anyOfExpr.add(*this);
-                anyOfExpr.add(other);
-                return anyOfExpr;
-            }
-
-            template<typename ExpressionT>
-            Generic::Not<ExpressionT> Matcher<ExpressionT>::operator ! () const {
-                return Generic::Not<ExpressionT>(*this);
-            }
-
-            namespace StdString {
-
-                inline std::string makeString(std::string const& str) { return str; }
-                inline std::string makeString(const char* str) { return str ? std::string(str) : std::string(); }
-
-                struct CasedString
-                {
-                    CasedString(std::string const& str, CaseSensitive::Choice caseSensitivity)
-                        : m_caseSensitivity(caseSensitivity),
-                        m_str(adjustString(str))
-                    {}
-                    std::string adjustString(std::string const& str) const {
-                        return m_caseSensitivity == CaseSensitive::No
-                            ? toLower(str)
-                            : str;
-
-                    }
-                    std::string toStringSuffix() const
-                    {
-                        return m_caseSensitivity == CaseSensitive::No
-                            ? " (case insensitive)"
-                            : std::string();
-                    }
-                    CaseSensitive::Choice m_caseSensitivity;
-                    std::string m_str;
-                };
-
-                struct Equals : MatcherImpl<Equals, std::string> {
-                    Equals(std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes)
-                        : m_data(str, caseSensitivity)
-                    {}
-                    Equals(Equals const& other) : m_data(other.m_data) {}
-
-                    virtual ~Equals();
-
-                    virtual bool match(std::string const& expr) const {
-                        return m_data.m_str == m_data.adjustString(expr);;
-                    }
-                    virtual std::string toString() const {
-                        return "equals: \"" + m_data.m_str + '"' + m_data.toStringSuffix();
-                    }
-
-                    CasedString m_data;
-                };
-
-                struct Contains : MatcherImpl<Contains, std::string> {
-                    Contains(std::string const& substr, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes)
-                        : m_data(substr, caseSensitivity) {}
-                    Contains(Contains const& other) : m_data(other.m_data) {}
-
-                    virtual ~Contains();
-
-                    virtual bool match(std::string const& expr) const {
-                        return m_data.adjustString(expr).find(m_data.m_str) != std::string::npos;
-                    }
-                    virtual std::string toString() const {
-                        return "contains: \"" + m_data.m_str + '"' + m_data.toStringSuffix();
-                    }
-
-                    CasedString m_data;
-                };
-
-                struct StartsWith : MatcherImpl<StartsWith, std::string> {
-                    StartsWith(std::string const& substr, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes)
-                        : m_data(substr, caseSensitivity) {}
-
-                    StartsWith(StartsWith const& other) : m_data(other.m_data) {}
-
-                    virtual ~StartsWith();
-
-                    virtual bool match(std::string const& expr) const {
-                        return startsWith(m_data.adjustString(expr), m_data.m_str);
-                    }
-                    virtual std::string toString() const {
-                        return "starts with: \"" + m_data.m_str + '"' + m_data.toStringSuffix();
-                    }
-
-                    CasedString m_data;
-                };
-
-                struct EndsWith : MatcherImpl<EndsWith, std::string> {
-                    EndsWith(std::string const& substr, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes)
-                        : m_data(substr, caseSensitivity) {}
-                    EndsWith(EndsWith const& other) : m_data(other.m_data) {}
-
-                    virtual ~EndsWith();
-
-                    virtual bool match(std::string const& expr) const {
-                        return endsWith(m_data.adjustString(expr), m_data.m_str);
-                    }
-                    virtual std::string toString() const {
-                        return "ends with: \"" + m_data.m_str + '"' + m_data.toStringSuffix();
-                    }
-
-                    CasedString m_data;
-                };
-            } // namespace StdString
         } // namespace Impl
 
           // The following functions create the actual matcher objects.
           // This allows the types to be inferred
-        template<typename ExpressionT>
-        inline Impl::Generic::Not<ExpressionT> Not(Impl::Matcher<ExpressionT> const& m) {
-            return Impl::Generic::Not<ExpressionT>(m);
+          // - deprecated: prefer ||, && and !
+        template<typename T>
+        inline Impl::MatchNotOf<T> Not(Impl::MatcherBase<T> const& underlyingMatcher) {
+            return Impl::MatchNotOf<T>(underlyingMatcher);
         }
-
-        template<typename ExpressionT>
-        inline Impl::Generic::AllOf<ExpressionT> AllOf(Impl::Matcher<ExpressionT> const& m1,
-            Impl::Matcher<ExpressionT> const& m2) {
-            return Impl::Generic::AllOf<ExpressionT>().add(m1).add(m2);
+        template<typename T>
+        inline Impl::MatchAllOf<T> AllOf(Impl::MatcherBase<T> const& m1, Impl::MatcherBase<T> const& m2) {
+            return Impl::MatchAllOf<T>() && m1 && m2;
         }
-        template<typename ExpressionT>
-        inline Impl::Generic::AllOf<ExpressionT> AllOf(Impl::Matcher<ExpressionT> const& m1,
-            Impl::Matcher<ExpressionT> const& m2,
-            Impl::Matcher<ExpressionT> const& m3) {
-            return Impl::Generic::AllOf<ExpressionT>().add(m1).add(m2).add(m3);
+        template<typename T>
+        inline Impl::MatchAllOf<T> AllOf(Impl::MatcherBase<T> const& m1, Impl::MatcherBase<T> const& m2, Impl::MatcherBase<T> const& m3) {
+            return Impl::MatchAllOf<T>() && m1 && m2 && m3;
         }
-        template<typename ExpressionT>
-        inline Impl::Generic::AnyOf<ExpressionT> AnyOf(Impl::Matcher<ExpressionT> const& m1,
-            Impl::Matcher<ExpressionT> const& m2) {
-            return Impl::Generic::AnyOf<ExpressionT>().add(m1).add(m2);
+        template<typename T>
+        inline Impl::MatchAnyOf<T> AnyOf(Impl::MatcherBase<T> const& m1, Impl::MatcherBase<T> const& m2) {
+            return Impl::MatchAnyOf<T>() || m1 || m2;
         }
-        template<typename ExpressionT>
-        inline Impl::Generic::AnyOf<ExpressionT> AnyOf(Impl::Matcher<ExpressionT> const& m1,
-            Impl::Matcher<ExpressionT> const& m2,
-            Impl::Matcher<ExpressionT> const& m3) {
-            return Impl::Generic::AnyOf<ExpressionT>().add(m1).add(m2).add(m3);
-        }
-
-        inline Impl::StdString::Equals      Equals(std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes) {
-            return Impl::StdString::Equals(str, caseSensitivity);
-        }
-        inline Impl::StdString::Equals      Equals(const char* str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes) {
-            return Impl::StdString::Equals(Impl::StdString::makeString(str), caseSensitivity);
-        }
-        inline Impl::StdString::Contains    Contains(std::string const& substr, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes) {
-            return Impl::StdString::Contains(substr, caseSensitivity);
-        }
-        inline Impl::StdString::Contains    Contains(const char* substr, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes) {
-            return Impl::StdString::Contains(Impl::StdString::makeString(substr), caseSensitivity);
-        }
-        inline Impl::StdString::StartsWith  StartsWith(std::string const& substr) {
-            return Impl::StdString::StartsWith(substr);
-        }
-        inline Impl::StdString::StartsWith  StartsWith(const char* substr) {
-            return Impl::StdString::StartsWith(Impl::StdString::makeString(substr));
-        }
-        inline Impl::StdString::EndsWith    EndsWith(std::string const& substr) {
-            return Impl::StdString::EndsWith(substr);
-        }
-        inline Impl::StdString::EndsWith    EndsWith(const char* substr) {
-            return Impl::StdString::EndsWith(Impl::StdString::makeString(substr));
+        template<typename T>
+        inline Impl::MatchAnyOf<T> AnyOf(Impl::MatcherBase<T> const& m1, Impl::MatcherBase<T> const& m2, Impl::MatcherBase<T> const& m3) {
+            return Impl::MatchAnyOf<T>() || m1 || m2 || m3;
         }
 
     } // namespace Matchers
 
     using namespace Matchers;
+    using Matchers::Impl::MatcherBase;
 
 } // namespace Catch
 
@@ -1334,7 +1211,7 @@ namespace Catch {
         void captureResult(ResultWas::OfType resultType);
         void captureExpression();
         void captureExpectedException(std::string const& expectedMessage);
-        void captureExpectedException(Matchers::Impl::Matcher<std::string> const& matcher);
+        void captureExpectedException(Matchers::Impl::MatcherBase<std::string> const& matcher);
         void handleResult(AssertionResult const& result);
         void react();
         bool shouldDebugBreak() const;
@@ -1364,6 +1241,7 @@ namespace Catch {
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable:4389) // '==' : signed/unsigned mismatch
+#pragma warning(disable:4312) // Converting int to T* using reinterpret_cast (issue on x64 platform)
 #endif
 
 #include <cstddef>
@@ -1880,6 +1758,8 @@ namespace Catch {
     public:
         ExpressionLhs(ResultBuilder& rb, T lhs) : m_rb(rb), m_lhs(lhs), m_truthy(false) {}
 
+        ExpressionLhs& operator = (const ExpressionLhs&);
+
         template<typename RhsT>
         BinaryExpression<T, Internal::IsEqualTo, RhsT const&>
             operator == (RhsT const& rhs) {
@@ -1957,6 +1837,8 @@ namespace Catch {
     public:
         BinaryExpression(ResultBuilder& rb, LhsT lhs, RhsT rhs)
             : m_rb(rb), m_lhs(lhs), m_rhs(rhs) {}
+
+        BinaryExpression& operator = (BinaryExpression&);
 
         void endExpression() const {
             m_rb
@@ -2252,6 +2134,14 @@ namespace Catch {
 
 }
 
+#if defined(CATCH_CONFIG_FAST_COMPILE)
+///////////////////////////////////////////////////////////////////////////////
+// We can speedup compilation significantly by breaking into debugger lower in
+// the callstack, because then we don't have to expand CATCH_BREAK_INTO_DEBUGGER
+// macro in each assertion
+#define INTERNAL_CATCH_REACT( resultBuilder ) \
+    resultBuilder.react();
+#else
 ///////////////////////////////////////////////////////////////////////////////
 // In the event of a failure works out if the debugger needs to be invoked
 // and/or an exception thrown and takes appropriate action.
@@ -2260,6 +2150,7 @@ namespace Catch {
 #define INTERNAL_CATCH_REACT( resultBuilder ) \
     if( resultBuilder.shouldDebugBreak() ) CATCH_BREAK_INTO_DEBUGGER(); \
     resultBuilder.react();
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 #define INTERNAL_CATCH_TEST( expr, resultDisposition, macroName ) \
@@ -2268,6 +2159,7 @@ namespace Catch {
         try { \
             CATCH_INTERNAL_SUPPRESS_PARENTHESES_WARNINGS \
             ( __catchResult <= expr ).endExpression(); \
+            CATCH_INTERNAL_UNSUPPRESS_PARENTHESES_WARNINGS \
         } \
         catch( ... ) { \
             __catchResult.useActiveException( resultDisposition ); \
@@ -2831,12 +2723,14 @@ namespace Catch {
         public:
             explicit Approx(double value)
                 : m_epsilon(std::numeric_limits<float>::epsilon() * 100),
+                m_margin(0.0),
                 m_scale(1.0),
                 m_value(value)
             {}
 
             Approx(Approx const& other)
                 : m_epsilon(other.m_epsilon),
+                m_margin(other.m_margin),
                 m_scale(other.m_scale),
                 m_value(other.m_value)
             {}
@@ -2848,6 +2742,7 @@ namespace Catch {
             Approx operator()(double value) {
                 Approx approx(value);
                 approx.epsilon(m_epsilon);
+                approx.margin(m_margin);
                 approx.scale(m_scale);
                 return approx;
             }
@@ -2857,7 +2752,11 @@ namespace Catch {
             friend bool operator == (const T& lhs, Approx const& rhs) {
                 // Thanks to Richard Harris for his help refining this formula
                 auto lhs_v = double(lhs);
-                return std::fabs(lhs_v - rhs.m_value) < rhs.m_epsilon * (rhs.m_scale + (std::max)(std::fabs(lhs_v), std::fabs(rhs.m_value)));
+                bool relativeOK = std::fabs(lhs_v - rhs.m_value) < rhs.m_epsilon * (rhs.m_scale + (std::max)(std::fabs(lhs_v), std::fabs(rhs.m_value)));
+                if (relativeOK) {
+                    return true;
+                }
+                return std::fabs(lhs_v - rhs.m_value) < rhs.m_margin;
             }
 
             template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
@@ -2901,7 +2800,11 @@ namespace Catch {
 #else
             friend bool operator == (double lhs, Approx const& rhs) {
                 // Thanks to Richard Harris for his help refining this formula
-                return std::fabs(lhs - rhs.m_value) < rhs.m_epsilon * (rhs.m_scale + (std::max)(std::fabs(lhs), std::fabs(rhs.m_value)));
+                bool relativeOK = std::fabs(lhs - rhs.m_value) < rhs.m_epsilon * (rhs.m_scale + (std::max)(std::fabs(lhs), std::fabs(rhs.m_value)));
+                if (relativeOK) {
+                    return true;
+                }
+                return std::fabs(lhs - rhs.m_value) < rhs.m_margin;
             }
 
             friend bool operator == (Approx const& lhs, double rhs) {
@@ -2942,6 +2845,11 @@ namespace Catch {
                 return *this;
             }
 
+            Approx& margin(double newMargin) {
+                m_margin = newMargin;
+                return *this;
+            }
+
             Approx& scale(double newScale) {
                 m_scale = newScale;
                 return *this;
@@ -2955,6 +2863,7 @@ namespace Catch {
 
         private:
             double m_epsilon;
+            double m_margin;
             double m_scale;
             double m_value;
         };
@@ -2966,6 +2875,153 @@ namespace Catch {
     }
 
 } // end namespace Catch
+
+  // #included from: internal/catch_matchers_string.h
+#define TWOBLUECUBES_CATCH_MATCHERS_STRING_H_INCLUDED
+
+namespace Catch {
+    namespace Matchers {
+
+        namespace StdString {
+
+            struct CasedString
+            {
+                CasedString(std::string const& str, CaseSensitive::Choice caseSensitivity);
+                std::string adjustString(std::string const& str) const;
+                std::string caseSensitivitySuffix() const;
+
+                CaseSensitive::Choice m_caseSensitivity;
+                std::string m_str;
+            };
+
+            struct StringMatcherBase : MatcherBase<std::string> {
+                StringMatcherBase(std::string operation, CasedString const& comparator);
+                virtual std::string describe() const CATCH_OVERRIDE;
+
+                CasedString m_comparator;
+                std::string m_operation;
+            };
+
+            struct EqualsMatcher : StringMatcherBase {
+                EqualsMatcher(CasedString const& comparator);
+                virtual bool match(std::string const& source) const CATCH_OVERRIDE;
+            };
+            struct ContainsMatcher : StringMatcherBase {
+                ContainsMatcher(CasedString const& comparator);
+                virtual bool match(std::string const& source) const CATCH_OVERRIDE;
+            };
+            struct StartsWithMatcher : StringMatcherBase {
+                StartsWithMatcher(CasedString const& comparator);
+                virtual bool match(std::string const& source) const CATCH_OVERRIDE;
+            };
+            struct EndsWithMatcher : StringMatcherBase {
+                EndsWithMatcher(CasedString const& comparator);
+                virtual bool match(std::string const& source) const CATCH_OVERRIDE;
+            };
+
+        } // namespace StdString
+
+          // The following functions create the actual matcher objects.
+          // This allows the types to be inferred
+
+        StdString::EqualsMatcher Equals(std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes);
+        StdString::ContainsMatcher Contains(std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes);
+        StdString::EndsWithMatcher EndsWith(std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes);
+        StdString::StartsWithMatcher StartsWith(std::string const& str, CaseSensitive::Choice caseSensitivity = CaseSensitive::Yes);
+
+    } // namespace Matchers
+} // namespace Catch
+
+  // #included from: internal/catch_matchers_vector.h
+#define TWOBLUECUBES_CATCH_MATCHERS_VECTOR_H_INCLUDED
+
+namespace Catch {
+    namespace Matchers {
+
+        namespace Vector {
+
+            template<typename T>
+            struct ContainsElementMatcher : MatcherBase<std::vector<T>, T> {
+
+                ContainsElementMatcher(T const &comparator) : m_comparator(comparator) {}
+
+                bool match(std::vector<T> const &v) const CATCH_OVERRIDE {
+                    return std::find(v.begin(), v.end(), m_comparator) != v.end();
+                }
+
+                virtual std::string describe() const CATCH_OVERRIDE {
+                    return "Contains: " + Catch::toString(m_comparator);
+                }
+
+                T const& m_comparator;
+            };
+
+            template<typename T>
+            struct ContainsMatcher : MatcherBase<std::vector<T>, std::vector<T> > {
+
+                ContainsMatcher(std::vector<T> const &comparator) : m_comparator(comparator) {}
+
+                bool match(std::vector<T> const &v) const CATCH_OVERRIDE {
+                    // !TBD: see note in EqualsMatcher
+                    if (m_comparator.size() > v.size())
+                        return false;
+                    for (size_t i = 0; i < m_comparator.size(); ++i)
+                        if (std::find(v.begin(), v.end(), m_comparator[i]) == v.end())
+                            return false;
+                    return true;
+                }
+                virtual std::string describe() const CATCH_OVERRIDE {
+                    return "Contains: " + Catch::toString(m_comparator);
+                }
+
+                std::vector<T> const& m_comparator;
+            };
+
+            template<typename T>
+            struct EqualsMatcher : MatcherBase<std::vector<T>, std::vector<T> > {
+
+                EqualsMatcher(std::vector<T> const &comparator) : m_comparator(comparator) {}
+
+                bool match(std::vector<T> const &v) const CATCH_OVERRIDE {
+                    // !TBD: This currently works if all elements can be compared using !=
+                    // - a more general approach would be via a compare template that defaults
+                    // to using !=. but could be specialised for, e.g. std::vector<T> etc
+                    // - then just call that directly
+                    if (m_comparator.size() != v.size())
+                        return false;
+                    for (size_t i = 0; i < v.size(); ++i)
+                        if (m_comparator[i] != v[i])
+                            return false;
+                    return true;
+                }
+                virtual std::string describe() const CATCH_OVERRIDE {
+                    return "Equals: " + Catch::toString(m_comparator);
+                }
+                std::vector<T> const& m_comparator;
+            };
+
+        } // namespace Vector
+
+          // The following functions create the actual matcher objects.
+          // This allows the types to be inferred
+
+        template<typename T>
+        Vector::ContainsMatcher<T> Contains(std::vector<T> const& comparator) {
+            return Vector::ContainsMatcher<T>(comparator);
+        }
+
+        template<typename T>
+        Vector::ContainsElementMatcher<T> VectorContains(T const& comparator) {
+            return Vector::ContainsElementMatcher<T>(comparator);
+        }
+
+        template<typename T>
+        Vector::EqualsMatcher<T> Equals(std::vector<T> const& comparator) {
+            return Vector::EqualsMatcher<T>(comparator);
+        }
+
+    } // namespace Matchers
+} // namespace Catch
 
   // #included from: internal/catch_interfaces_tag_alias_registry.h
 #define TWOBLUECUBES_CATCH_INTERFACES_TAG_ALIAS_REGISTRY_H_INCLUDED
@@ -3348,27 +3404,50 @@ return @ desc; \
 #endif
 
 #ifdef CATCH_IMPL
-  // #included from: internal/catch_impl.hpp
+
+  // !TBD: Move the leak detector code into a separate header
+#ifdef CATCH_CONFIG_WINDOWS_CRTDBG
+#include <crtdbg.h>
+class LeakDetector {
+public:
+    LeakDetector() {
+        int flag = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+        flag |= _CRTDBG_LEAK_CHECK_DF;
+        flag |= _CRTDBG_ALLOC_MEM_DF;
+        _CrtSetDbgFlag(flag);
+        _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE | _CRTDBG_MODE_DEBUG);
+        _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+        // Change this to leaking allocation's number to break there
+        _CrtSetBreakAlloc(-1);
+    }
+};
+#else
+class LeakDetector {};
+#endif
+
+LeakDetector leakDetector;
+
+// #included from: internal/catch_impl.hpp
 #define TWOBLUECUBES_CATCH_IMPL_HPP_INCLUDED
 
-  // Collect all the implementation files together here
-  // These are the equivalent of what would usually be cpp files
+// Collect all the implementation files together here
+// These are the equivalent of what would usually be cpp files
 
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wweak-vtables"
 #endif
 
-  // #included from: ../catch_session.hpp
+// #included from: ../catch_session.hpp
 #define TWOBLUECUBES_CATCH_RUNNER_HPP_INCLUDED
 
-  // #included from: internal/catch_commandline.hpp
+// #included from: internal/catch_commandline.hpp
 #define TWOBLUECUBES_CATCH_COMMANDLINE_HPP_INCLUDED
 
-  // #included from: catch_config.hpp
+// #included from: catch_config.hpp
 #define TWOBLUECUBES_CATCH_CONFIG_HPP_INCLUDED
 
-  // #included from: catch_test_spec_parser.hpp
+// #included from: catch_test_spec_parser.hpp
 #define TWOBLUECUBES_CATCH_TEST_SPEC_PARSER_HPP_INCLUDED
 
 #ifdef __clang__
@@ -3376,7 +3455,7 @@ return @ desc; \
 #pragma clang diagnostic ignored "-Wpadded"
 #endif
 
-  // #included from: catch_test_spec.hpp
+// #included from: catch_test_spec.hpp
 #define TWOBLUECUBES_CATCH_TEST_SPEC_HPP_INCLUDED
 
 #ifdef __clang__
@@ -3384,7 +3463,7 @@ return @ desc; \
 #pragma clang diagnostic ignored "-Wpadded"
 #endif
 
-  // #included from: catch_wildcard_pattern.hpp
+// #included from: catch_wildcard_pattern.hpp
 #define TWOBLUECUBES_CATCH_WILDCARD_PATTERN_HPP_INCLUDED
 
 #include <stdexcept>
@@ -3607,7 +3686,7 @@ namespace Catch {
         void addPattern() {
             std::string token = subString();
             for (size_t i = 0; i < m_escapeChars.size(); ++i)
-                token = token.substr(0, m_escapeChars[i] - i) + token.substr(m_escapeChars[i] + 1 - i);
+                token = token.substr(0, m_escapeChars[i] - m_start - i) + token.substr(m_escapeChars[i] - m_start - i + 1);
             m_escapeChars.clear();
             if (startsWith(token, "exclude:")) {
                 m_exclusion = true;
@@ -6274,6 +6353,16 @@ namespace Catch {
 
 #else // Not Windows - assumed to be POSIX compatible //////////////////////////
 
+#  if !defined(CATCH_CONFIG_POSIX_SIGNALS)
+
+namespace Catch {
+    struct FatalConditionHandler {
+        void reset() {}
+    };
+}
+
+#  else // CATCH_CONFIG_POSIX_SIGNALS is defined
+
 #include <signal.h>
 
 namespace Catch {
@@ -6351,6 +6440,8 @@ namespace Catch {
     char FatalConditionHandler::altStackMem[SIGSTKSZ] = {};
 
 } // namespace Catch
+
+#  endif // CATCH_CONFIG_POSIX_SIGNALS
 
 #endif // not Windows
 
@@ -8057,7 +8148,7 @@ namespace Catch {
         return os;
     }
 
-    Version libraryVersion(1, 7, 2, "", 0);
+    Version libraryVersion(1, 8, 0, "", 0);
 
 }
 
@@ -8228,7 +8319,15 @@ namespace Catch
 #endif
 
 #ifdef CATCH_PLATFORM_WINDOWS
+
 #else
+
+// Required for some versions of Cygwin to declare gettimeofday
+// see: http://stackoverflow.com/questions/36901803/gettimeofday-not-declared-in-this-scope-cygwin
+#   ifdef __CYGWIN__
+#       define _BSD_SOURCE
+#   endif
+
 #include <sys/time.h>
 #endif
 
@@ -8782,12 +8881,12 @@ namespace Catch {
 
     void ResultBuilder::captureExpectedException(std::string const& expectedMessage) {
         if (expectedMessage.empty())
-            captureExpectedException(Matchers::Impl::Generic::AllOf<std::string>());
+            captureExpectedException(Matchers::Impl::MatchAllOf<std::string>());
         else
             captureExpectedException(Matchers::Equals(expectedMessage));
     }
 
-    void ResultBuilder::captureExpectedException(Matchers::Impl::Matcher<std::string> const& matcher) {
+    void ResultBuilder::captureExpectedException(Matchers::Impl::MatcherBase<std::string> const& matcher) {
 
         assert(!isFalseTest(m_assertionInfo.resultDisposition));
         AssertionResultData data = m_data;
@@ -8821,6 +8920,15 @@ namespace Catch {
     }
 
     void ResultBuilder::react() {
+#if defined(CATCH_CONFIG_FAST_COMPILE)
+        if (m_shouldDebugBreak) {
+            ///////////////////////////////////////////////////////////////////
+            // To inspect the state during test, you need to go one level up the callstack
+            // To go back to the test and change execution, jump over the throw statement
+            ///////////////////////////////////////////////////////////////////
+            CATCH_BREAK_INTO_DEBUGGER();
+        }
+#endif
         if (m_shouldThrow)
             throw Catch::TestFailureException();
     }
@@ -8949,6 +9057,86 @@ namespace Catch {
 
 } // end namespace Catch
 
+  // #included from: catch_matchers_string.hpp
+
+namespace Catch {
+    namespace Matchers {
+
+        namespace StdString {
+
+            CasedString::CasedString(std::string const& str, CaseSensitive::Choice caseSensitivity)
+                : m_caseSensitivity(caseSensitivity),
+                m_str(adjustString(str))
+            {}
+            std::string CasedString::adjustString(std::string const& str) const {
+                return m_caseSensitivity == CaseSensitive::No
+                    ? toLower(str)
+                    : str;
+            }
+            std::string CasedString::caseSensitivitySuffix() const {
+                return m_caseSensitivity == CaseSensitive::No
+                    ? " (case insensitive)"
+                    : std::string();
+            }
+
+            StringMatcherBase::StringMatcherBase(std::string operation, CasedString const& comparator)
+                : m_comparator(comparator),
+                m_operation(operation) {
+            }
+
+            std::string StringMatcherBase::describe() const {
+                std::string description;
+                description.reserve(5 + m_operation.size() + m_comparator.m_str.size() +
+                    m_comparator.caseSensitivitySuffix().size());
+                description += m_operation;
+                description += ": \"";
+                description += m_comparator.m_str;
+                description += "\"";
+                description += m_comparator.caseSensitivitySuffix();
+                return description;
+            }
+
+            EqualsMatcher::EqualsMatcher(CasedString const& comparator) : StringMatcherBase("equals", comparator) {}
+
+            bool EqualsMatcher::match(std::string const& source) const {
+                return m_comparator.adjustString(source) == m_comparator.m_str;
+            }
+
+            ContainsMatcher::ContainsMatcher(CasedString const& comparator) : StringMatcherBase("contains", comparator) {}
+
+            bool ContainsMatcher::match(std::string const& source) const {
+                return contains(m_comparator.adjustString(source), m_comparator.m_str);
+            }
+
+            StartsWithMatcher::StartsWithMatcher(CasedString const& comparator) : StringMatcherBase("starts with", comparator) {}
+
+            bool StartsWithMatcher::match(std::string const& source) const {
+                return startsWith(m_comparator.adjustString(source), m_comparator.m_str);
+            }
+
+            EndsWithMatcher::EndsWithMatcher(CasedString const& comparator) : StringMatcherBase("ends with", comparator) {}
+
+            bool EndsWithMatcher::match(std::string const& source) const {
+                return endsWith(m_comparator.adjustString(source), m_comparator.m_str);
+            }
+
+        } // namespace StdString
+
+        StdString::EqualsMatcher Equals(std::string const& str, CaseSensitive::Choice caseSensitivity) {
+            return StdString::EqualsMatcher(StdString::CasedString(str, caseSensitivity));
+        }
+        StdString::ContainsMatcher Contains(std::string const& str, CaseSensitive::Choice caseSensitivity) {
+            return StdString::ContainsMatcher(StdString::CasedString(str, caseSensitivity));
+        }
+        StdString::EndsWithMatcher EndsWith(std::string const& str, CaseSensitive::Choice caseSensitivity) {
+            return StdString::EndsWithMatcher(StdString::CasedString(str, caseSensitivity));
+        }
+        StdString::StartsWithMatcher StartsWith(std::string const& str, CaseSensitive::Choice caseSensitivity) {
+            return StdString::StartsWithMatcher(StdString::CasedString(str, caseSensitivity));
+        }
+
+    } // namespace Matchers
+} // namespace Catch
   // #included from: ../reporters/catch_reporter_multi.hpp
 #define TWOBLUECUBES_CATCH_REPORTER_MULTI_HPP_INCLUDED
 
@@ -9092,6 +9280,7 @@ namespace Catch {
 #define TWOBLUECUBES_CATCH_REPORTER_BASES_HPP_INCLUDED
 
 #include <cstring>
+#include <assert.h>
 
 namespace Catch {
 
@@ -9691,6 +9880,12 @@ namespace Catch {
             return std::string();
         }
 
+        void writeSourceInfo(SourceLineInfo const& sourceInfo) {
+            m_xml
+                .writeAttribute("filename", sourceInfo.file)
+                .writeAttribute("line", sourceInfo.line);
+        }
+
     public: // StreamingReporterBase
 
         virtual void noMatchingTestCases(std::string const& s) CATCH_OVERRIDE {
@@ -9720,6 +9915,8 @@ namespace Catch {
                 .writeAttribute("description", testInfo.description)
                 .writeAttribute("tags", testInfo.tagsAsString);
 
+            writeSourceInfo(testInfo.lineInfo);
+
             if (m_config->showDurations() == ShowDurations::Always)
                 m_testCaseTimer.start();
             m_xml.ensureTagClosed();
@@ -9731,6 +9928,7 @@ namespace Catch {
                 m_xml.startElement("Section")
                     .writeAttribute("name", trim(sectionInfo.name))
                     .writeAttribute("description", sectionInfo.description);
+                writeSourceInfo(sectionInfo.lineInfo);
                 m_xml.ensureTagClosed();
             }
         }
@@ -9764,9 +9962,9 @@ namespace Catch {
             if (assertionResult.hasExpression()) {
                 m_xml.startElement("Expression")
                     .writeAttribute("success", assertionResult.succeeded())
-                    .writeAttribute("type", assertionResult.getTestMacroName())
-                    .writeAttribute("filename", assertionResult.getSourceInfo().file)
-                    .writeAttribute("line", assertionResult.getSourceInfo().line);
+                    .writeAttribute("type", assertionResult.getTestMacroName());
+
+                writeSourceInfo(assertionResult.getSourceInfo());
 
                 m_xml.scopedElement("Original")
                     .writeText(assertionResult.getExpression());
@@ -9777,16 +9975,16 @@ namespace Catch {
             // And... Print a result applicable to each result type.
             switch (assertionResult.getResultType()) {
             case ResultWas::ThrewException:
-                m_xml.scopedElement("Exception")
-                    .writeAttribute("filename", assertionResult.getSourceInfo().file)
-                    .writeAttribute("line", assertionResult.getSourceInfo().line)
-                    .writeText(assertionResult.getMessage());
+                m_xml.startElement("Exception");
+                writeSourceInfo(assertionResult.getSourceInfo());
+                m_xml.writeText(assertionResult.getMessage());
+                m_xml.endElement();
                 break;
             case ResultWas::FatalErrorCondition:
-                m_xml.scopedElement("FatalErrorCondition")
-                    .writeAttribute("filename", assertionResult.getSourceInfo().file)
-                    .writeAttribute("line", assertionResult.getSourceInfo().line)
-                    .writeText(assertionResult.getMessage());
+                m_xml.startElement("FatalErrorCondition");
+                writeSourceInfo(assertionResult.getSourceInfo());
+                m_xml.writeText(assertionResult.getMessage());
+                m_xml.endElement();
                 break;
             case ResultWas::Info:
                 m_xml.scopedElement("Info")
@@ -9796,8 +9994,10 @@ namespace Catch {
                 // Warning will already have been written
                 break;
             case ResultWas::ExplicitFailure:
-                m_xml.scopedElement("Failure")
-                    .writeText(assertionResult.getMessage());
+                m_xml.startElement("Failure");
+                writeSourceInfo(assertionResult.getSourceInfo());
+                m_xml.writeText(assertionResult.getMessage());
+                m_xml.endElement();
                 break;
             default:
                 break;
@@ -10110,7 +10310,29 @@ namespace Catch {
   // #included from: ../reporters/catch_reporter_console.hpp
 #define TWOBLUECUBES_CATCH_REPORTER_CONSOLE_HPP_INCLUDED
 
+#include <cfloat>
+#include <cstdio>
+
 namespace Catch {
+
+    namespace {
+        // Because formatting using c++ streams is stateful, drop down to C is required
+        // Alternatively we could use stringstream, but its performance is... not good.
+        std::string getFormattedDuration(double duration) {
+            // Max exponent + 1 is required to represent the whole part
+            // + 1 for decimal point
+            // + 3 for the 3 decimal places
+            // + 1 for null terminator
+            const size_t maxDoubleSize = DBL_MAX_10_EXP + 1 + 1 + 3 + 1;
+            char buffer[maxDoubleSize];
+#ifdef _MSC_VER
+            sprintf_s(buffer, "%.3f", duration);
+#else
+            sprintf(buffer, "%.3f", duration);
+#endif
+            return std::string(buffer);
+        }
+    }
 
     struct ConsoleReporter : StreamingReporterBase {
         ConsoleReporter(ReporterConfig const& _config)
@@ -10164,14 +10386,11 @@ namespace Catch {
                     stream << "\nNo assertions in test case";
                 stream << " '" << _sectionStats.sectionInfo.name << "'\n" << std::endl;
             }
-            if (m_headerPrinted) {
-                if (m_config->showDurations() == ShowDurations::Always)
-                    stream << "Completed in " << _sectionStats.durationInSeconds << 's' << std::endl;
-                m_headerPrinted = false;
+            if (m_config->showDurations() == ShowDurations::Always) {
+                stream << getFormattedDuration(_sectionStats.durationInSeconds) << " s: " << _sectionStats.sectionInfo.name << std::endl;
             }
-            else {
-                if (m_config->showDurations() == ShowDurations::Always)
-                    stream << _sectionStats.sectionInfo.name << " completed in " << _sectionStats.durationInSeconds << 's' << std::endl;
+            if (m_headerPrinted) {
+                m_headerPrinted = false;
             }
             StreamingReporterBase::sectionEnded(_sectionStats);
         }
@@ -10874,11 +11093,6 @@ namespace Catch {
     TestSpec::NamePattern::~NamePattern() {}
     TestSpec::TagPattern::~TagPattern() {}
     TestSpec::ExcludedPattern::~ExcludedPattern() {}
-
-    Matchers::Impl::StdString::Equals::~Equals() {}
-    Matchers::Impl::StdString::Contains::~Contains() {}
-    Matchers::Impl::StdString::StartsWith::~StartsWith() {}
-    Matchers::Impl::StdString::EndsWith::~EndsWith() {}
 
     void Config::dummy() {}
 

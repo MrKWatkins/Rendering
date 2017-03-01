@@ -4,11 +4,11 @@
 #include "../MrKWatkins.Rendering/Vector.h"
 #include "../MrKWatkins.Rendering/Point.h"
 
+// ReSharper disable CppPolymorphicClassWithNonVirtualPublicDestructor - Catch is at fault here.
 namespace MrKWatkins::Rendering::Tests
 {
-    struct VectorEquals : Catch::Impl::MatcherImpl<VectorEquals, Geometry::Vector>
+    class VectorEquals : public Catch::MatcherBase<Geometry::Vector>
     {
-    private:
         Geometry::Vector vector;
     public:
         explicit VectorEquals(Geometry::Vector const& vector) : vector{ vector }
@@ -25,16 +25,20 @@ namespace MrKWatkins::Rendering::Tests
                 vector.Y() == Approx(other.Y()) &&
                 vector.Z() == Approx(other.Z());
         }
-
-        std::string toString() const override
+        
+        std::string describe() const override
         {
             return "equals " + vector.ToString();
         }
     };
 
-    struct PointEquals : Catch::Impl::MatcherImpl<PointEquals, Geometry::Point>
+    inline VectorEquals Equals(Geometry::Vector const& vector)
     {
-    private:
+        return VectorEquals(vector);
+    }
+
+    class PointEquals : public Catch::MatcherBase<Geometry::Point>
+    {
         Geometry::Point point;
     public:
         explicit PointEquals(Geometry::Point const& point) : point{ point }
@@ -52,9 +56,15 @@ namespace MrKWatkins::Rendering::Tests
                 point.Z() == Approx(other.Z());
         }
 
-        std::string toString() const override
+        std::string describe() const override
         {
             return "equals " + point.ToString();
         }
     };
+
+    inline PointEquals Equals(Geometry::Point const& point)
+    {
+        return PointEquals(point);
+    }
 }
+// ReSharper restore CppPolymorphicClassWithNonVirtualPublicDestructor

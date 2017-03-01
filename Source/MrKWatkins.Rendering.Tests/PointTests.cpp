@@ -5,7 +5,6 @@
 #include "../MrKWatkins.Rendering/Point.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
-using Equals = MrKWatkins::Rendering::Tests::PointEquals;
 
 namespace MrKWatkins::Rendering::Tests::PointTests
 {
