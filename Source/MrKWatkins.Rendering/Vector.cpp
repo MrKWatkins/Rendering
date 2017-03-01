@@ -2,9 +2,14 @@
 #include "Vector.h"
 #include <stdexcept>
 #include <sstream>
+#include "Point.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
+    Vector::Vector(const Point& point) : x{ point.X() }, y{ point.Y() }, z{ point.Z() }
+    {
+    }
+
     Vector::Vector(double x, double y, double z) : x{ x }, y{ y }, z{ z }
     {
     }
@@ -71,7 +76,7 @@ namespace MrKWatkins::Rendering::Geometry
     std::string Vector::ToString() const
     {
         std::ostringstream oss;
-        oss << "(" << x << "," << y << "," << z << ")";
+        oss << x << "i + " << y << "j + " << z << "k";
         return oss.str();
     }
 

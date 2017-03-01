@@ -1,68 +1,61 @@
 ﻿#include "stdafx.h"
 #include "catch.hpp"
-#include "../MrKWatkins.Rendering/Vector.h"
 #include "Matchers.hpp"
-#include <random>
+#include "Random.h"
+#include "../MrKWatkins.Rendering/Vector.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
+using Equals = MrKWatkins::Rendering::Tests::VectorEquals;
 
 namespace MrKWatkins::Rendering::Tests::VectorTests
 {
-    std::default_random_engine generator{ std::random_device{}() };
-    std::uniform_real_distribution<double> distribution{ 0, 100 };
+    auto a = Random::Vector();
+    auto b = Random::Vector();
+    auto c = Random::Vector();
+    auto r = Random::Double();
+    auto s = Random::Double();
 
-    Vector RandomVector()
-    {
-        return Vector(distribution(generator), distribution(generator), distribution(generator));
-    }
-
-    auto a = RandomVector();
-    auto b = RandomVector();
-    auto c = RandomVector();
-    auto r = distribution(generator);
-    auto s = distribution(generator);
-
-    TEST_CASE("Length")
+    TEST_CASE("Vector - Length", "[Vector]")
     {
         CHECK(Vector(4, -6, 1.2).Length() == Approx(sqrt(16 + 36 + 1.44)));
         CHECK(Vector::Zero().Length() == Approx(0));
     }
 
-    TEST_CASE("Addition")
+    TEST_CASE("Vector - Addition", "[Vector]")
     {
         CHECK_THAT(Vector(1, 2.5, -34) + Vector(2, 3.2, 12), Equals(Vector(3, 5.7, -22)));
 
-        auto vector = RandomVector();
+        auto vector = Random::Vector();
         CHECK_THAT(vector + Vector::Zero(), Equals(vector));
     }
 
-    TEST_CASE("Subtraction")
+    TEST_CASE("Vector - Subtraction", "[Vector]")
     {
         CHECK_THAT(Vector(6, 7.5, 34) - Vector(2, 3.2, -12), Equals(Vector(4, 4.3, 46)));
 
-        auto vector = RandomVector();
+        auto vector = Random::Vector();
         CHECK_THAT(vector - Vector::Zero(), Equals(vector));
     }
 
-    TEST_CASE("Multiplication")
+    TEST_CASE("Vector - Multiplication", "[Vector]")
     {
         CHECK_THAT(Vector(2, 3.1, -4) * 5, Equals(Vector(10, 15.5, -20)));
         CHECK_THAT(5 * Vector(2, 3.1, -4), Equals(Vector(10, 15.5, -20)));
-        CHECK_THAT(RandomVector() * 0, Equals(Vector::Zero()));
+        CHECK_THAT(Random::Vector() * 0, Equals(Vector::Zero()));
     }
 
-    TEST_CASE("Division")
+    TEST_CASE("Vector - Division", "[Vector]")
     {
         CHECK_THAT(Vector(10, 15.5, -20) / 5, Equals(Vector(2, 3.1, -4)));
-        CHECK_THROWS_AS(RandomVector() / 0, std::invalid_argument);
+        CHECK_THROWS_AS(Random::Vector() / 0, std::invalid_argument);
     }
 
-    TEST_CASE("Dot Product")
+    TEST_CASE("Vector - Dot Product", "[Vector]")
     {
         CHECK(Vector(1, 2, 3).Dot(Vector(4, -5, 6)) == 12);
         CHECK(Vector(4, -5, 6).Dot(Vector(1, 2, 3)) == 12);
 
-        CHECK(RandomVector().Dot(Vector::Zero()) == 0);
+        CHECK(Random::Vector().Dot(Vector::Zero()) == 0);
 
         // Commutative:
         CHECK(a.Dot(b) == Approx(b.Dot(a)));
@@ -77,7 +70,7 @@ namespace MrKWatkins::Rendering::Tests::VectorTests
         CHECK((r * a).Dot(s * b) == Approx(r*s*(a.Dot(b))));
     }
 
-    TEST_CASE("Cross Product")
+    TEST_CASE("Vector - Cross Product", "[Vector]")
     {
         CHECK_THAT(Vector(3, -3, 1).Cross(Vector(4, 9, 2)), Equals(Vector(-15, -2, 39)));
 

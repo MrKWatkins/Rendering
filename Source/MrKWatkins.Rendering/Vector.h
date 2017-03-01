@@ -3,6 +3,9 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
+    // Need a forward declaration of Point to avoid circular references between Point and Vector.
+    struct Point;
+
     /// <summary>
     /// An immutable three-dimensional vector.
     /// </summary>
@@ -13,6 +16,7 @@ namespace MrKWatkins::Rendering::Geometry
         double y;
         double z;
     public:
+        explicit Vector(const Point& point);
         Vector(double x, double y, double z);
 
         double X() const noexcept { return x; }

@@ -2,19 +2,20 @@
 #include "stdafx.h"
 #include "catch.hpp"
 #include "../MrKWatkins.Rendering/Vector.h"
+#include "../MrKWatkins.Rendering/Point.h"
 
 namespace MrKWatkins::Rendering::Tests
 {
-    struct Equals : Catch::Impl::MatcherImpl<Equals, Geometry::Vector>
+    struct VectorEquals : Catch::Impl::MatcherImpl<VectorEquals, Geometry::Vector>
     {
     private:
         Geometry::Vector vector;
     public:
-        explicit Equals(Geometry::Vector const& vector) : vector{ vector }
+        explicit VectorEquals(Geometry::Vector const& vector) : vector{ vector }
         {
         }
 
-        Equals(Equals const& other) : vector{ other.vector }
+        VectorEquals(VectorEquals const& other) : vector{ other.vector }
         {
         }
 
@@ -28,6 +29,32 @@ namespace MrKWatkins::Rendering::Tests
         std::string toString() const override
         {
             return "equals " + vector.ToString();
+        }
+    };
+
+    struct PointEquals : Catch::Impl::MatcherImpl<PointEquals, Geometry::Point>
+    {
+    private:
+        Geometry::Point point;
+    public:
+        explicit PointEquals(Geometry::Point const& point) : point{ point }
+        {
+        }
+
+        PointEquals(PointEquals const& other) : point{ other.point }
+        {
+        }
+
+        bool match(Geometry::Point const& other) const override
+        {
+            return point.X() == Approx(other.X()) &&
+                point.Y() == Approx(other.Y()) &&
+                point.Z() == Approx(other.Z());
+        }
+
+        std::string toString() const override
+        {
+            return "equals " + point.ToString();
         }
     };
 }
