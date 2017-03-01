@@ -10,7 +10,7 @@ namespace MrKWatkins::Rendering::Algorithms
         std::uniform_real_distribution<double> distribution{ 0, 1 };
     public:
         Random();
-        explicit Random(double seed);
+        explicit Random(unsigned int seed);
 
         ~Random() = default;
 

@@ -41,6 +41,6 @@ namespace MrKWatkins::Rendering::Tests::PointTests
         CHECK(a.DistanceFrom(Point::Origin()) == Approx(Vector(a).Length()));
 
         auto b = Random::Point();
-        CHECK(a.DistanceFrom(b), == Approx(b.DistanceFrom(a)));
+        CHECK(a.DistanceFrom(b) == Approx(b.DistanceFrom(a)));
     }
 }

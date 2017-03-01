@@ -7,7 +7,7 @@ namespace MrKWatkins::Rendering::Algorithms
     {
     }
 
-    Random::Random(double seed) : generator(seed)
+    Random::Random(unsigned int seed) : generator{ seed }
     {
     }
 
