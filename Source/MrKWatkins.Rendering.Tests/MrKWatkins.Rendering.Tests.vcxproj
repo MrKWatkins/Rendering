@@ -164,6 +164,7 @@
     <ClCompile Include="Matchers.hpp" />
     <ClCompile Include="PointTests.cpp" />
     <ClCompile Include="Random.cpp" />
+    <ClCompile Include="SphereTests.cpp" />
     <ClCompile Include="VectorTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -50,5 +50,8 @@
     <ClCompile Include="PointTests.cpp">
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="SphereTests.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

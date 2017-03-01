@@ -7,9 +7,8 @@ namespace MrKWatkins::Rendering::Geometry
     /// <summary>
     /// An immutable point in three-dimensions.
     /// </summary>
-    struct Point
+    class Point
     {
-    private:
         double x;
         double y;
         double z;

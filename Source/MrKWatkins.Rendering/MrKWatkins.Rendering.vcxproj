@@ -143,8 +143,12 @@
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Gradient.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Optional.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Point.h" />
@@ -156,7 +160,9 @@
     <ClCompile Include="Gradient.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Random.cpp" />
+    <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -2,9 +2,8 @@
 
 namespace MrKWatkins::Rendering
 {
-    struct Colour
+    class Colour
     {
-    private:
         double r;
         double g;
         double b;
