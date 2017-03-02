@@ -1,6 +1,5 @@
 #pragma once
-#include "Point.h"
-#include "Optional.h"
+#include "Intersection.h"
 #include "Ray.h"
 
 namespace MrKWatkins::Rendering::Geometry
@@ -13,6 +12,6 @@ namespace MrKWatkins::Rendering::Geometry
     public:
         virtual ~Object() = default;
 
-        virtual Optional<Point> NearestIntersection(const Ray& ray) const = 0;
+        virtual Intersection NearestIntersection(const Ray& ray) const = 0;
     };
 }

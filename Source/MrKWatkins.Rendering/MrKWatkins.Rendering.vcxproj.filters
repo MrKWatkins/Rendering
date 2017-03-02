@@ -31,6 +31,12 @@
     <Filter Include="Source Files\Scene">
       <UniqueIdentifier>{dcc1390f-fe58-4fe4-881d-b3d13af17c6f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Shading">
+      <UniqueIdentifier>{d845ab5b-d281-41d2-8894-0ae44113a33d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shading">
+      <UniqueIdentifier>{1eec99d6-8a7c-4e94-9f65-6d321e16e1f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -84,6 +90,21 @@
     <ClInclude Include="RayTracing.h">
       <Filter>Header Files\Algorithms</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Intersection.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadingModel.h">
+      <Filter>Header Files\Shading</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Uniform.h">
+      <Filter>Header Files\Shading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -127,6 +148,21 @@
     </ClCompile>
     <ClCompile Include="RayTracing.cpp">
       <Filter>Source Files\Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="Intersection.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadingModel.cpp">
+      <Filter>Source Files\Shading</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Uniform.cpp">
+      <Filter>Source Files\Shading</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

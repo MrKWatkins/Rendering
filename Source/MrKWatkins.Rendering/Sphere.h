@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
 #include "Point.h"
+#include "Intersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -12,6 +13,6 @@ namespace MrKWatkins::Rendering::Geometry
         Sphere(const Point& center, double radius);
         Sphere(double x, double y, double z, double r);
 
-        Optional<Point> NearestIntersection(const Ray& ray) const override;
+        Intersection NearestIntersection(const Ray& ray) const override;
     };
 }

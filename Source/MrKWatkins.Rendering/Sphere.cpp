@@ -11,7 +11,7 @@ namespace MrKWatkins::Rendering::Geometry
     {
     }
 
-    Optional<Point> Sphere::NearestIntersection(const Ray& ray) const
+    Intersection Sphere::NearestIntersection(const Ray& ray) const
     {
         // Ray => R = O + dD.
         // Sphere => (S - C).(S - C) = r * r.
@@ -32,17 +32,22 @@ namespace MrKWatkins::Rendering::Geometry
         auto discriminant = DM * DM - c;
         if (discriminant < 0)
         {
-            return Optional<Point>();
+            return Intersection::None();
         }
 
         // Smallest solution is the one closest to the ray; will occur with the negative solution as the result of the sqrt will always be positive. (Or zero)
         auto d = -DM - sqrt(discriminant);
         if (d < 0)
         {
-            return Optional<Point>();
+            return Intersection::None();
         }
         
         // Plug d back into the ray's equation to get the intersection point.
-        return Optional<Point>(ray.Origin() + d * ray.Direction());
+        auto intersection = ray.Origin() + d * ray.Direction();
+
+        // The normal at the surface will be the vector from the centre to the intersection point.
+        auto normal = intersection - center;
+
+        return Intersection(intersection, normal);
     }
 }

@@ -7,7 +7,7 @@ namespace MrKWatkins::Rendering::Scene
     {
     }
 
-    Optional<Geometry::Point> SceneObject::NearestIntersection(const Geometry::Ray& ray) const
+    Geometry::Intersection SceneObject::NearestIntersection(const Geometry::Ray& ray) const
     {
         return object->NearestIntersection(ray);
     }
