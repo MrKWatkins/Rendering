@@ -12,7 +12,7 @@ namespace MrKWatkins::Rendering::Scene
     public:
         virtual ~Light() = default;
 
-        virtual Geometry::Vector GetDirectionAtPoint(Geometry::Point point) const = 0;
+        virtual Geometry::Vector GetDirectionAtPoint(Geometry::Point point, Geometry::Vector surfaceNormal) const = 0;
 
         Colour Colour() const { return colour; }
     };

@@ -140,10 +140,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Algorithm.h" />
+    <ClInclude Include="AmbientLight.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Gradient.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Intersection.h" />
+    <ClInclude Include="Lambertian.h" />
     <ClInclude Include="Uniform.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Object.h" />
@@ -164,10 +166,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algorithm.cpp" />
+    <ClCompile Include="AmbientLight.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Gradient.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Intersection.cpp" />
+    <ClCompile Include="Lambertian.cpp" />
     <ClCompile Include="Uniform.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="PointLight.cpp" />

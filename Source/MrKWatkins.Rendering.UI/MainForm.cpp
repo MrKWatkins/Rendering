@@ -6,7 +6,7 @@
 #include <nana/gui/detail/inner_fwd_implement.hpp>
 #include "../MrKWatkins.Rendering/Scene.h"
 #include "../MrKWatkins.Rendering/RayTracing.h"
-#include "../MrKWatkins.Rendering/Uniform.h"
+#include "../MrKWatkins.Rendering/Lambertian.h"
 
 using namespace nana;
 
@@ -32,10 +32,12 @@ namespace MrKWatkins::Rendering::UI
         graphicsBuffer = { nana::size{ 720, 720 } };
         graphicsBuffer.make(nana::size{ 720, 720 });
 
-        auto shadingModel = std::unique_ptr<Shading::ShadingModel>(std::make_unique<Shading::Uniform>());
+        auto shadingModel = std::unique_ptr<Shading::ShadingModel>(std::make_unique<Shading::Lambertian>());
 
         auto scene = std::make_unique<Scene::Scene>(Colour(0, 0, 0));
         scene->AddSphere(Geometry::Sphere(0.5, 0.5, 0.5, 0.1), Colour(0, 0, 1));
+        scene->AddAmbientLight(Colour(0.2, 0.2, 0.2));
+        scene->AddPointLight(Colour(0.6, 0.6, 0.6), Geometry::Point(1, 1, 0));
 
         renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene));
 

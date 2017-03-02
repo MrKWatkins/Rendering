@@ -7,8 +7,8 @@ namespace MrKWatkins::Rendering::Scene
     {
     }
 
-    Geometry::Vector PointLight::GetDirectionAtPoint(Geometry::Point point) const
+    Geometry::Vector PointLight::GetDirectionAtPoint(Geometry::Point point, Geometry::Vector surfaceNormal) const
     {
-        return point - position;
+        return position - point;
     }
 }

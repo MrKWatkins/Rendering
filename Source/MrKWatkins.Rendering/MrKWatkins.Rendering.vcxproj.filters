@@ -105,6 +105,12 @@
     <ClInclude Include="Uniform.h">
       <Filter>Header Files\Shading</Filter>
     </ClInclude>
+    <ClInclude Include="Lambertian.h">
+      <Filter>Header Files\Shading</Filter>
+    </ClInclude>
+    <ClInclude Include="AmbientLight.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -163,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="Uniform.cpp">
       <Filter>Source Files\Shading</Filter>
+    </ClCompile>
+    <ClCompile Include="Lambertian.cpp">
+      <Filter>Source Files\Shading</Filter>
+    </ClCompile>
+    <ClCompile Include="AmbientLight.cpp">
+      <Filter>Source Files\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

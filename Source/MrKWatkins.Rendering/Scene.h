@@ -17,8 +17,10 @@ namespace MrKWatkins::Rendering::Scene
         explicit Scene(Colour background);
         Scene& AddSphere(Geometry::Sphere sphere, Colour colour);
         Scene& AddPointLight(Colour colour, Geometry::Point position);
+        Scene& AddAmbientLight(Colour colour);
 
         std::vector<std::shared_ptr<SceneObject>> Objects() const noexcept { return objects; }
+        std::vector<std::shared_ptr<Light>> Lights() const noexcept { return lights; }
         Colour Background() const noexcept { return background; }
     };
 }

@@ -35,7 +35,7 @@ namespace MrKWatkins::Rendering
             {
                 for (unsigned int y = 0; y < height; y++)
                 {
-                    auto point = algorithm->RenderPoint(x / width, y / height);
+                    auto point = algorithm->RenderPoint(x / width, 1 - y / height);
 
                     SetPixel(x, y, point);
 

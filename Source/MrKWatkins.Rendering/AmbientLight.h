@@ -5,11 +5,11 @@
 
 namespace MrKWatkins::Rendering::Scene
 {
-    class PointLight : public Light
+    class AmbientLight : public Light
     {
         Geometry::Point position;
     public:
-        PointLight(Rendering::Colour colour, Geometry::Point position);
+        explicit AmbientLight(Rendering::Colour colour);
 
         Geometry::Vector GetDirectionAtPoint(Geometry::Point point, Geometry::Vector surfaceNormal) const override;
     };
