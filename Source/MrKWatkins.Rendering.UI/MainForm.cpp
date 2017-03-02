@@ -4,8 +4,8 @@
 #include <nana/paint/pixel_buffer.hpp>
 #include <nana/gui/widgets/picture.hpp>
 #include <nana/gui/detail/inner_fwd_implement.hpp>
-#include "../MrKWatkins.Rendering/Random.h"
-#include "../MrKWatkins.Rendering/Gradient.h"
+#include "../MrKWatkins.Rendering/Scene.h"
+#include "../MrKWatkins.Rendering/RayTracing.h"
 
 using namespace nana;
 
@@ -26,30 +26,32 @@ namespace MrKWatkins::Rendering::UI
         return "Progress: " + std::to_string(progress * 100) + "%";
     }
 
-    MainForm::MainForm() : form(API::make_center(720, 755), appear::decorate<appear::taskbar>()), imageBuffer { 700, 700 }
+    MainForm::MainForm() : form(API::make_center(740, 775), appear::decorate<appear::taskbar>()), imageBuffer { 720, 720 }
     {
-        graphicsBuffer = { nana::size{ 700, 700 } };
-        graphicsBuffer.make(nana::size{ 700, 700 });
+        graphicsBuffer = { nana::size{ 720, 720 } };
+        graphicsBuffer.make(nana::size{ 720, 720 });
 
-        renderer = Renderer::Start<Algorithms::Gradient>(700, Colour(0, 0, 0), Colour(0, 1, 0));
+        auto scene = std::make_unique<Scene::Scene>(Colour(0, 0, 0));
+        scene->AddSphere(Geometry::Sphere(0.5, 0.5, 0.5, 0.1), Colour(0, 0, 1));
+
+        renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(scene));
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));
         cancel.caption("Cancel");
+
+        Layout();
 
         cancel.events().click([&]
         {
             renderer->Cancel();
         });
 
-
         view.bgcolor(colors::black);
         viewDrawing.draw_diehard([&](graphics& graphics)
         {
             graphicsBuffer.stretch(graphics, rectangle(graphics.size()));
         });
-
-        Layout();
 
         updateTimer.interval(1000);
         updateTimer.elapse([&]()

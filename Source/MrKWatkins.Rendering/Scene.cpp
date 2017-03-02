@@ -1,0 +1,20 @@
+#include "stdafx.h"
+#include "Colour.h"
+#include "Sphere.h"
+#include "Scene.h"
+
+namespace MrKWatkins::Rendering::Scene
+{
+    Scene::Scene(Colour background) : background{ background }
+    {
+    }
+
+    Scene& Scene::AddSphere(Geometry::Sphere sphere, Colour colour)
+    {
+        auto pointerToSphere = std::unique_ptr<Geometry::Object>(std::make_unique<Geometry::Sphere>(sphere));
+        auto pointerToSceneObject = std::make_shared<SceneObject>(move(pointerToSphere), colour);
+        objects.push_back(pointerToSceneObject);
+
+        return *this;
+    }
+}

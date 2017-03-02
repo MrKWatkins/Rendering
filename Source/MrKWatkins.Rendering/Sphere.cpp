@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Sphere.h"
 
 namespace MrKWatkins::Rendering::Geometry
@@ -13,40 +13,36 @@ namespace MrKWatkins::Rendering::Geometry
 
     Optional<Point> Sphere::NearestIntersection(const Ray& ray) const
     {
-        // Based on http://gamedev.stackexchange.com/a/96487/12495. Explanation at
-        // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection.
+        // Ray => R = O + dD.
+        // Sphere => (S - C).(S - C) = r * r.
+        // M = O - C.
+        auto M = ray.Origin() - center;
 
-        auto m = ray.Origin() - center;
-
-        // a = 1.
-        auto b = m.Dot(ray.Direction());
-        auto c = m.Dot(m) - radius * radius;
-
-        // No intersection if r�s origin outside s (c > 0) and r pointing away from s. (b > 0)
-        if (b > 0 && c > 0)
+        // Ray starts inside the sphere if M.M - r² <= 0.
+        auto c = M.Dot(M) - radius * radius;
+        if (c <= 0)
         {
-            return Optional<Point>();
+            throw std::exception("Ray's origin is inside this sphere.");
         }
 
-        auto discriminant = b * b - c;
+        // Solutions are -D.M ± √((D.M)² - M.M + r²)
+        auto DM = ray.Direction().Dot(M);
 
-        // A negative discriminant corresponds to ray missing sphere 
+        // If the value under the root is negative there can be no (real) solutions.
+        auto discriminant = DM * DM - c;
         if (discriminant < 0)
         {
             return Optional<Point>();
         }
 
-        // Ray now found to intersect sphere, compute smallest t value of intersection
-        auto t = -b - sqrt(discriminant);
-
-        // If t is negative, ray started inside sphere.
-        if (t < 0.0f)
+        // Smallest solution is the one closest to the ray; will occur with the negative solution as the result of the sqrt will always be positive. (Or zero)
+        auto d = -DM - sqrt(discriminant);
+        if (d < 0)
         {
-            // We might want to eventually support being inside a sphere, e.g. for translucent spheres, but to keep things simple for now just throw an exception
-            // to pick up errors where our scene isn't setup correctly.
-            throw std::exception("Not yet supported.");
+            return Optional<Point>();
         }
         
-        return Optional<Point>(ray.Origin() + t * ray.Direction());
+        // Plug d back into the ray's equation to get the intersection point.
+        return Optional<Point>(ray.Origin() + d * ray.Direction());
     }
 }

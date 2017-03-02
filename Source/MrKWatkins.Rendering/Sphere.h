@@ -4,7 +4,6 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-
     class Sphere : public Object
     {
         Point center;
