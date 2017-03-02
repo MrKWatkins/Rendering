@@ -4,18 +4,48 @@
 
 namespace MrKWatkins::Rendering::Shading
 {
-    Colour Lambertian::ShadePoint(Scene::Scene& scene, Geometry::Point point, Colour colourOfPoint, Geometry::Vector surfaceNormal) const
+    Colour Lambertian::ShadePoint(Scene::Scene& scene, Scene::SceneObject& sceneObject, Geometry::Intersection& intersection) const
     {
-        auto colour = Colour(0, 0, 0);
+        auto colour = sceneObject.Colour() * scene.AmbientLight();
 
         // Loop over all the lights in the scene to get their contribution.
         for (auto&& light : scene.Lights())
         {
-            auto lightDirection = light->GetDirectionAtPoint(point, surfaceNormal).Normalize();
+            auto lightRay = light->GetLightRayToPoint(intersection.Point());
 
-            auto intensity = std::clamp(lightDirection.Dot(surfaceNormal), 0.0, 1.0);
+            // Is there an object in between the source of the light and the intersection point?
+            auto closerObject = false;
+            auto distanceFromIntersection = lightRay.Origin().DistanceFrom(intersection.Point());
+            for (auto&& object : scene.Objects())
+            {
+                if (*object == sceneObject)
+                {
+                    continue;
+                }
 
-            colour = colour + colourOfPoint * light->Colour() * intensity;
+                auto objectIntersection = object->NearestIntersection(lightRay);
+                if (!objectIntersection.HasIntersection())
+                {
+                    continue;
+                }
+
+                auto distanceToObject = lightRay.Origin().DistanceFrom(objectIntersection.Point());
+                if (distanceToObject < distanceFromIntersection)
+                {
+                    closerObject = true;
+                    break;
+                }
+            }
+
+            // If there is an object closer than the one we're calculating light for then it must be blocking the light.
+            if (closerObject)
+            {
+                continue;
+            }
+
+            auto intensity = std::clamp(lightRay.Direction().Dot(intersection.Normal()), 0.0, 1.0);
+
+            colour = colour + sceneObject.Colour() * light->Colour() * intensity;
         }
 
         return colour;

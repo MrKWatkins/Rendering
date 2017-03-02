@@ -10,6 +10,6 @@ namespace MrKWatkins::Rendering::Shading
     public:
         virtual ~ShadingModel() = default;
 
-        virtual Colour ShadePoint(Scene::Scene& scene, Geometry::Point point, Colour colourOfPoint, Geometry::Vector surfaceNormal) const = 0;
+        virtual Colour ShadePoint(Scene::Scene& scene, Scene::SceneObject& sceneObject, Geometry::Intersection& intersection) const = 0;
     };
 }

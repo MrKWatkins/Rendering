@@ -68,6 +68,12 @@ namespace MrKWatkins::Rendering::Geometry
 
     Vector Vector::Normalize() const
     {
+        const auto length = Length();
+        if (length == 0)
+        {
+            return Zero();
+        }
+
         const auto multiplier = 1.0 / Length();
 
         return Vector(x * multiplier, y * multiplier, z * multiplier);

@@ -11,6 +11,6 @@ namespace MrKWatkins::Rendering::Scene
     public:
         PointLight(Rendering::Colour colour, Geometry::Point position);
 
-        Geometry::Vector GetDirectionAtPoint(Geometry::Point point, Geometry::Vector surfaceNormal) const override;
+        Geometry::Ray GetLightRayToPoint(Geometry::Point point) const override;
     };
 }
