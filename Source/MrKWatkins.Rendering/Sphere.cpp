@@ -42,7 +42,9 @@ namespace MrKWatkins::Rendering::Geometry
         // If t is negative, ray started inside sphere.
         if (t < 0.0f)
         {
-            throw std::exception("Not yet implemented.");
+            // We might want to eventually support being inside a sphere, e.g. for translucent spheres, but to keep things simple for now just throw an exception
+            // to pick up errors where our scene isn't setup correctly.
+            throw std::exception("Not yet supported.");
         }
         
         return Optional<Point>(ray.Origin() + t * ray.Direction());

@@ -9,8 +9,7 @@ using namespace MrKWatkins::Rendering::Geometry;
 
 namespace MrKWatkins::Rendering::Tests::PointTests
 {
-    // TODO: Optional equals.
-    // TODO: Test Ray normalizes direction.
+    // TODO: Optional equals class.
     TEST_CASE("Sphere - NearestIntersection - sphere behind ray", "[Sphere]")
     {
         // Sphere centered at point on negative x-axis with radius less than distance along x-axis so sphere entirely in negative x.
@@ -34,10 +33,9 @@ namespace MrKWatkins::Rendering::Tests::PointTests
 
     TEST_CASE("Sphere - NearestIntersection - ray and sphere at origin", "[Sphere]")
     {
-        // Sphere centered at origin, ray starting at origin heading down x axis. Should intersect once at sphere radius on the x-axis.
+        // Sphere centered at origin, ray starting at origin heading down x axis. Should intersect once at one the inside of the sphere at the sphere radius on x-axis.
+        // HOWEVER... For now we're not supporting rays starting inside a sphere so we expect an exception.
         auto radius = Random::Double();
-        auto result = Sphere(Point::Origin(), radius).NearestIntersection(Ray(Point::Origin(), Vector(1, 0, 0)));
-        REQUIRE(result.HasValue() == true);
-        REQUIRE_THAT(result.Value(), Equals(Point(radius, 0, 0)));
+        REQUIRE_THROWS(Sphere(Point::Origin(), radius).NearestIntersection(Ray(Point::Origin(), Vector(1, 0, 0))));
     }
 }
