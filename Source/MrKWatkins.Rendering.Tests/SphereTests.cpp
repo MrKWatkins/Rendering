@@ -17,7 +17,7 @@ namespace MrKWatkins::Rendering::Tests::PointTests
         auto radius = Random::Double();
         auto xOrigin = -Random::Double() * radius;
         auto result = Sphere(Point(xOrigin, 0, 0), radius).NearestIntersection(Ray(Point::Origin(), Vector(1, 0, 0)));
-        REQUIRE(result.HasValue() == false);
+        REQUIRE(result.HasIntersection() == false);
     }
 
     TEST_CASE("Sphere - NearestIntersection - ray and sphere on x axis", "[Sphere]")
@@ -27,8 +27,8 @@ namespace MrKWatkins::Rendering::Tests::PointTests
         auto radius = Random::Double();
         auto xOrigin = Random::Double() * radius;
         auto result = Sphere(Point(xOrigin, 0, 0), radius).NearestIntersection(Ray(Point::Origin(), Vector(1, 0, 0)));
-        REQUIRE(result.HasValue() == true);
-        REQUIRE_THAT(result.Value(), Equals(Point(xOrigin - radius, 0, 0)));
+        REQUIRE(result.HasIntersection() == true);
+        REQUIRE_THAT(result.Point(), Equals(Point(xOrigin - radius, 0, 0)));
     }
 
     TEST_CASE("Sphere - NearestIntersection - ray and sphere at origin", "[Sphere]")
