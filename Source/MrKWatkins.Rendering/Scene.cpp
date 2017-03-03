@@ -10,6 +10,15 @@ namespace MrKWatkins::Rendering::Scene
     {
     }
 
+    Scene& Scene::AddPlane(Geometry::Plane plane, Colour colour)
+    {
+        auto pointerToPlane = std::unique_ptr<Geometry::Object>(std::make_unique<Geometry::Plane>(plane));
+        auto pointerToSceneObject = std::make_shared<SceneObject>(move(pointerToPlane), colour);
+        objects.push_back(pointerToSceneObject);
+
+        return *this;
+    }
+
     Scene& Scene::AddSphere(Geometry::Sphere sphere, Colour colour)
     {
         auto pointerToSphere = std::unique_ptr<Geometry::Object>(std::make_unique<Geometry::Sphere>(sphere));

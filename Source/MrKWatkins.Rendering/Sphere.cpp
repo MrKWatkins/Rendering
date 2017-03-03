@@ -3,11 +3,11 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    Sphere::Sphere(const Point& center, double radius) : center{center}, radius{radius}
+    Sphere::Sphere(const Point& centre, double radius) : centre{ centre }, radius{radius}
     {
     }
 
-    Sphere::Sphere(double x, double y, double z, double r): center{ x, y, z }, radius{ r }
+    Sphere::Sphere(double x, double y, double z, double r): centre{ x, y, z }, radius{ r }
     {
     }
 
@@ -16,7 +16,7 @@ namespace MrKWatkins::Rendering::Geometry
         // Ray => R = O + dD.
         // Sphere => (S - C).(S - C) = r * r.
         // M = O - C.
-        auto M = ray.Origin() - center;
+        auto M = ray.Origin() - centre;
 
         // Ray starts inside the sphere if M.M - r² <= 0.
         auto c = M.Dot(M) - radius * radius;
@@ -46,7 +46,7 @@ namespace MrKWatkins::Rendering::Geometry
         auto intersection = ray.Origin() + d * ray.Direction();
 
         // The normal at the surface will be the vector from the centre to the intersection point.
-        auto normal = center - intersection;
+        auto normal = centre - intersection;
 
         return Intersection(intersection, normal);
     }

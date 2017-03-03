@@ -1,9 +1,10 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include "Light.h"
+#include "Plane.h"
 #include "SceneObject.h"
 #include "Sphere.h"
-#include "Light.h"
 
 namespace MrKWatkins::Rendering::Scene
 {
@@ -16,6 +17,7 @@ namespace MrKWatkins::Rendering::Scene
 
     public:
         explicit Scene(Colour background, Colour ambientLight);
+        Scene& AddPlane(Geometry::Plane plane, Colour colour);
         Scene& AddSphere(Geometry::Sphere sphere, Colour colour);
         Scene& AddPointLight(Colour colour, Geometry::Point position);
 

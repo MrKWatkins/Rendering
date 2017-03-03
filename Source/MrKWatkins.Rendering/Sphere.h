@@ -7,12 +7,16 @@ namespace MrKWatkins::Rendering::Geometry
 {
     class Sphere : public Object
     {
-        Point center;
+        Point centre;
         double radius;
     public:
-        Sphere(const Point& center, double radius);
+        Sphere(const Point& centre, double radius);
         Sphere(double x, double y, double z, double r);
 
         Intersection NearestIntersection(const Ray& ray) const override;
+
+        const Point& Centre() const { return centre; }
+
+        double Radius() const { return radius; }
     };
 }

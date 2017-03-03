@@ -31,6 +31,7 @@ namespace MrKWatkins::Rendering::Tests::PointTests
 
         auto point = Random::Point();
         CHECK_THAT(point - Point::Origin(), VectorEquals(Vector(point)));
+        CHECK_THAT(Point::Origin() - point , VectorEquals(-Vector(point)));
     }
 
     TEST_CASE("Point - DistanceFrom", "[Point]")
