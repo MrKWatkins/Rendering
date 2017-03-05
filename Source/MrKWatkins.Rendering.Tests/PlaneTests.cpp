@@ -11,14 +11,18 @@ namespace MrKWatkins::Rendering::Tests::PointTests
 {
     TEST_CASE("Plane - NearestIntersection - ray above plane intersecting orthogonally", "[Plane]")
     {
-        // Plane on origin covering x,y axes. Positive z is 'above' the plane.
+        // Plane on origin covering x,y axes with normal pointing into positive z.
         auto plane = Plane(Point(Random::Double(), Random::Double(), 0), Vector(0, 0, Random::Double()));
-        auto ray = Ray(Point(Random::Double(), Random::Double(), 5 + Random::Double()), Vector(0, 0, -Random::Double()));
+
+        // Ray starts above plane, points straight into negative z.
+        auto ray = Ray(Point(Random::Double(), Random::Double(), 1 + Random::Double()), Vector(0, 0, -Random::Double()));
 
         auto result = plane.NearestIntersection(ray);
         REQUIRE(result.HasIntersection() == true);
-        REQUIRE_THAT(result.Point(), Equals(Point(ray.Origin().X(), ray.Origin().Y(), 0)));
-        REQUIRE_THAT(result.Normal(), Equals(plane.Normal()));
+
+        // As ray is pointing straight down intersection point will have the same x and y as the ray's origin.
+        CHECK_THAT(result.Point(), Equals(Point(ray.Origin().X(), ray.Origin().Y(), 0)));
+        CHECK_THAT(result.SurfaceNormal(), Equals(plane.Normal()));
     }
 
     TEST_CASE("Plane - NearestIntersection - ray below plane intersecting orthogonally", "[Plane]")
@@ -29,7 +33,7 @@ namespace MrKWatkins::Rendering::Tests::PointTests
 
         auto result = plane.NearestIntersection(ray);
         REQUIRE(result.HasIntersection() == true);
-        REQUIRE_THAT(result.Point(), Equals(Point(ray.Origin().X(), ray.Origin().Y(), 0)));
-        REQUIRE_THAT(result.Normal(), Equals(-plane.Normal()));
+        CHECK_THAT(result.Point(), Equals(Point(ray.Origin().X(), ray.Origin().Y(), 0)));
+        CHECK_THAT(result.SurfaceNormal(), Equals(-plane.Normal()));
     }
 }

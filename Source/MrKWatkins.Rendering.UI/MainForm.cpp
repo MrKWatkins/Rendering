@@ -35,11 +35,23 @@ namespace MrKWatkins::Rendering::UI
         auto shadingModel = std::unique_ptr<Shading::ShadingModel>(std::make_unique<Shading::Lambertian>());
 
         auto scene = std::make_unique<Scene::Scene>(Colour(0, 0, 0), Colour(0.2, 0.2, 0.2));
-        scene->AddPlane(Geometry::Plane(Geometry::Point(0, 0, 0.1), Geometry::Vector(1, 0, 1)), Colour(1, 0, 0));
+        scene->AddPlane(Geometry::Plane(Geometry::Point(0, 0, 0), Geometry::Vector(0, 1, 0)), Colour(1, 1, 1));
         scene->AddSphere(Geometry::Sphere(0.5, 0.5, 0.5, 0.1), Colour(0, 0, 1));
-        scene->AddPointLight(Colour(0.8, 0.8, 0.8), Geometry::Point(1, 0.5, 0));
+        scene->AddSphere(Geometry::Sphere(0.2, 0.2, 1.25, 0.2), Colour(1, 0, 0));
+        scene->AddPointLight(Geometry::Point(1, 1, 0), Colour(1, 1, 1));
 
-        renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene));
+        /*for (auto f = 0.1; f<= 1.0; f+= 0.1)
+        {
+            scene->AddSphere(Geometry::Sphere(0, 0, f, 0.01), Colour(1, 0, 0));
+            scene->AddSphere(Geometry::Sphere(1, 0, f, 0.01), Colour(1, 1, 0));
+            scene->AddSphere(Geometry::Sphere(0, 1, f, 0.01), Colour(1, 0, 1));
+            scene->AddSphere(Geometry::Sphere(1, 1, f, 0.01), Colour(1, 1, 1));
+
+            scene->AddSphere(Geometry::Sphere(f, f, 1, 0.01), Colour(0, 1, 0));
+            scene->AddSphere(Geometry::Sphere(1-f, f, 1, 0.01), Colour(0, 1, 0));
+        }*/
+
+        renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1);
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));

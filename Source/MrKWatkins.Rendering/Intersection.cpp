@@ -3,23 +3,23 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    Intersection::Intersection(): hasIntersection{ false }, point { Point::Origin() }, normal { Vector::Zero() }
+    Intersection::Intersection(): hasIntersection{ false }, point { Point::Origin() }, surfaceNormal{ Vector::Zero() }
     {
     }
 
-    Intersection::Intersection(Geometry::Point point, Vector normal) : hasIntersection{ true }, point{ point }, normal{ normal.Normalize() }
+    Intersection::Intersection(const Geometry::Point& point, const Vector& surfaceNormal) : hasIntersection{ true }, point{ point }, surfaceNormal{ surfaceNormal.Normalize() }
     {
     }
 
-    Point Intersection::Point() const
+    const Point& Intersection::Point() const
     {
         VerifyIntersection();
         return point;
     }
 
-    Vector Intersection::Normal() const
+    const Vector& Intersection::SurfaceNormal() const
     {
         VerifyIntersection();
-        return normal;
+        return surfaceNormal;
     }
 }

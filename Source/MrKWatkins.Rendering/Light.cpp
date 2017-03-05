@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering::Scene
 {
-    Light::Light(Rendering::Colour colour) : colour{colour}
+    Light::Light(const Rendering::Colour& colour) : colour{colour}
     {
     }
 }

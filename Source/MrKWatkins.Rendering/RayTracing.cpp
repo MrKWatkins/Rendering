@@ -4,14 +4,15 @@
 
 namespace MrKWatkins::Rendering::Algorithms
 {
-    RayTracing::RayTracing(std::unique_ptr<Shading::ShadingModel>&& shadingModel, std::unique_ptr<Scene::Scene>&& scene) : shadingModel{ move(shadingModel) }, scene { move(scene) }
+    RayTracing::RayTracing(std::unique_ptr<Shading::ShadingModel>&& shadingModel, std::unique_ptr<Scene::Scene>&& scene, double cameraDistance) : shadingModel{ move(shadingModel) }, scene { move(scene) }, camera(0.5, 0.5, -cameraDistance)
     {
     }
 
     Colour RayTracing::RenderPoint(double x, double y)
     {
-        // Create a ray from the (x,y) point at 0 on the z-axis directed into positive z.
-        auto ray = Geometry::Ray(Geometry::Point(x, y, 0), Geometry::Vector(0, 0, 1));
+        // Create a ray from the (x,y) point at 0 on the z-axis. It should point from the camera
+        auto rayOrigin = Geometry::Point(x, y, 0);
+        auto ray = Geometry::Ray(rayOrigin, rayOrigin - camera);
 
         std::shared_ptr<Scene::SceneObject> closestObject;
         auto closestIntersection = Geometry::Intersection::None();

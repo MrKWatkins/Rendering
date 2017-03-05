@@ -9,8 +9,8 @@ namespace MrKWatkins::Rendering::Scene
     {
         Geometry::Point position;
     public:
-        PointLight(Rendering::Colour colour, Geometry::Point position);
+        PointLight(const Rendering::Colour& colour, const Geometry::Point& position);
 
-        Geometry::Ray GetLightRayToPoint(Geometry::Point point) const override;
+        Geometry::Ray GetLightRayToPoint(const Geometry::Point& point) const override;
     };
 }

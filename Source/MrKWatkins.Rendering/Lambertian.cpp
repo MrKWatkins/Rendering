@@ -4,7 +4,7 @@
 
 namespace MrKWatkins::Rendering::Shading
 {
-    Colour Lambertian::ShadePoint(Scene::Scene& scene, Scene::SceneObject& sceneObject, Geometry::Intersection& intersection) const
+    Colour Lambertian::ShadePoint(const Scene::Scene& scene, const Scene::SceneObject& sceneObject, const Geometry::Intersection& intersection) const
     {
         auto colour = sceneObject.Colour() * scene.AmbientLight();
 
@@ -43,7 +43,9 @@ namespace MrKWatkins::Rendering::Shading
                 continue;
             }
 
-            auto intensity = std::clamp(lightRay.Direction().Dot(intersection.Normal()), 0.0, 1.0);
+            // Our ray is in the opposite direction to the surface normal - to calculate our intensity we need to flip the direction
+            // of one of the vectors. However a cheaper operation will be to just negate the value afterwards.
+            auto intensity = -lightRay.Direction().Dot(intersection.SurfaceNormal());
 
             colour = colour + sceneObject.Colour() * light->Colour() * intensity;
         }

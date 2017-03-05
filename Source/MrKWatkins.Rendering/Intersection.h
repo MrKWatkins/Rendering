@@ -8,7 +8,7 @@ namespace MrKWatkins::Rendering::Geometry
     {
         bool hasIntersection;
         Point point;
-        Vector normal;
+        Vector surfaceNormal;
 
         void VerifyIntersection() const
         {
@@ -21,12 +21,12 @@ namespace MrKWatkins::Rendering::Geometry
         Intersection();
 
     public:
-        Intersection(Point point, Vector normal);
+        Intersection(const Point& point, const Vector& surfaceNormal);
 
         bool HasIntersection() const noexcept { return hasIntersection; }
 
-        Point Point() const;
-        Vector Normal() const;
+        const Point& Point() const;
+        const Vector& SurfaceNormal() const;
 
         static Intersection None() { return Intersection(); }
     };

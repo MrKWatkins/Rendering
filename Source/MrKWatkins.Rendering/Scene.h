@@ -16,14 +16,14 @@ namespace MrKWatkins::Rendering::Scene
         Colour ambientLight;
 
     public:
-        explicit Scene(Colour background, Colour ambientLight);
-        Scene& AddPlane(Geometry::Plane plane, Colour colour);
-        Scene& AddSphere(Geometry::Sphere sphere, Colour colour);
-        Scene& AddPointLight(Colour colour, Geometry::Point position);
+        explicit Scene(const Colour& background, const Colour& ambientLight);
+        Scene& AddPlane(const Geometry::Plane& plane, const Colour& colour);
+        Scene& AddSphere(const Geometry::Sphere& sphere, const Colour& colour);
+        Scene& AddPointLight(const Geometry::Point& position, const Colour& colour);
 
-        std::vector<std::shared_ptr<SceneObject>> Objects() const noexcept { return objects; }
-        std::vector<std::shared_ptr<Light>> Lights() const noexcept { return lights; }
-        Colour Background() const noexcept { return background; }
-        Colour AmbientLight() const noexcept { return ambientLight; }
+        const std::vector<std::shared_ptr<SceneObject>>& Objects() const noexcept { return objects; }
+        const std::vector<std::shared_ptr<Light>>& Lights() const noexcept { return lights; }
+        const Colour& Background() const noexcept { return background; }
+        const Colour& AmbientLight() const noexcept { return ambientLight; }
     };
 }

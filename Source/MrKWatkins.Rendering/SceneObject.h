@@ -13,7 +13,7 @@ namespace MrKWatkins::Rendering::Scene
         Colour colour;
 
     public:
-        SceneObject(std::unique_ptr<Geometry::Object>&& object, Colour colour);
+        SceneObject(std::unique_ptr<Geometry::Object>&& object, const Colour& colour);
         SceneObject(const SceneObject& toCopy) = delete;
         ~SceneObject() = default;
 
@@ -21,6 +21,6 @@ namespace MrKWatkins::Rendering::Scene
         bool operator!=(const SceneObject& other) const;
 
         Geometry::Intersection NearestIntersection(const Geometry::Ray& ray) const;
-        Colour Colour() const noexcept { return colour; }
+        const Colour& Colour() const noexcept { return colour; }
     };
 }

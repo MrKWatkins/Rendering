@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering
 {
-    Image::Image(unsigned width, unsigned height) : Image(width, height, Colour { 0, 0, 0 })
+    Image::Image(unsigned int width, unsigned int height) : Image(width, height, Colour { 0, 0, 0 })
     {
     }
 

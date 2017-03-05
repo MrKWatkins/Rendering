@@ -46,7 +46,7 @@ namespace MrKWatkins::Rendering::Geometry
         auto intersection = ray.Origin() + d * ray.Direction();
 
         // The normal at the surface will be the vector from the centre to the intersection point.
-        auto normal = centre - intersection;
+        auto normal = intersection - centre;
 
         return Intersection(intersection, normal);
     }

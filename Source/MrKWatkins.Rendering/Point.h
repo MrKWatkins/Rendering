@@ -9,6 +9,7 @@ namespace MrKWatkins::Rendering::Geometry
     /// </summary>
     class Point
     {
+        static Point origin;
         double x;
         double y;
         double z;
@@ -28,6 +29,6 @@ namespace MrKWatkins::Rendering::Geometry
         std::string ToString() const;
         friend std::ostream& operator<<(std::ostream& os, const Point& point);
 
-        static Point Origin() noexcept { return Point(0.0, 0.0, 0.0); }
+        static const Point& Origin() noexcept { return origin; }
     };
 }

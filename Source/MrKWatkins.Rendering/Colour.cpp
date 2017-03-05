@@ -4,7 +4,7 @@
 
 namespace MrKWatkins::Rendering
 {
-    // TODO: Parameter validation.
+    // TODO: Parameter validation OR clamp.
     Colour::Colour(double r, double g, double b) : r{ r }, g{ g }, b{ b }
     {
     }

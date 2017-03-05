@@ -4,6 +4,8 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
+    Point Point::origin{ 0, 0, 0 };
+
     Point::Point(double x, double y, double z) : x{ x }, y{ y }, z{ z }
     {
     }
@@ -26,7 +28,7 @@ namespace MrKWatkins::Rendering::Geometry
     std::string Point::ToString() const
     {
         std::ostringstream oss;
-        oss << "(" << x << "," << y << "," << z << ")";
+        oss << "Vector (" << x + 0.0 << "," << y + 0.0 << "," << z + 0.0 << ")";   // + 0.0 converts -0.0 into +0.0.
         return oss.str();
     }
 

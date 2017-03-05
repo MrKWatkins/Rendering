@@ -4,6 +4,7 @@
 // TODO: Use include directory to get rid of path.
 #include "../MrKWatkins.Rendering/Sphere.h"
 #include "Matchers.hpp"
+#include <complex.h>
 
 using namespace MrKWatkins::Rendering::Geometry;
 
@@ -24,11 +25,13 @@ namespace MrKWatkins::Rendering::Tests::PointTests
     {
         // Sphere centered at point on x-axis with radius less than distance along x-axis so sphere entirely in positive x.
         // Intersection with ray along x-axis will be at origin - radius on x-axis.
+        // Surface normal will be pointing along negative x.
         auto radius = Random::Double();
         auto xOrigin = Random::Double() * radius;
         auto result = Sphere(Point(xOrigin, 0, 0), radius).NearestIntersection(Ray(Point::Origin(), Vector(1, 0, 0)));
         REQUIRE(result.HasIntersection() == true);
-        REQUIRE_THAT(result.Point(), Equals(Point(xOrigin - radius, 0, 0)));
+        CHECK_THAT(result.Point(), Equals(Point(xOrigin - radius, 0, 0)));
+        CHECK_THAT(result.SurfaceNormal(), Equals(Vector(-1, 0, 0)));
     }
 
     TEST_CASE("Sphere - NearestIntersection - ray and sphere at origin", "[Sphere]")

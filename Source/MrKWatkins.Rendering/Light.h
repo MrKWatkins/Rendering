@@ -8,12 +8,12 @@ namespace MrKWatkins::Rendering::Scene
     {
     protected:
         Colour colour;
-        explicit Light(Colour colour);
+        explicit Light(const Colour& colour);
     public:
         virtual ~Light() = default;
 
-        virtual Geometry::Ray GetLightRayToPoint(Geometry::Point point) const = 0;
+        virtual Geometry::Ray GetLightRayToPoint(const Geometry::Point& point) const = 0;
 
-        Colour Colour() const { return colour; }
+        const Colour& Colour() const noexcept { return colour; }
     };
 }

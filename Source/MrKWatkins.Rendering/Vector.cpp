@@ -6,6 +6,11 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
+    Vector Vector::zero{ 0, 0, 0 };
+    Vector Vector::i{ 1, 0, 0 };
+    Vector Vector::j{ 0, 1, 0 };
+    Vector Vector::k{ 0, 0, 1 };
+
     Vector::Vector(const Point& point) : x{ point.X() }, y{ point.Y() }, z{ point.Z() }
     {
     }
@@ -82,7 +87,7 @@ namespace MrKWatkins::Rendering::Geometry
     std::string Vector::ToString() const
     {
         std::ostringstream oss;
-        oss << x << "i + " << y << "j + " << z << "k";
+        oss << "Vector (" << x + 0.0 << "," << y + 0.0 << "," << z + 0.0 << ")";   // + 0.0 converts -0.0 into +0.0.
         return oss.str();
     }
 

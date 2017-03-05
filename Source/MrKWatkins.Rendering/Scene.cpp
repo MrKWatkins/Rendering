@@ -6,11 +6,11 @@
 
 namespace MrKWatkins::Rendering::Scene
 {
-    Scene::Scene(Colour background, Colour ambientLight) : background{ background }, ambientLight { ambientLight }
+    Scene::Scene(const Colour& background, const Colour& ambientLight) : background{ background }, ambientLight { ambientLight }
     {
     }
 
-    Scene& Scene::AddPlane(Geometry::Plane plane, Colour colour)
+    Scene& Scene::AddPlane(const Geometry::Plane& plane, const Colour& colour)
     {
         auto pointerToPlane = std::unique_ptr<Geometry::Object>(std::make_unique<Geometry::Plane>(plane));
         auto pointerToSceneObject = std::make_shared<SceneObject>(move(pointerToPlane), colour);
@@ -19,7 +19,7 @@ namespace MrKWatkins::Rendering::Scene
         return *this;
     }
 
-    Scene& Scene::AddSphere(Geometry::Sphere sphere, Colour colour)
+    Scene& Scene::AddSphere(const Geometry::Sphere& sphere, const Colour& colour)
     {
         auto pointerToSphere = std::unique_ptr<Geometry::Object>(std::make_unique<Geometry::Sphere>(sphere));
         auto pointerToSceneObject = std::make_shared<SceneObject>(move(pointerToSphere), colour);
@@ -28,7 +28,7 @@ namespace MrKWatkins::Rendering::Scene
         return *this;
     }
 
-    Scene& Scene::AddPointLight(Colour colour, Geometry::Point position)
+    Scene& Scene::AddPointLight(const Geometry::Point& position, const Colour& colour)
     {
         lights.push_back(std::make_shared<PointLight>(colour, position));
 

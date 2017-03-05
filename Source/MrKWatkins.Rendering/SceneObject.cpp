@@ -5,7 +5,7 @@ namespace MrKWatkins::Rendering::Scene
 {
     static int nextId;
 
-    SceneObject::SceneObject(std::unique_ptr<Geometry::Object>&& object, Rendering::Colour colour) : id{ nextId++ }, object { move(object) }, colour{ colour }
+    SceneObject::SceneObject(std::unique_ptr<Geometry::Object>&& object, const Rendering::Colour& colour) : id{ nextId++ }, object { move(object) }, colour{ colour }
     {
     }
 

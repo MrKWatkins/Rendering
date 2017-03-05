@@ -20,13 +20,19 @@ namespace MrKWatkins::Rendering::Geometry
         }
 
         auto d = (pointOnPlane - ray.Origin()).Dot(normal) / Dn;
+        if (d < 0)
+        {
+            // Intersection is behind the ray's origin.
+            return Intersection::None();
+        }
 
         // Plug d back into the ray's equation to get the intersection point.
         auto intersection = ray.Origin() + d * ray.Direction();
 
-        // The normal at the surface will depend on which side of the plane we've intersected with. Dn is the dot of the ray direction and the normal -
-        // if it's negative they're pointing in opposite directions, in which case the ray is 'above' the plane pointing down so the normal is normal.
-        // If it's positive then it's in the same direction so the ray is 'below' the plane - normal needs to be negative.
+        // The normal at the surface will depend on which side of the plane we've intersected with. Dn is the dot of the ray direction and the normal.
+        // The dot product between two vector is positive for 0 -> 90 degress, then negative for 90 -> 270 degrees, *when both vectors start at the
+        // same point*. With our vectors the normal starts at the end of the ray, so the angle is 180 degrees greater. Therefore when the ray strikes
+        // the top our dot product will be negative, and when it strikes the underneath it will be positive.
         if (Dn < 0)
         {
             return Intersection(intersection, normal);
