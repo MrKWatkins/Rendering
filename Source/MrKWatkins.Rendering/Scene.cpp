@@ -28,9 +28,9 @@ namespace MrKWatkins::Rendering::Scene
         return *this;
     }
 
-    Scene& Scene::AddPointLight(const Point& position, const Colour& colour)
+    Scene& Scene::AddPointLight(const Point& position, const Attenuation& attenuation, const Colour& colour)
     {
-        lights.push_back(std::make_unique<PointLight>(colour, position));
+        lights.push_back(std::make_unique<PointLight>(colour, attenuation, position));
 
         return *this;
     }

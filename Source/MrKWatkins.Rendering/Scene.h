@@ -22,7 +22,7 @@ namespace MrKWatkins::Rendering::Scene
         explicit Scene(const Colour& background, const Colour& ambientLight);
         Scene& AddPlane(const Plane& plane, const Colour& colour);
         Scene& AddSphere(const Sphere& sphere, const Colour& colour);
-        Scene& AddPointLight(const Point& position, const Colour& colour);
+        Scene& AddPointLight(const Point& position, const Attenuation& attenuation, const Colour& colour);
 
         const std::vector<std::unique_ptr<SceneObject>>& Objects() const noexcept { return objects; }
         const std::vector<std::unique_ptr<Light>>& Lights() const noexcept { return lights; }

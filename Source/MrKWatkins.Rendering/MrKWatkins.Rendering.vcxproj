@@ -140,7 +140,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Algorithm.h" />
+    <ClInclude Include="Attenuation.h" />
     <ClInclude Include="Colour.h" />
+    <ClInclude Include="Constant.h" />
     <ClInclude Include="Gradient.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Intersection.h" />
@@ -166,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Algorithm.cpp" />
+    <ClCompile Include="Attenuation.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Gradient.cpp" />
     <ClCompile Include="Image.cpp" />

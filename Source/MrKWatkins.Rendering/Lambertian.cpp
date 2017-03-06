@@ -10,6 +10,12 @@ namespace MrKWatkins::Rendering::Shading
         // Loop over all the lights in the scene to get their contribution.
         for (auto&& light : scene.Lights())
         {
+            auto intensity = light->GetIntensityAtPoint(intersection.Point());
+            if (intensity == 0)
+            {
+                continue;
+            }
+
             auto lightRay = light->GetLightRayToPoint(intersection.Point());
 
             // Is there an object in between the source of the light and the intersection point?
@@ -52,10 +58,8 @@ namespace MrKWatkins::Rendering::Shading
             //  Cl = Colour of light.
             //  I  = Intensity of light at the point.
 
-            // Our ray (R) is from the light to the surface, i.e. R = -L. Also our lights don't have intesity fall off yet so I = 1. Therefore:
-
-            // C = -R.N Cs Cl
-            auto lambertian = -lightRay.Direction().Dot(intersection.SurfaceNormal()) * sceneObject.Colour() * light->Colour();
+            // Our ray (R) is from the light to the surface, i.e. R = -L. Therefore C = -R.N Cs Cl I
+            auto lambertian = -lightRay.Direction().Dot(intersection.SurfaceNormal()) * sceneObject.Colour() * light->Colour() * intensity;
 
             colour = colour + lambertian;
         }

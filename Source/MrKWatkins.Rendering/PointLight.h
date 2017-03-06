@@ -11,8 +11,10 @@ namespace MrKWatkins::Rendering::Lighting
     {
         Point position;
     public:
-        PointLight(const Rendering::Colour& colour, const Point& position);
+        PointLight(const Rendering::Colour& colour, const Attenuation& attenuation, const Point& position);
 
         Ray GetLightRayToPoint(const Point& point) const override;
+
+        double GetIntensityAtPoint(const Point& point) const override;
     };
 }

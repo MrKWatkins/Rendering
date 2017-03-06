@@ -38,7 +38,7 @@ namespace MrKWatkins::Rendering::UI
         scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Colour(1, 1, 1));
         scene->AddSphere(Sphere(0.5, 0.5, 0.5, 0.1), Colour(0, 0, 1));
         scene->AddSphere(Sphere(0.2, 0.2, 1.25, 0.2), Colour(1, 0, 0));
-        scene->AddPointLight(Point(1, 1, 0), Colour(1, 1, 1));
+        scene->AddPointLight(Point(1, 1, 0), Attenuation::Linear(10), Colour(1, 1, 1));
 
         /*for (auto f = 0.1; f<= 1.0; f+= 0.1)
         {
