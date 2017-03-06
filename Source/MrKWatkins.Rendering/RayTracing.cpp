@@ -14,11 +14,11 @@ namespace MrKWatkins::Rendering::Algorithms
         auto rayOrigin = Geometry::Point(x, y, 0);
         auto ray = Geometry::Ray(rayOrigin, rayOrigin - camera);
 
-        std::shared_ptr<Scene::SceneObject> closestObject;
+        Scene::SceneObject* closestObject = nullptr;
         auto closestIntersection = Geometry::Intersection::None();
         auto distanceToClosestIntersection = std::numeric_limits<double>::max();
 
-        for (auto&& object : scene->Objects())
+        for (auto& object : scene->Objects())
         {
             auto intersection = object->NearestIntersection(ray);
             if (!intersection.HasIntersection())
@@ -29,7 +29,7 @@ namespace MrKWatkins::Rendering::Algorithms
             auto distanceToIntersection = ray.Origin().DistanceFrom(intersection.Point());
             if (distanceToIntersection < distanceToClosestIntersection)
             {
-                closestObject = object;
+                closestObject = object.get();
                 closestIntersection = intersection;
                 distanceToClosestIntersection = distanceToIntersection;
             }

@@ -10,8 +10,8 @@ namespace MrKWatkins::Rendering::Scene
 {
     class Scene
     {
-        std::vector<std::shared_ptr<SceneObject>> objects;
-        std::vector<std::shared_ptr<Light>> lights;
+        std::vector<std::unique_ptr<SceneObject>> objects;
+        std::vector<std::unique_ptr<Light>> lights;
         Colour background;
         Colour ambientLight;
 
@@ -21,8 +21,8 @@ namespace MrKWatkins::Rendering::Scene
         Scene& AddSphere(const Geometry::Sphere& sphere, const Colour& colour);
         Scene& AddPointLight(const Geometry::Point& position, const Colour& colour);
 
-        const std::vector<std::shared_ptr<SceneObject>>& Objects() const noexcept { return objects; }
-        const std::vector<std::shared_ptr<Light>>& Lights() const noexcept { return lights; }
+        const std::vector<std::unique_ptr<SceneObject>>& Objects() const noexcept { return objects; }
+        const std::vector<std::unique_ptr<Light>>& Lights() const noexcept { return lights; }
         const Colour& Background() const noexcept { return background; }
         const Colour& AmbientLight() const noexcept { return ambientLight; }
     };
