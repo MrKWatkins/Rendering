@@ -147,7 +147,9 @@
     <ClInclude Include="Image.h" />
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="Lambertian.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Plane.h" />
+    <ClInclude Include="Solid.h" />
     <ClInclude Include="Uniform.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Object.h" />
@@ -175,6 +177,7 @@
     <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="Lambertian.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Solid.cpp" />
     <ClCompile Include="Uniform.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="PointLight.cpp" />

@@ -5,7 +5,8 @@ namespace MrKWatkins::Rendering::Shading
 {
     Colour Lambertian::ShadePoint(const Scene::Scene& scene, const SceneObject& sceneObject, const Intersection& intersection) const
     {
-        auto colour = sceneObject.Colour() * scene.AmbientLight();
+        auto objectColour = sceneObject.GetColourAtPoint(intersection.Point());
+        auto colour = objectColour * scene.AmbientLight();
 
         // Loop over all the lights in the scene to get their contribution.
         for (auto&& light : scene.Lights())
@@ -59,7 +60,7 @@ namespace MrKWatkins::Rendering::Shading
             //  I  = Intensity of light at the point.
 
             // Our ray (R) is from the light to the surface, i.e. R = -L. Therefore C = -R.N Cs Cl I
-            auto lambertian = -lightRay.Direction().Dot(intersection.SurfaceNormal()) * sceneObject.Colour() * light->Colour() * intensity;
+            auto lambertian = -lightRay.Direction().Dot(intersection.SurfaceNormal()) * objectColour * light->Colour() * intensity;
 
             colour = colour + lambertian;
         }

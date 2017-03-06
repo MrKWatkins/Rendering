@@ -20,8 +20,13 @@ namespace MrKWatkins::Rendering::Scene
 
     public:
         explicit Scene(const Colour& background, const Colour& ambientLight);
+
         Scene& AddPlane(const Plane& plane, const Colour& colour);
+        Scene& AddPlane(const Plane& plane, const std::shared_ptr<Material> material);
+
         Scene& AddSphere(const Sphere& sphere, const Colour& colour);
+        Scene& AddSphere(const Sphere& sphere, const std::shared_ptr<Material> material);
+
         Scene& AddPointLight(const Point& position, const Attenuation& attenuation, const Colour& colour);
 
         const std::vector<std::unique_ptr<SceneObject>>& Objects() const noexcept { return objects; }
