@@ -30,9 +30,9 @@ namespace MrKWatkins::Rendering::Geometry
         auto intersection = ray.Origin() + d * ray.Direction();
 
         // The normal at the surface will depend on which side of the plane we've intersected with. Dn is the dot of the ray direction and the normal.
-        // The dot product between two vector is positive for 0 -> 90 degress, then negative for 90 -> 270 degrees, *when both vectors start at the
-        // same point*. With our vectors the normal starts at the end of the ray, so the angle is 180 degrees greater. Therefore when the ray strikes
-        // the top our dot product will be negative, and when it strikes the underneath it will be positive.
+        // The dot product between two vector is positive for 0 -> 90 degress, then negative for 90 -> 180 degrees, *when both vectors start at the
+        // same point*. With our vectors however the ray is in the opposite direction. Therefore when the ray strikes the top our dot product will be
+        // negative, and when it strikes the underneath it will be positive.
         if (Dn < 0)
         {
             return Intersection(intersection, normal);

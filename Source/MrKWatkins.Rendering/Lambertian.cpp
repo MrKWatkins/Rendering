@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Lambertian.h"
-#include <algorithm>
 
 namespace MrKWatkins::Rendering::Shading
 {
@@ -43,11 +42,22 @@ namespace MrKWatkins::Rendering::Shading
                 continue;
             }
 
-            // Our ray is in the opposite direction to the surface normal - to calculate our intensity we need to flip the direction
-            // of one of the vectors. However a cheaper operation will be to just negate the value afterwards.
-            auto intensity = -lightRay.Direction().Dot(intersection.SurfaceNormal());
+            // Lambertian reflectance is:
+            // C = L.N Cs Cl I
+            // Where:
+            //  C  = Final colour.
+            //  L  = Normal vector from surface to light.
+            //  N  = Surface normal.
+            //  Cs = Colour of surface at the point.
+            //  Cl = Colour of light.
+            //  I  = Intensity of light at the point.
 
-            colour = colour + sceneObject.Colour() * light->Colour() * intensity;
+            // Our ray (R) is from the light to the surface, i.e. R = -L. Also our lights don't have intesity fall off yet so I = 1. Therefore:
+
+            // C = -R.N Cs Cl
+            auto lambertian = -lightRay.Direction().Dot(intersection.SurfaceNormal()) * sceneObject.Colour() * light->Colour();
+
+            colour = colour + lambertian;
         }
 
         return colour;

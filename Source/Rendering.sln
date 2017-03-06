@@ -17,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Blog", "Blog", "{E432DE66-1
 		..\Blog\1 - Setting up the Application.md = ..\Blog\1 - Setting up the Application.md
 		..\Blog\2 - Basic Framework.md = ..\Blog\2 - Basic Framework.md
 		..\Blog\3 - First Image.md = ..\Blog\3 - First Image.md
+		..\Blog\4 - Plane Shading.md = ..\Blog\4 - Plane Shading.md
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MrKWatkins.Rendering", "MrKWatkins.Rendering\MrKWatkins.Rendering.vcxproj", "{688FE410-A7CA-4D8E-A2B5-C2F7F802F059}"
