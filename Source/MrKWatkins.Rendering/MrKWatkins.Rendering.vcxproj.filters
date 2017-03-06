@@ -135,6 +135,9 @@
     <ClInclude Include="Solid.h">
       <Filter>Header Files\Materials</Filter>
     </ClInclude>
+    <ClInclude Include="Chequerboard.h">
+      <Filter>Header Files\Materials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -201,6 +204,9 @@
       <Filter>Source Files\Lighting</Filter>
     </ClCompile>
     <ClCompile Include="Solid.cpp">
+      <Filter>Source Files\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Chequerboard.cpp">
       <Filter>Source Files\Materials</Filter>
     </ClCompile>
   </ItemGroup>
