@@ -16,7 +16,8 @@ namespace MrKWatkins::Rendering::UI
     class MainForm : public form
     {
         label progressText{ *this };
-        button cancel{ *this };
+        button save{ *this, "Save" };
+        button cancel{ *this, "Cancel" };
         panel<true> view{ *this };
         drawing viewDrawing { view };
         timer updateTimer;

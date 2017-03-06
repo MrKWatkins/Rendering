@@ -4,6 +4,7 @@
 #include <nana/paint/pixel_buffer.hpp>
 #include <nana/gui/widgets/picture.hpp>
 #include <nana/gui/detail/inner_fwd_implement.hpp>
+#include <nana/gui/filebox.hpp>
 #include "../MrKWatkins.Rendering/Scene.h"
 #include "../MrKWatkins.Rendering/RayTracing.h"
 #include "../MrKWatkins.Rendering/Lambertian.h"
@@ -17,9 +18,10 @@ namespace MrKWatkins::Rendering::UI
     void MainForm::Layout() const
     {
         place layout{ *this };
-        layout.div("margin=10 gap=10 vert<weight=35 <margin=[5,0,0,0] progressText><weight=100 margin=[0,0,10,10] cancel>><view>");
+        layout.div("margin=10 gap=10 vert<weight=35 <margin=[5,0,0,0] progressText><weight=100 margin=[0,0,10,10] save><weight=100 margin=[0,0,10,10] cancel>><view>");
         layout["progressText"] << progressText;
         layout["view"] << view;
+        layout["save"] << save;
         layout["cancel"] << cancel;
         layout.collocate();
     }
@@ -57,9 +59,22 @@ namespace MrKWatkins::Rendering::UI
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));
-        cancel.caption("Cancel");
+        save.enabled(false);
 
         Layout();
+
+        save.events().click([&]
+        {
+            filebox fb{ *this, false };
+            fb.add_filter("PNG (*.png)", "*.png");
+            fb.init_path("%USERPROFILE%\\Desktop");
+
+            if (fb())
+            {
+                auto file = fb.file();
+                graphicsBuffer.save_as_file(file.c_str());
+            }
+        });
 
         cancel.events().click([&]
         {
@@ -80,6 +95,7 @@ namespace MrKWatkins::Rendering::UI
             {
                 // Disable cancel if we're no longer in progress.
                 cancel.enabled(false);
+                save.enabled(true);
 
                 // If we're not still in the process of cancelling then we can stop the timer too; after the next
                 // update it won't get any more new pixels.
