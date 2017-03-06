@@ -5,7 +5,7 @@ namespace MrKWatkins::Rendering::Scene
 {
     static int nextId;
 
-    SceneObject::SceneObject(std::unique_ptr<Geometry::Object>&& object, const Rendering::Colour& colour) : id{ nextId++ }, object { move(object) }, colour{ colour }
+    SceneObject::SceneObject(std::unique_ptr<Object>&& object, const Rendering::Colour& colour) : id{ nextId++ }, object { move(object) }, colour{ colour }
     {
     }
 
@@ -19,7 +19,7 @@ namespace MrKWatkins::Rendering::Scene
         return id != other.id;
     }
 
-    Geometry::Intersection SceneObject::NearestIntersection(const Geometry::Ray& ray) const
+    Intersection SceneObject::NearestIntersection(const Ray& ray) const
     {
         return object->NearestIntersection(ray);
     }

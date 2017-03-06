@@ -37,6 +37,12 @@
     <Filter Include="Source Files\Shading">
       <UniqueIdentifier>{1eec99d6-8a7c-4e94-9f65-6d321e16e1f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Lighting">
+      <UniqueIdentifier>{42133383-c8e3-4d2c-96ee-e8513a955ac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Lighting">
+      <UniqueIdentifier>{b1ed44e6-33f9-41a9-a1db-8bb0052f9a13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -90,17 +96,11 @@
     <ClInclude Include="RayTracing.h">
       <Filter>Header Files\Algorithms</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Header Files\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Intersection.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="ShadingModel.h">
       <Filter>Header Files\Shading</Filter>
-    </ClInclude>
-    <ClInclude Include="PointLight.h">
-      <Filter>Header Files\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Uniform.h">
       <Filter>Header Files\Shading</Filter>
@@ -110,6 +110,12 @@
     </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header Files\Lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,15 +164,6 @@
     <ClCompile Include="Intersection.cpp">
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="ShadingModel.cpp">
-      <Filter>Source Files\Shading</Filter>
-    </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>Source Files\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Source Files\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Uniform.cpp">
       <Filter>Source Files\Shading</Filter>
     </ClCompile>
@@ -175,6 +172,12 @@
     </ClCompile>
     <ClCompile Include="Plane.cpp">
       <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Source Files\Lighting</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

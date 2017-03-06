@@ -3,6 +3,8 @@
 #include "Intersection.h"
 #include "Scene.h"
 
+using namespace MrKWatkins::Rendering::Scene;
+
 namespace MrKWatkins::Rendering::Shading
 {
     class ShadingModel
@@ -10,6 +12,6 @@ namespace MrKWatkins::Rendering::Shading
     public:
         virtual ~ShadingModel() = default;
 
-        virtual Colour ShadePoint(const Scene::Scene& scene, const Scene::SceneObject& sceneObject, const Geometry::Intersection& intersection) const = 0;
+        virtual Colour ShadePoint(const Scene::Scene& scene, const SceneObject& sceneObject, const Intersection& intersection) const = 0;
     };
 }

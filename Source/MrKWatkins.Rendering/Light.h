@@ -2,7 +2,9 @@
 #include "Colour.h"
 #include "Ray.h"
 
-namespace MrKWatkins::Rendering::Scene
+using namespace MrKWatkins::Rendering::Geometry;
+
+namespace MrKWatkins::Rendering::Lighting
 {
     class Light
     {
@@ -12,7 +14,7 @@ namespace MrKWatkins::Rendering::Scene
     public:
         virtual ~Light() = default;
 
-        virtual Geometry::Ray GetLightRayToPoint(const Geometry::Point& point) const = 0;
+        virtual Ray GetLightRayToPoint(const Point& point) const = 0;
 
         const Colour& Colour() const noexcept { return colour; }
     };

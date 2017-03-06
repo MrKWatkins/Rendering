@@ -35,10 +35,10 @@ namespace MrKWatkins::Rendering::UI
         auto shadingModel = std::unique_ptr<Shading::ShadingModel>(std::make_unique<Shading::Lambertian>());
 
         auto scene = std::make_unique<Scene::Scene>(Colour(0, 0, 0), Colour(0.2, 0.2, 0.2));
-        scene->AddPlane(Geometry::Plane(Geometry::Point(0, 0, 0), Geometry::Vector(0, 1, 0)), Colour(1, 1, 1));
-        scene->AddSphere(Geometry::Sphere(0.5, 0.5, 0.5, 0.1), Colour(0, 0, 1));
-        scene->AddSphere(Geometry::Sphere(0.2, 0.2, 1.25, 0.2), Colour(1, 0, 0));
-        scene->AddPointLight(Geometry::Point(1, 1, 0), Colour(1, 1, 1));
+        scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Colour(1, 1, 1));
+        scene->AddSphere(Sphere(0.5, 0.5, 0.5, 0.1), Colour(0, 0, 1));
+        scene->AddSphere(Sphere(0.2, 0.2, 1.25, 0.2), Colour(1, 0, 0));
+        scene->AddPointLight(Point(1, 1, 0), Colour(1, 1, 1));
 
         /*for (auto f = 0.1; f<= 1.0; f+= 0.1)
         {

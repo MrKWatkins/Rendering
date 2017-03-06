@@ -3,14 +3,16 @@
 #include "Point.h"
 #include "Colour.h"
 
-namespace MrKWatkins::Rendering::Scene
+using namespace MrKWatkins::Rendering::Geometry;
+
+namespace MrKWatkins::Rendering::Lighting
 {
     class PointLight : public Light
     {
-        Geometry::Point position;
+        Point position;
     public:
-        PointLight(const Rendering::Colour& colour, const Geometry::Point& position);
+        PointLight(const Rendering::Colour& colour, const Point& position);
 
-        Geometry::Ray GetLightRayToPoint(const Geometry::Point& point) const override;
+        Ray GetLightRayToPoint(const Point& point) const override;
     };
 }

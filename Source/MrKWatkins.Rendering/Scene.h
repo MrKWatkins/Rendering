@@ -6,6 +6,9 @@
 #include "SceneObject.h"
 #include "Sphere.h"
 
+using namespace MrKWatkins::Rendering::Geometry;
+using namespace MrKWatkins::Rendering::Lighting;
+
 namespace MrKWatkins::Rendering::Scene
 {
     class Scene
@@ -17,9 +20,9 @@ namespace MrKWatkins::Rendering::Scene
 
     public:
         explicit Scene(const Colour& background, const Colour& ambientLight);
-        Scene& AddPlane(const Geometry::Plane& plane, const Colour& colour);
-        Scene& AddSphere(const Geometry::Sphere& sphere, const Colour& colour);
-        Scene& AddPointLight(const Geometry::Point& position, const Colour& colour);
+        Scene& AddPlane(const Plane& plane, const Colour& colour);
+        Scene& AddSphere(const Sphere& sphere, const Colour& colour);
+        Scene& AddPointLight(const Point& position, const Colour& colour);
 
         const std::vector<std::unique_ptr<SceneObject>>& Objects() const noexcept { return objects; }
         const std::vector<std::unique_ptr<Light>>& Lights() const noexcept { return lights; }

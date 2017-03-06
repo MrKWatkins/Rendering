@@ -4,23 +4,25 @@
 #include "Colour.h"
 #include "Intersection.h"
 
+using namespace MrKWatkins::Rendering::Geometry;
+
 namespace MrKWatkins::Rendering::Scene
 {
     class SceneObject
     {
         int id;
-        std::unique_ptr<Geometry::Object> object;
+        std::unique_ptr<Object> object;
         Colour colour;
 
     public:
-        SceneObject(std::unique_ptr<Geometry::Object>&& object, const Colour& colour);
+        SceneObject(std::unique_ptr<Object>&& object, const Colour& colour);
         SceneObject(const SceneObject& toCopy) = delete;
         ~SceneObject() = default;
 
         bool operator==(const SceneObject& other) const;
         bool operator!=(const SceneObject& other) const;
 
-        Geometry::Intersection NearestIntersection(const Geometry::Ray& ray) const;
+        Intersection NearestIntersection(const Ray& ray) const;
         const Colour& Colour() const noexcept { return colour; }
     };
 }

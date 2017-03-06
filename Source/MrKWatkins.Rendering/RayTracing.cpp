@@ -11,11 +11,11 @@ namespace MrKWatkins::Rendering::Algorithms
     Colour RayTracing::RenderPoint(double x, double y)
     {
         // Create a ray from the (x,y) point at 0 on the z-axis. It should point from the camera
-        auto rayOrigin = Geometry::Point(x, y, 0);
-        auto ray = Geometry::Ray(rayOrigin, rayOrigin - camera);
+        auto rayOrigin = Point(x, y, 0);
+        auto ray = Ray(rayOrigin, rayOrigin - camera);
 
-        Scene::SceneObject* closestObject = nullptr;
-        auto closestIntersection = Geometry::Intersection::None();
+        SceneObject* closestObject = nullptr;
+        auto closestIntersection = Intersection::None();
         auto distanceToClosestIntersection = std::numeric_limits<double>::max();
 
         for (auto& object : scene->Objects())

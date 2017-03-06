@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering::Shading
 {
-    Colour Lambertian::ShadePoint(const Scene::Scene& scene, const Scene::SceneObject& sceneObject, const Geometry::Intersection& intersection) const
+    Colour Lambertian::ShadePoint(const Scene::Scene& scene, const SceneObject& sceneObject, const Intersection& intersection) const
     {
         auto colour = sceneObject.Colour() * scene.AmbientLight();
 
