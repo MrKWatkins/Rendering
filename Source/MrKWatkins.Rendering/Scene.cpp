@@ -7,7 +7,15 @@
 
 namespace MrKWatkins::Rendering::Scene
 {
-    Scene::Scene(const Colour& background, const Colour& ambientLight) : background{ background }, ambientLight { ambientLight }
+    Scene::Scene(const Colour& ambientLight) : Scene(ambientLight, Colour(0, 0, 0))
+    {
+    }
+
+    Scene::Scene(const Colour& ambientLight, const Colour& backgroundColour) : Scene(ambientLight, std::shared_ptr<Material>(std::make_shared<Solid>(backgroundColour)))
+    {
+    }
+
+    Scene::Scene(const Colour& ambientLight, const std::shared_ptr<Material> background) : ambientLight{ ambientLight }, background { background }
     {
     }
 
@@ -44,5 +52,10 @@ namespace MrKWatkins::Rendering::Scene
         lights.push_back(std::make_unique<PointLight>(colour, attenuation, position));
 
         return *this;
+    }
+
+    Colour Scene::GetBackground(const Ray& ray) const
+    {
+        return background->GetColourAtPoint(Point(ray.Origin() + 10000000000 * ray.Direction()));
     }
 }

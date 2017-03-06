@@ -150,6 +150,7 @@
     <ClInclude Include="Lambertian.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Plane.h" />
+    <ClInclude Include="SkyGradient.h" />
     <ClInclude Include="Solid.h" />
     <ClInclude Include="Uniform.h" />
     <ClInclude Include="Light.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="Lambertian.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="SkyGradient.cpp" />
     <ClCompile Include="Solid.cpp" />
     <ClCompile Include="Uniform.cpp" />
     <ClCompile Include="Light.cpp" />

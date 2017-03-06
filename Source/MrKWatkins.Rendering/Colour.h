@@ -20,5 +20,7 @@ namespace MrKWatkins::Rendering
         double R() const noexcept { return r; }
         double G() const noexcept { return g; }
         double B() const noexcept { return b; }
+
+        static Colour Interpolate(const Colour& from, const Colour& to, double position);
     };
 }

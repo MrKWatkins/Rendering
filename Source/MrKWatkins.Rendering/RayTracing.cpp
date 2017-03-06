@@ -37,7 +37,7 @@ namespace MrKWatkins::Rendering::Algorithms
 
         if (!closestIntersection.HasIntersection())
         {
-            return scene->Background();
+            return scene->GetBackground(ray);
         }
 
         return shadingModel->ShadePoint(*scene, *closestObject, closestIntersection);

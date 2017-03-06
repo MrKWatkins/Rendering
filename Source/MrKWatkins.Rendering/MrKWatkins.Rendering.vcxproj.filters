@@ -138,6 +138,9 @@
     <ClInclude Include="Chequerboard.h">
       <Filter>Header Files\Materials</Filter>
     </ClInclude>
+    <ClInclude Include="SkyGradient.h">
+      <Filter>Header Files\Materials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -207,6 +210,9 @@
       <Filter>Source Files\Materials</Filter>
     </ClCompile>
     <ClCompile Include="Chequerboard.cpp">
+      <Filter>Source Files\Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyGradient.cpp">
       <Filter>Source Files\Materials</Filter>
     </ClCompile>
   </ItemGroup>

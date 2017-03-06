@@ -30,4 +30,19 @@ namespace MrKWatkins::Rendering
     {
         return colour * multiple;
     }
+
+    double InterpolateComponent(double from, double to, double position)
+    {
+        return from + position * (to - from);
+    }
+
+    Colour Colour::Interpolate(const Colour& from, const Colour& to, double position)
+    {
+        position = std::clamp(position, 0.0, 1.0);
+
+        return Colour(
+            InterpolateComponent(from.R(), to.R(), position),
+            InterpolateComponent(from.G(), to.G(), position),
+            InterpolateComponent(from.B(), to.B(), position));
+    }
 }

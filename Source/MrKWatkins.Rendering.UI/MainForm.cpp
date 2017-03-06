@@ -8,6 +8,7 @@
 #include "../MrKWatkins.Rendering/RayTracing.h"
 #include "../MrKWatkins.Rendering/Lambertian.h"
 #include "../MrKWatkins.Rendering/Chequerboard.h"
+#include "../MrKWatkins.Rendering/SkyGradient.h"
 
 using namespace nana;
 
@@ -35,7 +36,7 @@ namespace MrKWatkins::Rendering::UI
 
         auto shadingModel = std::unique_ptr<Shading::ShadingModel>(std::make_unique<Shading::Lambertian>());
 
-        auto scene = std::make_unique<Scene::Scene>(Colour(0, 0, 0), Colour(0.2, 0.2, 0.2));
+        auto scene = std::make_unique<Scene::Scene>(Colour(0.2, 0.2, 0.2), std::shared_ptr<Material>(std::make_shared<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8))));
         scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), std::shared_ptr<Material>(std::make_shared<Chequerboard>(Colour(1, 1, 1), Colour(0, 1, 0), 0.25)));
         scene->AddSphere(Sphere(0.5, 0.5, 0.5, 0.1), Colour(0, 0, 1));
         scene->AddSphere(Sphere(0.2, 0.2, 1.25, 0.2), Colour(1, 0, 0));
