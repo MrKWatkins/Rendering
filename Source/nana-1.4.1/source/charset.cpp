@@ -22,6 +22,9 @@
 #include <cstring>	//Added by Pr0curo(pr#98)
 #include <memory>
 
+// codecvt deprecated in C++17.
+#define STD_CODECVT_NOT_SUPPORTED
+
 //GCC 4.7.0 does not implement the <codecvt> and codecvt_utfx classes
 #ifndef STD_CODECVT_NOT_SUPPORTED
 	#include <codecvt>
