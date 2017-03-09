@@ -2,10 +2,10 @@
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Define a path to the ZLib and LibPng source folders. -->
   <PropertyGroup>
-    <ZlibSource Condition=" '$(ZlibSource)' == '' ">$(ProjectDir)zlib-1.2.11\</ZlibSource>
+    <ZlibSource Condition=" '$(ZlibSource)' == '' ">$(SolutionDir)ThirdParty\zlib-1.2.11\</ZlibSource>
   </PropertyGroup>
   <PropertyGroup>
-    <LibpngSource Condition=" '$(LibpngSource)' == '' ">$(ProjectDir)libpng-1.6.28\</LibpngSource>
+    <LibpngSource Condition=" '$(LibpngSource)' == '' ">$(SolutionDir)ThirdParty\libpng-1.6.28\</LibpngSource>
   </PropertyGroup>
 
   <PropertyGroup>
