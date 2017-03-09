@@ -1,0 +1,2 @@
+# Our libpng project creates this file for us so no need to include in source control.
+/libpng-*/pnglibconf.h

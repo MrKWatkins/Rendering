@@ -198,14 +198,14 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\libpng-1.6.28\libpng.vcxproj">
-      <Project>{d6973076-9317-4ef2-a0b8-b7a18ac0713e}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\MrKWatkins.Rendering\MrKWatkins.Rendering.vcxproj">
       <Project>{688fe410-a7ca-4d8e-a2b5-c2f7f802f059}</Project>
     </ProjectReference>
     <ProjectReference Include="..\nana-1.4.1\build\vc2015\nana.vcxproj">
       <Project>{25b21068-491b-4a9f-b99f-6c27bf31baad}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdParty\libpng.vcxproj">
+      <Project>{d6973076-9317-4ef2-a0b8-b7a18ac0713e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\ThirdParty\zlib.vcxproj">
       <Project>{745dec58-ebb3-47a9-a9b8-4c6627c01bf8}</Project>

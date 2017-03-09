@@ -2,9 +2,13 @@
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Define a path to the ZLib source folder. -->
   <PropertyGroup>
-    <ZlibSource Condition=" '$(ZlibSource)' == '' ">$(ProjectDir)zlib-1.2.11</ZlibSource>
+    <ZlibSource Condition=" '$(ZlibSource)' == '' ">$(ProjectDir)zlib-1.2.11\</ZlibSource>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IntDir>$(ZlibSource)$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -25,6 +29,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8}</ProjectGuid>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -102,7 +107,6 @@
     </ResourceCompile>
     <Lib>
       <AdditionalOptions>/NODEFAULTLIB %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(OutDir)zlib.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
@@ -130,7 +134,6 @@
     </ResourceCompile>
     <Lib>
       <AdditionalOptions>/NODEFAULTLIB %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(OutDir)zlib.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
@@ -160,7 +163,6 @@
     </ResourceCompile>
     <Lib>
       <AdditionalOptions>/NODEFAULTLIB %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(OutDir)zlib.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
@@ -191,39 +193,38 @@
     </ResourceCompile>
     <Lib>
       <AdditionalOptions>/NODEFAULTLIB %(AdditionalOptions)</AdditionalOptions>
-      <OutputFile>$(OutDir)zlib.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="$(ZlibSource)\adler32.c" />
-    <ClCompile Include="$(ZlibSource)\compress.c" />
-    <ClCompile Include="$(ZlibSource)\crc32.c" />
-    <ClCompile Include="$(ZlibSource)\deflate.c" />
-    <ClCompile Include="$(ZlibSource)\gzclose.c" />
-    <ClCompile Include="$(ZlibSource)\gzlib.c" />
-    <ClCompile Include="$(ZlibSource)\gzread.c" />
-    <ClCompile Include="$(ZlibSource)\gzwrite.c" />
-    <ClCompile Include="$(ZlibSource)\infback.c" />
-    <ClCompile Include="$(ZlibSource)\contrib\masmx64\inffas8664.c">
+    <ClCompile Include="$(ZlibSource)adler32.c" />
+    <ClCompile Include="$(ZlibSource)compress.c" />
+    <ClCompile Include="$(ZlibSource)crc32.c" />
+    <ClCompile Include="$(ZlibSource)deflate.c" />
+    <ClCompile Include="$(ZlibSource)gzclose.c" />
+    <ClCompile Include="$(ZlibSource)gzlib.c" />
+    <ClCompile Include="$(ZlibSource)gzread.c" />
+    <ClCompile Include="$(ZlibSource)gzwrite.c" />
+    <ClCompile Include="$(ZlibSource)infback.c" />
+    <ClCompile Include="$(ZlibSource)contrib\masmx64\inffas8664.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="$(ZlibSource)\inffast.c" />
-    <ClCompile Include="$(ZlibSource)\inflate.c" />
-    <ClCompile Include="$(ZlibSource)\inftrees.c" />
-    <ClCompile Include="$(ZlibSource)\contrib\minizip\ioapi.c" />
-    <ClCompile Include="$(ZlibSource)\trees.c" />
-    <ClCompile Include="$(ZlibSource)\uncompr.c" />
-    <ClCompile Include="$(ZlibSource)\contrib\minizip\unzip.c" />
-    <ClCompile Include="$(ZlibSource)\contrib\minizip\zip.c" />
-    <ClCompile Include="$(ZlibSource)\zutil.c" />
+    <ClCompile Include="$(ZlibSource)inffast.c" />
+    <ClCompile Include="$(ZlibSource)inflate.c" />
+    <ClCompile Include="$(ZlibSource)inftrees.c" />
+    <ClCompile Include="$(ZlibSource)contrib\minizip\ioapi.c" />
+    <ClCompile Include="$(ZlibSource)trees.c" />
+    <ClCompile Include="$(ZlibSource)uncompr.c" />
+    <ClCompile Include="$(ZlibSource)contrib\minizip\unzip.c" />
+    <ClCompile Include="$(ZlibSource)contrib\minizip\zip.c" />
+    <ClCompile Include="$(ZlibSource)zutil.c" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="$(ZlibSource)\contrib\vstudio\vc14\zlib.rc" />
+    <ResourceCompile Include="$(ZlibSource)contrib\vstudio\vc14\zlib.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(ZlibSource)\contrib\vstudio\vc14\zlibvc.def" />
+    <None Include="$(ZlibSource)contrib\vstudio\vc14\zlibvc.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
