@@ -5,11 +5,11 @@
 #include <nana/gui/widgets/picture.hpp>
 #include <nana/gui/detail/inner_fwd_implement.hpp>
 #include <nana/gui/filebox.hpp>
-#include "../MrKWatkins.Rendering/Scene.h"
-#include "../MrKWatkins.Rendering/RayTracing.h"
-#include "../MrKWatkins.Rendering/Lambertian.h"
-#include "../MrKWatkins.Rendering/Chequerboard.h"
-#include "../MrKWatkins.Rendering/SkyGradient.h"
+#include <Scene.h>
+#include <RayTracing.h>
+#include <Lambertian.h>
+#include <Chequerboard.h>
+#include <SkyGradient.h>
 
 using namespace nana;
 

@@ -2,8 +2,6 @@
 
 #include "stdafx.h"
 #include <nana/gui.hpp>
-#include <nana/gui/widgets/label.hpp>
-#include "../MrKWatkins.Rendering/Renderer.h"
 #include "MainForm.h"
 
 using namespace nana;
