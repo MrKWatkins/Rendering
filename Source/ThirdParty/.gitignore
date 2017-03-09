@@ -1,2 +1,5 @@
 # Our libpng project creates this file for us so no need to include in source control.
 /libpng-*/pnglibconf.h
+
+# Our nana project creates this folder for us so no need to include in source control.
+/nana-*/nana_extrlib

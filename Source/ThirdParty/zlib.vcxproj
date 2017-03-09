@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- Define a path to the ZLib source folder. -->
+  <!-- Define a path to the zlib source folder. -->
   <PropertyGroup>
     <ZlibSource Condition=" '$(ZlibSource)' == '' ">$(SolutionDir)ThirdParty\zlib-1.2.11\</ZlibSource>
   </PropertyGroup>

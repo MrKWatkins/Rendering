@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">  
+  <!-- Define a path to the nana source folder. -->
+  <PropertyGroup>
+    <NanaSource Condition=" '$(NanaSource)' == '' ">$(SolutionDir)ThirdParty\nana-1.4.1\</NanaSource>
+  </PropertyGroup>
+
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -71,27 +76,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)nana-1.4.1\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(NanaSource)include;$(IncludePath)</IncludePath>
     <TargetName>Rendering</TargetName>
-    <LibraryPath>$(SolutionDir)nana-1.4.1\extrlib\vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)nana-1.4.1\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(NanaSource)include;$(IncludePath)</IncludePath>
     <TargetName>Rendering</TargetName>
-    <LibraryPath>$(SolutionDir)nana-1.4.1\extrlib\vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)nana-1.4.1\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(NanaSource)include;$(IncludePath)</IncludePath>
     <TargetName>Rendering</TargetName>
-    <LibraryPath>$(SolutionDir)nana-1.4.1\extrlib\vc2015;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)nana-1.4.1\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(NanaSource)include;$(IncludePath)</IncludePath>
     <TargetName>Rendering</TargetName>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -201,11 +202,11 @@
     <ProjectReference Include="..\MrKWatkins.Rendering\MrKWatkins.Rendering.vcxproj">
       <Project>{688fe410-a7ca-4d8e-a2b5-c2f7f802f059}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\nana-1.4.1\build\vc2015\nana.vcxproj">
-      <Project>{25b21068-491b-4a9f-b99f-6c27bf31baad}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\ThirdParty\libpng.vcxproj">
       <Project>{d6973076-9317-4ef2-a0b8-b7a18ac0713e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdParty\nana.vcxproj">
+      <Project>{25b21068-491b-4a9f-b99f-6c27bf31baad}</Project>
     </ProjectReference>
     <ProjectReference Include="..\ThirdParty\zlib.vcxproj">
       <Project>{745dec58-ebb3-47a9-a9b8-4c6627c01bf8}</Project>

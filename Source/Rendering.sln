@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nana", "nana-1.4.1\build\vc2015\nana.vcxproj", "{25B21068-491B-4A9F-B99F-6C27BF31BAAD}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MrKWatkins.Rendering.UI", "MrKWatkins.Rendering.UI\MrKWatkins.Rendering.UI.vcxproj", "{EB4A3119-9100-467E-B756-A456194E4460}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C705654-3B6E-49C4-B6F5-0A79E02B1ED7}"
@@ -28,6 +26,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "ThirdParty\zlib.vcx
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libpng", "ThirdParty\libpng.vcxproj", "{D6973076-9317-4EF2-A0B8-B7A18AC0713E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nana", "ThirdParty\nana.vcxproj", "{25B21068-491B-4A9F-B99F-6C27BF31BAAD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Third Party", "Third Party", "{717825A4-5248-4EA8-8AA1-C92215DE4B9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -36,14 +38,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x64.ActiveCfg = Debug|x64
-		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x64.Build.0 = Debug|x64
-		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x86.ActiveCfg = Debug|Win32
-		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x86.Build.0 = Debug|Win32
-		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x64.ActiveCfg = Release|x64
-		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x64.Build.0 = Release|x64
-		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x86.ActiveCfg = Release|Win32
-		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x86.Build.0 = Release|Win32
 		{EB4A3119-9100-467E-B756-A456194E4460}.Debug|x64.ActiveCfg = Debug|x64
 		{EB4A3119-9100-467E-B756-A456194E4460}.Debug|x64.Build.0 = Debug|x64
 		{EB4A3119-9100-467E-B756-A456194E4460}.Debug|x86.ActiveCfg = Debug|Win32
@@ -84,11 +78,22 @@ Global
 		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Release|x64.Build.0 = Release|x64
 		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Release|x86.ActiveCfg = Release|Win32
 		{D6973076-9317-4EF2-A0B8-B7A18AC0713E}.Release|x86.Build.0 = Release|Win32
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x64.ActiveCfg = Debug|x64
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x64.Build.0 = Debug|x64
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x86.ActiveCfg = Debug|Win32
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Debug|x86.Build.0 = Debug|Win32
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x64.ActiveCfg = Release|x64
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x64.Build.0 = Release|x64
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x86.ActiveCfg = Release|Win32
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E432DE66-136B-4D2E-A681-3AE03EA8CA8F} = {6C705654-3B6E-49C4-B6F5-0A79E02B1ED7}
+		{745DEC58-EBB3-47A9-A9B8-4C6627C01BF8} = {717825A4-5248-4EA8-8AA1-C92215DE4B9D}
+		{D6973076-9317-4EF2-A0B8-B7A18AC0713E} = {717825A4-5248-4EA8-8AA1-C92215DE4B9D}
+		{25B21068-491B-4A9F-B99F-6C27BF31BAAD} = {717825A4-5248-4EA8-8AA1-C92215DE4B9D}
 	EndGlobalSection
 EndGlobal
