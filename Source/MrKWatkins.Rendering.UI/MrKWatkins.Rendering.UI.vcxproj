@@ -91,7 +91,7 @@
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)nana-1.4.1\include;$(IncludePath)</IncludePath>
     <TargetName>Rendering</TargetName>
-    <LibraryPath>$(SolutionDir)nana-1.4.1\extrlib\vc2015;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -207,7 +207,7 @@
     <ProjectReference Include="..\nana-1.4.1\build\vc2015\nana.vcxproj">
       <Project>{25b21068-491b-4a9f-b99f-6c27bf31baad}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\zlib-1.2.11\zlib.vcxproj">
+    <ProjectReference Include="..\ThirdParty\zlib.vcxproj">
       <Project>{745dec58-ebb3-47a9-a9b8-4c6627c01bf8}</Project>
     </ProjectReference>
   </ItemGroup>
