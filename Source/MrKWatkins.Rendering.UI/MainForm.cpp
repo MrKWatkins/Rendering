@@ -15,7 +15,7 @@ using namespace nana;
 
 namespace MrKWatkins::Rendering::UI
 {
-    void MainForm::Layout() const
+	void MainForm::Layout() const
     {
         place layout{ *this };
         layout.div("margin=10 gap=10 vert<weight=35 <margin=[5,0,0,0] progressText><weight=100 margin=[0,0,10,10] save><weight=100 margin=[0,0,10,10] cancel>><view>");
@@ -38,22 +38,11 @@ namespace MrKWatkins::Rendering::UI
 
         auto shadingModel = std::unique_ptr<Shading::ShadingModel>(std::make_unique<Shading::Lambertian>());
 
-        auto scene = std::make_unique<Scene::Scene>(Colour(0.2, 0.2, 0.2), std::shared_ptr<Material>(std::make_shared<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8))));
-        scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), std::shared_ptr<Material>(std::make_shared<Chequerboard>(Colour(1, 1, 1), Colour(0, 1, 0), 0.25)));
-        scene->AddSphere(Sphere(0.5, 0.5, 0.5, 0.1), Colour(0, 0, 1));
-        scene->AddSphere(Sphere(0.2, 0.2, 1.25, 0.2), Colour(1, 0, 0));
-        scene->AddPointLight(Point(1, 1, 0), Attenuation::Linear(10), Colour(1, 1, 1));
-
-        /*for (auto f = 0.1; f<= 1.0; f+= 0.1)
-        {
-            scene->AddSphere(Geometry::Sphere(0, 0, f, 0.01), Colour(1, 0, 0));
-            scene->AddSphere(Geometry::Sphere(1, 0, f, 0.01), Colour(1, 1, 0));
-            scene->AddSphere(Geometry::Sphere(0, 1, f, 0.01), Colour(1, 0, 1));
-            scene->AddSphere(Geometry::Sphere(1, 1, f, 0.01), Colour(1, 1, 1));
-
-            scene->AddSphere(Geometry::Sphere(f, f, 1, 0.01), Colour(0, 1, 0));
-            scene->AddSphere(Geometry::Sphere(1-f, f, 1, 0.01), Colour(0, 1, 0));
-        }*/
+        auto scene = std::make_unique<Scene::Scene>(Colour(0.2, 0.2, 0.2), Colour(0, 0, 0));
+		scene->AddPlane(Plane(Point(0, 0, 1), Vector(0, 0, -1)), Colour(1, 1, 1));
+        scene->AddPointLight(Point(0, 0.5, 0.9), Attenuation::Linear(0.1), Colour(1, 1, 1));
+		scene->AddPointLight(Point(0.5, 0.5, 0.9), Attenuation::Inverse(0.1), Colour(1, 1, 1));
+        scene->AddPointLight(Point(1, 0.5, 0.9), Attenuation::InverseSquare(0.1), Colour(1, 1, 1));
 
         renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1);
 
