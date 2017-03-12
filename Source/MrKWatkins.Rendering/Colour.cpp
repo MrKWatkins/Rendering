@@ -4,6 +4,9 @@
 
 namespace MrKWatkins::Rendering
 {
+	Colour Colour::black{ 0, 0, 0 };
+	Colour Colour::white{ 1, 1, 1 };
+
     // TODO: Parameter validation OR clamp.
     Colour::Colour(double r, double g, double b) : r{ r }, g{ g }, b{ b }
     {

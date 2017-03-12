@@ -1,6 +1,7 @@
 #pragma once
 #include "Colour.h"
 #include <vector>
+
 namespace MrKWatkins::Rendering
 {
     class MutableImage;
@@ -25,7 +26,7 @@ namespace MrKWatkins::Rendering
     class MutableImage : public Image
     {
     public:
-        MutableImage(unsigned width, unsigned height);
+        MutableImage(unsigned int width, unsigned int height);
         void SetPixel(unsigned int x, unsigned int y, Colour colour);
     };
 }

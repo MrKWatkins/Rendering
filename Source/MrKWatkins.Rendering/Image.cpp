@@ -24,12 +24,12 @@ namespace MrKWatkins::Rendering
         target.image.assign(image.begin(), image.end());
     }
 
-    MutableImage::MutableImage(unsigned width, unsigned height) : Image(width, height)
+    MutableImage::MutableImage(unsigned int width, unsigned int height) : Image(width, height)
     {
     }
 
-    void MutableImage::SetPixel(unsigned x, unsigned y, Colour colour)
-    {
+	void MutableImage::SetPixel(unsigned int x, unsigned int y, Colour colour)
+	{
         // TODO: Parameter validation. Could use at() of course but we want a better error message.
         image[x + y * height] = colour;
     }
