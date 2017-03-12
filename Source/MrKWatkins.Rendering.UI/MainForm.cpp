@@ -12,6 +12,7 @@
 #include <SkyGradient.h>
 
 using namespace nana;
+using namespace MrKWatkins::Rendering::Shading;
 
 namespace MrKWatkins::Rendering::UI
 {
@@ -36,7 +37,7 @@ namespace MrKWatkins::Rendering::UI
         graphicsBuffer = { nana::size{ 720, 720 } };
         graphicsBuffer.make(nana::size{ 720, 720 });
 
-        auto shadingModel = std::unique_ptr<Shading::ShadingModel>(std::make_unique<Shading::Lambertian>());
+		auto shadingModel = ShadingModel::Create<Lambertian>();
 
 		auto scene = std::make_unique<Scene::Scene>(Colour(0.2, 0.2, 0.2), std::shared_ptr<Texture>(std::make_shared<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8))));
 		scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), std::shared_ptr<Texture>(std::make_shared<Chequerboard>(Colour(1, 1, 1), Colour(0, 1, 0), 0.25)));
