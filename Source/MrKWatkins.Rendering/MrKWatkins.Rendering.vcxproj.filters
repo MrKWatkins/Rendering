@@ -43,11 +43,11 @@
     <Filter Include="Source Files\Lighting">
       <UniqueIdentifier>{b1ed44e6-33f9-41a9-a1db-8bb0052f9a13}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Materials">
-      <UniqueIdentifier>{0c021d25-75ef-487d-b9a6-cc5cf691d76c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Materials">
+    <Filter Include="Source Files\Textures">
       <UniqueIdentifier>{10788640-d9a4-40e2-ab8c-2e0b39682e30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Textures">
+      <UniqueIdentifier>{0c021d25-75ef-487d-b9a6-cc5cf691d76c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,17 +129,17 @@
     <ClInclude Include="Constant.h">
       <Filter>Header Files\Lighting</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
-      <Filter>Header Files\Materials</Filter>
-    </ClInclude>
     <ClInclude Include="Solid.h">
-      <Filter>Header Files\Materials</Filter>
+      <Filter>Header Files\Textures</Filter>
     </ClInclude>
     <ClInclude Include="Chequerboard.h">
-      <Filter>Header Files\Materials</Filter>
+      <Filter>Header Files\Textures</Filter>
     </ClInclude>
     <ClInclude Include="SkyGradient.h">
-      <Filter>Header Files\Materials</Filter>
+      <Filter>Header Files\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\Textures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -207,13 +207,13 @@
       <Filter>Source Files\Lighting</Filter>
     </ClCompile>
     <ClCompile Include="Solid.cpp">
-      <Filter>Source Files\Materials</Filter>
+      <Filter>Source Files\Textures</Filter>
     </ClCompile>
     <ClCompile Include="Chequerboard.cpp">
-      <Filter>Source Files\Materials</Filter>
+      <Filter>Source Files\Textures</Filter>
     </ClCompile>
     <ClCompile Include="SkyGradient.cpp">
-      <Filter>Source Files\Materials</Filter>
+      <Filter>Source Files\Textures</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

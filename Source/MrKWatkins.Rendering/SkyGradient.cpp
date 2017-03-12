@@ -5,7 +5,7 @@
 
 using namespace MrKWatkins::Rendering::Geometry;
 
-namespace MrKWatkins::Rendering::Materials
+namespace MrKWatkins::Rendering::Textures
 {
     SkyGradient::SkyGradient(const Colour& horizonColour, const Colour& zenithColour) : horizonColour{ horizonColour }, zenithColour { zenithColour }
     {

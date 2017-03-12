@@ -2,12 +2,12 @@
 #include "Colour.h"
 #include "Point.h"
 
-namespace MrKWatkins::Rendering::Materials
+namespace MrKWatkins::Rendering::Textures
 {
-    class Material
+    class Texture
     {
     public:
-        virtual ~Material() = default;
+        virtual ~Texture() = default;
 
         virtual Colour GetColourAtPoint(const Geometry::Point& point) const = 0;
     };

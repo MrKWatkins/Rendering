@@ -38,11 +38,11 @@ namespace MrKWatkins::Rendering::UI
 
         auto shadingModel = std::unique_ptr<Shading::ShadingModel>(std::make_unique<Shading::Lambertian>());
 
-        auto scene = std::make_unique<Scene::Scene>(Colour(0.2, 0.2, 0.2), Colour(0, 0, 0));
-		scene->AddPlane(Plane(Point(0, 0, 1), Vector(0, 0, -1)), Colour(1, 1, 1));
-        scene->AddPointLight(Point(0, 0.5, 0.9), Attenuation::Linear(0.1), Colour(1, 1, 1));
-		scene->AddPointLight(Point(0.5, 0.5, 0.9), Attenuation::Inverse(0.1), Colour(1, 1, 1));
-        scene->AddPointLight(Point(1, 0.5, 0.9), Attenuation::InverseSquare(0.1), Colour(1, 1, 1));
+		auto scene = std::make_unique<Scene::Scene>(Colour(0.2, 0.2, 0.2), std::shared_ptr<Texture>(std::make_shared<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8))));
+		scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), std::shared_ptr<Texture>(std::make_shared<Chequerboard>(Colour(1, 1, 1), Colour(0, 1, 0), 0.25)));
+		scene->AddSphere(Sphere(0.5, 0.5, 0.5, 0.1), Colour(0, 0, 1));
+		scene->AddSphere(Sphere(0.2, 0.2, 1.25, 0.2), Colour(1, 0, 0));
+		scene->AddPointLight(Point(1, 1, 0), Attenuation::Linear(10), Colour(1, 1, 1));
 
         renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1);
 

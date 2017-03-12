@@ -148,7 +148,7 @@
     <ClInclude Include="Image.h" />
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="Lambertian.h" />
-    <ClInclude Include="Material.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="SkyGradient.h" />
     <ClInclude Include="Solid.h" />

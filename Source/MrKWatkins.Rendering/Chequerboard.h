@@ -1,9 +1,9 @@
 #pragma once
-#include "Material.h"
+#include "Texture.h"
 
-namespace MrKWatkins::Rendering::Materials
+namespace MrKWatkins::Rendering::Textures
 {
-    class Chequerboard : public Material
+    class Chequerboard : public Texture
     {
         Colour colour1;
         Colour colour2;

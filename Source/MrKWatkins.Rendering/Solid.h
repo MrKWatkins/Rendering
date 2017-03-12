@@ -1,9 +1,9 @@
 #pragma once
-#include "Material.h"
+#include "Texture.h"
 
-namespace MrKWatkins::Rendering::Materials
+namespace MrKWatkins::Rendering::Textures
 {
-    class Solid : public Material
+    class Solid : public Texture
     {
         Colour colour;
     public:

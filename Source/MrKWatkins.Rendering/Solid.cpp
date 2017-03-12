@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Solid.h"
 
-namespace MrKWatkins::Rendering::Materials
+namespace MrKWatkins::Rendering::Textures
 {
     Solid::Solid(const Colour& colour) : colour { colour }
     {

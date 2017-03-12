@@ -3,7 +3,7 @@
 #include "Colour.h"
 #include "Chequerboard.h"
 
-namespace MrKWatkins::Rendering::Materials
+namespace MrKWatkins::Rendering::Textures
 {
     Chequerboard::Chequerboard(const Colour& colour1, const Colour& colour2, double size) : colour1{ colour1 }, colour2{ colour2 }, size{ size }
     {

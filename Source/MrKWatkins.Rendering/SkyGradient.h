@@ -1,9 +1,9 @@
 #pragma once
-#include "Material.h"
+#include "Texture.h"
 
-namespace MrKWatkins::Rendering::Materials
+namespace MrKWatkins::Rendering::Textures
 {
-    class SkyGradient : public Material
+    class SkyGradient : public Texture
     {
         Colour horizonColour;
         Colour zenithColour;

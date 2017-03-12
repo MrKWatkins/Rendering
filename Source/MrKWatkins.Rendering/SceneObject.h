@@ -2,10 +2,10 @@
 #include "Object.h"
 #include <memory>
 #include "Intersection.h"
-#include "Material.h"
+#include "Texture.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
-using namespace MrKWatkins::Rendering::Materials;
+using namespace MrKWatkins::Rendering::Textures;
 
 namespace MrKWatkins::Rendering::Scene
 {
@@ -13,10 +13,10 @@ namespace MrKWatkins::Rendering::Scene
     {
         int id;
         std::unique_ptr<Object> object;
-        std::shared_ptr<Material> material;
+        std::shared_ptr<Texture> texture;
 
     public:
-        SceneObject(std::unique_ptr<Object>&& object, const std::shared_ptr<Material> material);
+        SceneObject(std::unique_ptr<Object>&& object, const std::shared_ptr<Texture> texture);
         SceneObject(const SceneObject& toCopy) = delete;
         ~SceneObject() = default;
 
