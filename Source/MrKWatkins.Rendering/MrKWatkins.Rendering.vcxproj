@@ -143,7 +143,6 @@
     <ClInclude Include="Attenuation.h" />
     <ClInclude Include="Chequerboard.h" />
     <ClInclude Include="Colour.h" />
-    <ClInclude Include="Constant.h" />
     <ClInclude Include="Gradient.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Intersection.h" />
@@ -156,7 +155,6 @@
     <ClInclude Include="Uniform.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Object.h" />
-    <ClInclude Include="Optional.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Ray.h" />

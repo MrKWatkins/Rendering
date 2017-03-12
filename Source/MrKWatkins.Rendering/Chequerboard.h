@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering::Textures
 {
-    class Chequerboard : public Texture
+    class Chequerboard final : public Texture
     {
         Colour colour1;
         Colour colour2;

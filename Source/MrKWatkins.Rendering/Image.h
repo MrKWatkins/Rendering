@@ -23,7 +23,7 @@ namespace MrKWatkins::Rendering
         void CopyTo(MutableImage& target);
     };
 
-    class MutableImage : public Image
+    class MutableImage final : public Image
     {
     public:
         MutableImage(unsigned int width, unsigned int height);

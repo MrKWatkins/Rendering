@@ -13,7 +13,7 @@ using namespace paint;
 
 namespace MrKWatkins::Rendering::UI
 {
-    class MainForm : public form
+    class MainForm final : public form
     {
         label progressText{ *this };
         button save{ *this, "Save" };

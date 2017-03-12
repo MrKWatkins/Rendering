@@ -7,7 +7,7 @@ using namespace MrKWatkins::Rendering::Geometry;
 
 namespace MrKWatkins::Rendering::Lighting
 {
-    class PointLight : public Light
+    class PointLight final : public Light
     {
         Point position;
     public:

@@ -6,7 +6,7 @@
 
 namespace MrKWatkins::Rendering::Algorithms
 {
-    class RayTracing : public Algorithm
+    class RayTracing final : public Algorithm
     {
         std::unique_ptr<Shading::ShadingModel> shadingModel;
         std::unique_ptr<Scene::Scene> scene;

@@ -9,7 +9,7 @@ namespace MrKWatkins::Rendering::Geometry
     /// <summary>
     /// An immutable three-dimensional vector.
     /// </summary>
-    class Vector
+    class Vector final
     {
         static Vector zero;
         static Vector i;

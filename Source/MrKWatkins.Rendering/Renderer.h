@@ -33,7 +33,7 @@ namespace MrKWatkins::Rendering
         Error
     };
 
-    class Renderer
+    class Renderer final
     {
         class Implementation;
         std::unique_ptr<Implementation> implementation;

@@ -4,7 +4,7 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    class Ray
+    class Ray final
     {
         Point origin;
         Vector direction;

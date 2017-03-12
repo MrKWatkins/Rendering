@@ -5,7 +5,7 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    class Plane : public Object
+    class Plane final : public Object
     {
         Point pointOnPlane;
         Vector normal;

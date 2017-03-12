@@ -87,9 +87,6 @@
     <ClInclude Include="Object.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Optional.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Sphere.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
@@ -124,9 +121,6 @@
       <Filter>Header Files\Lighting</Filter>
     </ClInclude>
     <ClInclude Include="Attenuation.h">
-      <Filter>Header Files\Lighting</Filter>
-    </ClInclude>
-    <ClInclude Include="Constant.h">
       <Filter>Header Files\Lighting</Filter>
     </ClInclude>
     <ClInclude Include="Solid.h">

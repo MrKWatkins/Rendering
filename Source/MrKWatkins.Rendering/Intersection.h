@@ -4,7 +4,7 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    class Intersection
+    class Intersection final
     {
         bool hasIntersection;
         Point point;

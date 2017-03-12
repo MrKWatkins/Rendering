@@ -4,7 +4,7 @@
 
 namespace MrKWatkins::Rendering::Algorithms
 {
-    class Gradient : public Algorithm
+    class Gradient final : public Algorithm
     {
         Colour from;
         Colour to;

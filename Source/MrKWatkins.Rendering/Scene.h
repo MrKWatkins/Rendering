@@ -11,7 +11,7 @@ using namespace MrKWatkins::Rendering::Lighting;
 
 namespace MrKWatkins::Rendering::Scene
 {
-    class Scene
+    class Scene final
     {
         std::vector<std::unique_ptr<SceneObject>> objects;
         std::vector<std::unique_ptr<Light>> lights;

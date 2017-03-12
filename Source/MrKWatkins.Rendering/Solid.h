@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering::Textures
 {
-    class Solid : public Texture
+    class Solid final : public Texture
     {
         Colour colour;
     public:

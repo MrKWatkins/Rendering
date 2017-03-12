@@ -9,7 +9,7 @@ using namespace MrKWatkins::Rendering::Textures;
 
 namespace MrKWatkins::Rendering::Scene
 {
-    class SceneObject
+    class SceneObject final
     {
         int id;
         std::unique_ptr<Object> object;

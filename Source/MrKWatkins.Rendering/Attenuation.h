@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering::Lighting
 {
-    class Attenuation
+    class Attenuation final
     {
         std::function<double(double)> function;
         explicit Attenuation(const std::function<double(double)>& function);

@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering::Textures
 {
-    class SkyGradient : public Texture
+    class SkyGradient final : public Texture
     {
         Colour horizonColour;
         Colour zenithColour;

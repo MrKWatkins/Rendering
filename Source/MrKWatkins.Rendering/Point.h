@@ -7,7 +7,7 @@ namespace MrKWatkins::Rendering::Geometry
     /// <summary>
     /// An immutable point in three-dimensions.
     /// </summary>
-    class Point
+    class Point final
     {
         static Point origin;
         double x;

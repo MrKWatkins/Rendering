@@ -5,7 +5,7 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    class Sphere : public Object
+    class Sphere final : public Object
     {
         Point centre;
         double radius;
