@@ -7,7 +7,7 @@
 #include <nana/gui/filebox.hpp>
 #include <Scene.h>
 #include <RayTracing.h>
-#include <Lambertian.h>
+#include <Phong.h>
 #include <Chequerboard.h>
 #include <SkyGradient.h>
 
@@ -37,13 +37,14 @@ namespace MrKWatkins::Rendering::UI
         graphicsBuffer = { nana::size{ 720, 720 } };
         graphicsBuffer.make(nana::size{ 720, 720 });
 
-		auto shadingModel = ShadingModel::Create<Lambertian>();
+		auto shadingModel = ShadingModel::Create<Phong>();
 
 		auto scene = std::make_unique<Scene::Scene>(Colour(0.2, 0.2, 0.2), Texture::Create<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8)));
 		scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Texture::Create<Chequerboard>(Material(Colour(1, 1, 1)), Material(Colour(0, 1, 0)), 0.25));
-		scene->AddSphere(Sphere(0.5, 0.5, 0.5, 0.1), Material(Colour(0, 0, 1), 0.5));
+		scene->AddSphere(Sphere(0.5, 0.5, 0.5, 0.1), Material(Colour(0, 0, 1), 50));
 		scene->AddSphere(Sphere(0.2, 0.2, 1.25, 0.2), Material(Colour(1, 0, 0)));
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::Linear(10), Colour(1, 1, 1));
+		scene->AddPointLight(Point(0, 1, 0), Attenuation::Linear(10), Colour(0.5, 0.5, 0.5));
 
         renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1);
 

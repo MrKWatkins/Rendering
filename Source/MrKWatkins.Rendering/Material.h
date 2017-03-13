@@ -3,6 +3,7 @@
 
 namespace MrKWatkins::Rendering
 {
+	// TODO: No specular should have specular colour black rather than shininess 0.
 	class Material final
 	{
 		Colour diffuse;

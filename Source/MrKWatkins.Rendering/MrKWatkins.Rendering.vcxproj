@@ -148,6 +148,7 @@
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="Lambertian.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Phong.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="SkyGradient.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="Lambertian.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Phong.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="ShadingModel.cpp" />
     <ClCompile Include="SkyGradient.cpp" />
