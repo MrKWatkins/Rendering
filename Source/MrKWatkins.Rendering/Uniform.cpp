@@ -5,6 +5,6 @@ namespace MrKWatkins::Rendering::Shading
 {
     Colour Uniform::ShadePoint(const Scene::Scene& scene, const SceneObject& sceneObject, const Intersection& intersection) const
     {
-        return sceneObject.GetColourAtPoint(intersection.Point());
+        return sceneObject.GetMaterialAtPoint(intersection.Point()).Ambient();
     }
 }

@@ -25,6 +25,6 @@ namespace MrKWatkins::Rendering::Scene
 
         Intersection NearestIntersection(const Ray& ray) const;
 
-        Colour GetColourAtPoint(const Point& point) const;
+		Material GetMaterialAtPoint(const Point& point) const;
     };
 }

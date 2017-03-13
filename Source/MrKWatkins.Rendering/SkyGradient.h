@@ -10,6 +10,6 @@ namespace MrKWatkins::Rendering::Textures
     public:
         explicit SkyGradient(const Colour& horizonColour, const Colour& zenithColour);
 
-        Colour GetColourAtPoint(const Geometry::Point& point) const override;
+		Material GetMaterialAtPoint(const Geometry::Point& point) const override;
     };
 }

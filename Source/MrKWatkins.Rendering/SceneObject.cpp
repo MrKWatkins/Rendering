@@ -24,8 +24,8 @@ namespace MrKWatkins::Rendering::Scene
 		return object->NearestIntersection(ray);
 	}
 
-	Colour SceneObject::GetColourAtPoint(const Point& point) const
+	Material SceneObject::GetMaterialAtPoint(const Point& point) const
 	{
-		return texture->GetColourAtPoint(point);
+		return texture->GetMaterialAtPoint(point);
 	}
 }

@@ -5,10 +5,10 @@ namespace MrKWatkins::Rendering::Textures
 {
     class Solid final : public Texture
     {
-        Colour colour;
+		Material material;
     public:
-        explicit Solid(const Colour& colour);
+        explicit Solid(const Material& material);
 
-        Colour GetColourAtPoint(const Geometry::Point& point) const override;
+		Material GetMaterialAtPoint(const Geometry::Point& point) const override;
     };
 }

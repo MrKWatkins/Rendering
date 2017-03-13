@@ -11,7 +11,7 @@ namespace MrKWatkins::Rendering::Scene
     {
     }
 
-    Scene::Scene(const Colour& ambientLight, const Colour& backgroundColour) : Scene(ambientLight, std::shared_ptr<Texture>(std::make_shared<Solid>(backgroundColour)))
+    Scene::Scene(const Colour& ambientLight, const Colour& backgroundColour) : Scene(ambientLight, std::shared_ptr<Texture>(std::make_shared<Solid>(Material(backgroundColour))))
     {
     }
 
@@ -19,9 +19,9 @@ namespace MrKWatkins::Rendering::Scene
     {
     }
 
-    Scene& Scene::AddPlane(const Plane& plane, const Colour& colour)
+    Scene& Scene::AddPlane(const Plane& plane, const Material& material)
     {
-        return AddPlane(plane, std::shared_ptr<Texture>(std::make_shared<Solid>(colour)));
+        return AddPlane(plane, std::shared_ptr<Texture>(std::make_shared<Solid>(material)));
     }
 
     Scene& Scene::AddPlane(const Plane& plane, const std::shared_ptr<Texture> texture)
@@ -33,9 +33,9 @@ namespace MrKWatkins::Rendering::Scene
         return *this;
     }
 
-    Scene& Scene::AddSphere(const Sphere& sphere, const Colour& colour)
+    Scene& Scene::AddSphere(const Sphere& sphere, const Material& material)
     {
-        return AddSphere(sphere, std::shared_ptr<Texture>(std::make_shared<Solid>(colour)));
+        return AddSphere(sphere, std::shared_ptr<Texture>(std::make_shared<Solid>(material)));
     }
 
     Scene& Scene::AddSphere(const Sphere& sphere, const std::shared_ptr<Texture> texture)
@@ -56,6 +56,6 @@ namespace MrKWatkins::Rendering::Scene
 
     Colour Scene::GetBackground(const Ray& ray) const
     {
-        return background->GetColourAtPoint(Point(ray.Origin() + 10000000000 * ray.Direction()));
+        return background->GetMaterialAtPoint(Point(ray.Origin() + 10000000000 * ray.Direction())).Ambient();
     }
 }

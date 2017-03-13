@@ -180,6 +180,7 @@
     <ClCompile Include="Lambertian.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="ShadingModel.cpp" />
     <ClCompile Include="SkyGradient.cpp" />
     <ClCompile Include="Solid.cpp" />
     <ClCompile Include="Uniform.cpp" />

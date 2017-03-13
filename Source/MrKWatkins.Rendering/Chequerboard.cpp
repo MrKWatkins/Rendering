@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "Point.h"
-#include "Colour.h"
+#include "Material.h"
 #include "Chequerboard.h"
 
 namespace MrKWatkins::Rendering::Textures
 {
-    Chequerboard::Chequerboard(const Colour& colour1, const Colour& colour2, double size) : colour1{ colour1 }, colour2{ colour2 }, size{ size }
+    Chequerboard::Chequerboard(const Material& material1, const Material& material2, double size) : material1{ material1 }, material2{ material2 }, size{ size }
     {
     }
 
-    Colour Chequerboard::GetColourAtPoint(const Geometry::Point& point) const
+    Material Chequerboard::GetMaterialAtPoint(const Geometry::Point& point) const
     {
         auto x = int(round(point.X() / size));
         auto y = int(round(point.Y() / size));
@@ -17,8 +17,8 @@ namespace MrKWatkins::Rendering::Textures
 
         if ((x + y + z & 1) == 0)
         {
-            return colour1;
+            return material1;
         }
-        return colour2;
+        return material2;
     }
 }

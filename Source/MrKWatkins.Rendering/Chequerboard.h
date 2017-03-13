@@ -5,12 +5,12 @@ namespace MrKWatkins::Rendering::Textures
 {
     class Chequerboard final : public Texture
     {
-        Colour colour1;
-        Colour colour2;
+		Material material1;
+		Material material2;
         double size;
     public:
-        explicit Chequerboard(const Colour& colour1, const Colour& colour2, double size);
+        Chequerboard(const Material& material1, const Material& material2, double size);
 
-        Colour GetColourAtPoint(const Geometry::Point& point) const override;
+		Material GetMaterialAtPoint(const Geometry::Point& point) const override;
     };
 }

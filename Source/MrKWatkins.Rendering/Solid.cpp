@@ -3,12 +3,12 @@
 
 namespace MrKWatkins::Rendering::Textures
 {
-    Solid::Solid(const Colour& colour) : colour { colour }
+    Solid::Solid(const Material& material) : material{ material }
     {
     }
 
-    Colour Solid::GetColourAtPoint(const Geometry::Point& point) const
+	Material Solid::GetMaterialAtPoint(const Geometry::Point& point) const
     {
-        return colour;
+        return material;
     }
 }

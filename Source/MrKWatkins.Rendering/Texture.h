@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "Colour.h"
+#include "Material.h"
 #include "Point.h"
 
 namespace MrKWatkins::Rendering::Textures
@@ -18,7 +18,6 @@ namespace MrKWatkins::Rendering::Textures
 
         virtual ~Texture() = default;
 
-        virtual Colour GetColourAtPoint(const Geometry::Point& point) const = 0;
-
+        virtual Material GetMaterialAtPoint(const Geometry::Point& point) const = 0;
     };
 }

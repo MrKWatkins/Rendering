@@ -215,5 +215,8 @@
     <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShadingModel.cpp">
+      <Filter>Source Files\Shading</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

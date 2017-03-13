@@ -11,9 +11,9 @@ namespace MrKWatkins::Rendering::Textures
     {
     }
 
-    Colour SkyGradient::GetColourAtPoint(const Point& point) const
+	Material SkyGradient::GetMaterialAtPoint(const Point& point) const
     {
         // Could make this more generic by allowing the user to specify the gradient direction.
-        return Colour::Interpolate(horizonColour, zenithColour, abs(Vector::J().Dot(Vector(point).Normalize())));
+        return Material(Colour::Interpolate(horizonColour, zenithColour, abs(Vector::J().Dot(Vector(point).Normalize()))));
     }
 }
