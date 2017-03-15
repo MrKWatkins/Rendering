@@ -4,9 +4,6 @@
 
 namespace MrKWatkins::Rendering
 {
-	Colour Colour::black{ 0, 0, 0 };
-	Colour Colour::white{ 1, 1, 1 };
-
     // TODO: Parameter validation OR clamp.
     Colour::Colour(double r, double g, double b) : r{ r }, g{ g }, b{ b }
     {
@@ -47,5 +44,19 @@ namespace MrKWatkins::Rendering
             InterpolateComponent(from.R(), to.R(), position),
             InterpolateComponent(from.G(), to.G(), position),
             InterpolateComponent(from.B(), to.B(), position));
-    }
+    }	
+
+	const Colour& Colour::Black() noexcept
+	{
+		static auto black = Colour(0, 0, 0);
+
+		return black;
+	}
+
+	const Colour& Colour::White() noexcept
+	{
+		static auto white = Colour(1, 1, 1);
+
+		return white;
+	}
 }

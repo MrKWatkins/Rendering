@@ -4,8 +4,6 @@ namespace MrKWatkins::Rendering
 {
     class Colour final
     {
-		static Colour black;
-		static Colour white;
         double r;
         double g;
         double b;
@@ -25,7 +23,7 @@ namespace MrKWatkins::Rendering
 
         static Colour Interpolate(const Colour& from, const Colour& to, double position);
 
-		static const Colour& Black() noexcept { return black; }
-		static const Colour& White() noexcept { return white; }
+		static const Colour& Black() noexcept;
+		static const Colour& White() noexcept;
     };
 }
