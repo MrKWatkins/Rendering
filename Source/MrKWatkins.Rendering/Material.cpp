@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering
 {
-	Material::Material(const Colour& matte) : Material(matte, 0)
+	Material::Material(const Colour& matte) : Material(matte, Colour::Black(), 0)
 	{
 	}
 

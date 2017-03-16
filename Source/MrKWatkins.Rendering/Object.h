@@ -1,17 +1,30 @@
 #pragma once
+#include <memory>
+#include "Solid.h"
 #include "Intersection.h"
-#include "Ray.h"
+#include "Texture.h"
 
-namespace MrKWatkins::Rendering::Geometry
+using namespace MrKWatkins::Rendering::Geometry;
+using namespace MrKWatkins::Rendering::Textures;
+
+namespace MrKWatkins::Rendering::Scene
 {
-    /// <summary>
-    /// Base for all geometrical objects.
-    /// </summary>
-    class Object
+    class Object final
     {
-    public:
-        virtual ~Object() = default;
+        int id;
+        std::unique_ptr<Solid> solid;
+        std::shared_ptr<Texture> texture;
 
-        virtual Intersection NearestIntersection(const Ray& ray) const = 0;
+    public:
+		Object(std::unique_ptr<Solid>&& solid, const std::shared_ptr<Texture> texture);
+		Object(const Object& toCopy) = delete;
+        ~Object() = default;
+
+        bool operator==(const Object& other) const;
+        bool operator!=(const Object& other) const;
+
+		std::optional<Intersection> NearestIntersection(const Ray& ray) const;
+
+		Material GetMaterialAtPoint(const Point& point) const;
     };
 }

@@ -18,11 +18,11 @@ namespace MrKWatkins::Rendering::Tests::PointTests
         auto ray = Ray(Point(Random::Double(), Random::Double(), 1 + Random::Double()), Vector(0, 0, -Random::Double()));
 
         auto result = plane.NearestIntersection(ray);
-        REQUIRE(result.HasIntersection() == true);
+        REQUIRE(result.has_value());
 
         // As ray is pointing straight down intersection point will have the same x and y as the ray's origin.
-        CHECK_THAT(result.Point(), Equals(Point(ray.Origin().X(), ray.Origin().Y(), 0)));
-        CHECK_THAT(result.SurfaceNormal(), Equals(plane.Normal()));
+        CHECK_THAT(result.value().Point(), Equals(Point(ray.Origin().X(), ray.Origin().Y(), 0)));
+        CHECK_THAT(result.value().SurfaceNormal(), Equals(plane.Normal()));
     }
 
     TEST_CASE("Plane - NearestIntersection - ray below plane intersecting orthogonally", "[Plane]")
@@ -32,8 +32,8 @@ namespace MrKWatkins::Rendering::Tests::PointTests
         auto ray = Ray(Point(Random::Double(), Random::Double(), -5 - Random::Double()), Vector(0, 0, Random::Double()));
 
         auto result = plane.NearestIntersection(ray);
-        REQUIRE(result.HasIntersection() == true);
-        CHECK_THAT(result.Point(), Equals(Point(ray.Origin().X(), ray.Origin().Y(), 0)));
-        CHECK_THAT(result.SurfaceNormal(), Equals(-plane.Normal()));
+		REQUIRE(result.has_value());
+        CHECK_THAT(result.value().Point(), Equals(Point(ray.Origin().X(), ray.Origin().Y(), 0)));
+        CHECK_THAT(result.value().SurfaceNormal(), Equals(-plane.Normal()));
     }
 }

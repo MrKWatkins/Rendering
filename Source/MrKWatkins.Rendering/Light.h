@@ -16,7 +16,10 @@ namespace MrKWatkins::Rendering::Lighting
     public:
         virtual ~Light() = default;
 
-        virtual Ray GetLightRayToPoint(const Point& point) const = 0;
+		/// <summary>
+		/// Returns a ray from the light to the specified point.
+		/// </summary>
+        virtual Ray GetRayToPoint(const Point& point) const = 0;
 
         virtual double GetIntensityAtPoint(const Point& point) const = 0;
 

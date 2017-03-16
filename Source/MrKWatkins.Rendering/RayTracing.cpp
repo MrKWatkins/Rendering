@@ -14,32 +14,13 @@ namespace MrKWatkins::Rendering::Algorithms
         auto rayOrigin = Point(x, y, 0);
         auto ray = Ray(rayOrigin, rayOrigin - camera);
 
-        SceneObject* closestObject = nullptr;
-        auto closestIntersection = Intersection::None();
-        auto distanceToClosestIntersection = std::numeric_limits<double>::max();
+		auto intersection = scene->GetClosestIntersection(ray);
 
-        for (auto& object : scene->Objects())
-        {
-            auto intersection = object->NearestIntersection(ray);
-            if (!intersection.HasIntersection())
-            {
-                continue;
-            }
-
-            auto distanceToIntersection = ray.Origin().DistanceFrom(intersection.Point());
-            if (distanceToIntersection < distanceToClosestIntersection)
-            {
-                closestObject = object.get();
-                closestIntersection = intersection;
-                distanceToClosestIntersection = distanceToIntersection;
-            }
-        }
-
-        if (!closestIntersection.HasIntersection())
+        if (!intersection.has_value())
         {
             return scene->GetBackground(ray);
         }
 
-        return shadingModel->ShadePoint(*scene, *closestObject, closestIntersection);
+        return shadingModel->ShadePoint(*scene, *intersection.value().Object(), intersection.value());
     }
 }

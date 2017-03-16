@@ -1,11 +1,11 @@
 #pragma once
-#include "Object.h"
+#include "Solid.h"
 #include "Point.h"
 #include "Intersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    class Sphere final : public Object
+    class Sphere final : public Solid
     {
         Point centre;
         double radius;
@@ -13,7 +13,7 @@ namespace MrKWatkins::Rendering::Geometry
         Sphere(const Point& centre, double radius);
         Sphere(double x, double y, double z, double r);
 
-        Intersection NearestIntersection(const Ray& ray) const override;
+		std::optional<Intersection> NearestIntersection(const Ray& ray) const override;
 
         const Point& Centre() const { return centre; }
 

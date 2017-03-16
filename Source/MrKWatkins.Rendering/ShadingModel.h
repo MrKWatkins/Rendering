@@ -7,6 +7,7 @@ using namespace MrKWatkins::Rendering::Scene;
 
 namespace MrKWatkins::Rendering::Shading
 {
+	// TODO: Shading model should be on a per object level, ideally with a default at ray tracer level.
     class ShadingModel
     {
     public:
@@ -20,9 +21,6 @@ namespace MrKWatkins::Rendering::Shading
 
         virtual ~ShadingModel() = default;
 
-        virtual Colour ShadePoint(const Scene::Scene& scene, const SceneObject& sceneObject, const Intersection& intersection) const = 0;
-
-	protected:
-		bool IsRayToPointOnObjectBlocked(const Scene::Scene& scene, const Ray& ray, const SceneObject& object, const Point& pointOnObject) const;
+        virtual Colour ShadePoint(const Scene::Scene& scene, const Object& sceneObject, const Intersection& intersection) const = 0;
     };
 }

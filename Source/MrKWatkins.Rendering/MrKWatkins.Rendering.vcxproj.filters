@@ -84,14 +84,8 @@
     <ClInclude Include="Ray.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Header Files\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Sphere.h">
       <Filter>Header Files\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneObject.h">
-      <Filter>Header Files\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\Scene</Filter>
@@ -123,9 +117,6 @@
     <ClInclude Include="Attenuation.h">
       <Filter>Header Files\Lighting</Filter>
     </ClInclude>
-    <ClInclude Include="Solid.h">
-      <Filter>Header Files\Textures</Filter>
-    </ClInclude>
     <ClInclude Include="Chequerboard.h">
       <Filter>Header Files\Textures</Filter>
     </ClInclude>
@@ -140,6 +131,18 @@
     </ClInclude>
     <ClInclude Include="Phong.h">
       <Filter>Header Files\Shading</Filter>
+    </ClInclude>
+    <ClInclude Include="Solid.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Flat.h">
+      <Filter>Header Files\Textures</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectIntersection.h">
+      <Filter>Header Files\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -179,9 +182,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Source Files\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="SceneObject.cpp">
-      <Filter>Source Files\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="RayTracing.cpp">
       <Filter>Source Files\Algorithms</Filter>
     </ClCompile>
@@ -206,9 +206,6 @@
     <ClCompile Include="Attenuation.cpp">
       <Filter>Source Files\Lighting</Filter>
     </ClCompile>
-    <ClCompile Include="Solid.cpp">
-      <Filter>Source Files\Textures</Filter>
-    </ClCompile>
     <ClCompile Include="Chequerboard.cpp">
       <Filter>Source Files\Textures</Filter>
     </ClCompile>
@@ -218,11 +215,17 @@
     <ClCompile Include="Material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShadingModel.cpp">
-      <Filter>Source Files\Shading</Filter>
-    </ClCompile>
     <ClCompile Include="Phong.cpp">
       <Filter>Source Files\Shading</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Flat.cpp">
+      <Filter>Source Files\Textures</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectIntersection.cpp">
+      <Filter>Source Files\Scene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,9 +1,11 @@
 #pragma once
+#include <optional>
 #include <vector>
 #include <memory>
 #include "Light.h"
 #include "Plane.h"
-#include "SceneObject.h"
+#include "Object.h"
+#include "ObjectIntersection.h"
 #include "Sphere.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
@@ -13,7 +15,7 @@ namespace MrKWatkins::Rendering::Scene
 {
     class Scene final
     {
-        std::vector<std::unique_ptr<SceneObject>> objects;
+        std::vector<std::unique_ptr<Object>> objects;
         std::vector<std::unique_ptr<Light>> lights;
         Colour ambientLight;
         std::shared_ptr<Texture> background;
@@ -31,8 +33,10 @@ namespace MrKWatkins::Rendering::Scene
 
         Scene& AddPointLight(const Point& position, const Attenuation& attenuation, const Colour& colour);
 
-        const std::vector<std::unique_ptr<SceneObject>>& Objects() const noexcept { return objects; }
+        const std::vector<std::unique_ptr<Object>>& Objects() const noexcept { return objects; }
         const std::vector<std::unique_ptr<Light>>& Lights() const noexcept { return lights; }
+
+		std::optional<ObjectIntersection> GetClosestIntersection(const Ray& ray) const;
 
 		Colour GetBackground(const Ray& ray) const;
 

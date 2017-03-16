@@ -7,7 +7,7 @@ namespace MrKWatkins::Rendering::Lighting
     {
     }
 
-    Ray PointLight::GetLightRayToPoint(const Point& point) const
+    Ray PointLight::GetRayToPoint(const Point& point) const
     {
         // point - position => gives the vector that if we added to position, i.e. where our light is, it would take us to the point.
         return Ray(position, point - position);

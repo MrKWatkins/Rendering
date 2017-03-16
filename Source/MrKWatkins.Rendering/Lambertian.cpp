@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering::Shading
 {
-    Colour Lambertian::ShadePoint(const Scene::Scene& scene, const SceneObject& sceneObject, const Intersection& intersection) const
+    Colour Lambertian::ShadePoint(const Scene::Scene& scene, const Object& sceneObject, const Intersection& intersection) const
     {
         auto objectMaterial = sceneObject.GetMaterialAtPoint(intersection.Point());
         auto colour = objectMaterial.Ambient() * scene.AmbientLight();
@@ -17,8 +17,10 @@ namespace MrKWatkins::Rendering::Shading
                 continue;
             }
 
-            auto lightRay = light->GetLightRayToPoint(intersection.Point());
-			if (IsRayToPointOnObjectBlocked(scene, lightRay, sceneObject, intersection.Point()))
+			// Check if there is an object in the way of the light.
+            auto lightRay = light->GetRayToPoint(intersection.Point());
+			auto closestObjectToLight = scene.GetClosestIntersection(lightRay);
+			if (*closestObjectToLight.value().Object() != sceneObject)	// No need to check has_value - we must intersect.
 			{
 				continue;
 			}
@@ -33,8 +35,8 @@ namespace MrKWatkins::Rendering::Shading
             //  Cl = Colour of light.
             //  I  = Intensity of light at the point.
 
-            // Our ray (R) is from the light to the surface, i.e. R = -L. Therefore C = -R.N Cs Cl I
-            auto lambertian = -lightRay.Direction().Dot(intersection.SurfaceNormal()) * objectMaterial.Diffuse() * light->Colour() * intensity;
+			// Our ray (R) is from the light to the surface, i.e. R = -L. Therefore C = -R.N Cs Cl I
+			auto lambertian = -lightRay.Direction().Dot(intersection.SurfaceNormal()) * objectMaterial.Diffuse() * light->Colour() * intensity;
 
             colour = colour + lambertian;
         }

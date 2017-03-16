@@ -1,18 +1,18 @@
 #pragma once
-#include "Object.h"
+#include "Solid.h"
 #include "Point.h"
 #include "Intersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    class Plane final : public Object
+    class Plane final : public Solid
     {
         Point pointOnPlane;
         Vector normal;
     public:
         Plane(const Point& pointOnPlane, const Vector& normal);
 
-        Intersection NearestIntersection(const Ray& ray) const override;
+		std::optional<Intersection> NearestIntersection(const Ray& ray) const override;
 
         const Point& PointOnPlane() const { return pointOnPlane; }
 

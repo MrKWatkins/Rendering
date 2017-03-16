@@ -7,7 +7,7 @@ namespace MrKWatkins::Rendering::Geometry
     {
     }
 
-    Intersection Plane::NearestIntersection(const Ray& ray) const
+	std::optional<Intersection> Plane::NearestIntersection(const Ray& ray) const
     {
         // Ray => R = O + dD.
         // Plane => (P - p).n = 0
@@ -16,14 +16,14 @@ namespace MrKWatkins::Rendering::Geometry
         if (Dn == 0)
         {
             // Ray is parallel to the plane. We'll treat being parallel and in the plane ( (p - O).n = 0 ) as not an intersection.
-            return Intersection::None();
+            return std::optional<Intersection>();
         }
 
         auto d = (pointOnPlane - ray.Origin()).Dot(normal) / Dn;
         if (d < 0)
         {
             // Intersection is behind the ray's origin.
-            return Intersection::None();
+			return std::optional<Intersection>();
         }
 
         // Plug d back into the ray's equation to get the intersection point.

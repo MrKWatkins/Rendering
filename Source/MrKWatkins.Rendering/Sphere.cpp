@@ -11,7 +11,7 @@ namespace MrKWatkins::Rendering::Geometry
     {
     }
 
-    Intersection Sphere::NearestIntersection(const Ray& ray) const
+	std::optional<Intersection> Sphere::NearestIntersection(const Ray& ray) const
     {
         // Ray => R = O + dD.
         // Sphere => (S - C).(S - C) = r * r.
@@ -32,14 +32,14 @@ namespace MrKWatkins::Rendering::Geometry
         auto discriminant = DM * DM - c;
         if (discriminant < 0)
         {
-            return Intersection::None();
+			return std::optional<Intersection>();
         }
 
         // Smallest solution is the one closest to the ray; will occur with the negative solution as the result of the sqrt will always be positive. (Or zero)
         auto d = -DM - sqrt(discriminant);
         if (d < 0)
         {
-            return Intersection::None();
+            return std::optional<Intersection>();
         }
         
         // Plug d back into the ray's equation to get the intersection point.

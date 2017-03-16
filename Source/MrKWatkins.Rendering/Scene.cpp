@@ -3,7 +3,7 @@
 #include "Sphere.h"
 #include "Scene.h"
 #include "PointLight.h"
-#include "Solid.h"
+#include "Flat.h"
 
 namespace MrKWatkins::Rendering::Scene
 {
@@ -11,7 +11,7 @@ namespace MrKWatkins::Rendering::Scene
     {
     }
 
-    Scene::Scene(const Colour& ambientLight, const Colour& backgroundColour) : Scene(ambientLight, std::shared_ptr<Texture>(std::make_shared<Solid>(Material(backgroundColour))))
+    Scene::Scene(const Colour& ambientLight, const Colour& backgroundColour) : Scene(ambientLight, std::shared_ptr<Texture>(std::make_shared<Flat>(Material(backgroundColour))))
     {
     }
 
@@ -21,13 +21,13 @@ namespace MrKWatkins::Rendering::Scene
 
     Scene& Scene::AddPlane(const Plane& plane, const Material& material)
     {
-        return AddPlane(plane, std::shared_ptr<Texture>(std::make_shared<Solid>(material)));
+        return AddPlane(plane, std::shared_ptr<Texture>(std::make_shared<Flat>(material)));
     }
 
     Scene& Scene::AddPlane(const Plane& plane, const std::shared_ptr<Texture> texture)
     {
-        auto pointerToPlane = std::unique_ptr<Object>(std::make_unique<Plane>(plane));
-        auto pointerToSceneObject = std::make_unique<SceneObject>(move(pointerToPlane), texture);
+        auto pointerToPlane = std::unique_ptr<Solid>(std::make_unique<Plane>(plane));
+        auto pointerToSceneObject = std::make_unique<Object>(move(pointerToPlane), texture);
         objects.push_back(move(pointerToSceneObject));
 
         return *this;
@@ -35,13 +35,13 @@ namespace MrKWatkins::Rendering::Scene
 
     Scene& Scene::AddSphere(const Sphere& sphere, const Material& material)
     {
-        return AddSphere(sphere, std::shared_ptr<Texture>(std::make_shared<Solid>(material)));
+        return AddSphere(sphere, std::shared_ptr<Texture>(std::make_shared<Flat>(material)));
     }
 
     Scene& Scene::AddSphere(const Sphere& sphere, const std::shared_ptr<Texture> texture)
     {
-        auto pointerToSphere = std::unique_ptr<Object>(std::make_unique<Sphere>(sphere));
-        auto pointerToSceneObject = std::make_unique<SceneObject>(move(pointerToSphere), texture);
+        auto pointerToSphere = std::unique_ptr<Solid>(std::make_unique<Sphere>(sphere));
+        auto pointerToSceneObject = std::make_unique<Object>(move(pointerToSphere), texture);
         objects.push_back(move(pointerToSceneObject));
 
         return *this;
@@ -54,7 +54,34 @@ namespace MrKWatkins::Rendering::Scene
         return *this;
     }
 
-    Colour Scene::GetBackground(const Ray& ray) const
+	std::optional<ObjectIntersection> Scene::GetClosestIntersection(const Ray & ray) const
+	{
+		auto closest = std::optional<ObjectIntersection>();
+		auto closestx = std::optional<int>();
+		auto distanceToClosest = std::numeric_limits<double>::max();
+
+		for (auto const& object : objects)
+		{
+			auto intersection = object->NearestIntersection(ray);
+			if (!intersection.has_value())
+			{
+				continue;
+			}
+
+			// TODO: Compare Length ^ 2 to avoid sqrts.
+			auto distance = ray.Origin().DistanceFrom(intersection.value().Point());
+			if (distance < distanceToClosest)
+			{
+				closestx = 5;
+				closest = ObjectIntersection(object.get(), intersection.value());
+				distanceToClosest = distance;
+			}
+		}
+
+		return closest;
+	}
+
+	Colour Scene::GetBackground(const Ray& ray) const
     {
         return background->GetMaterialAtPoint(Point(ray.Origin() + 10000000000 * ray.Direction())).Ambient();
     }

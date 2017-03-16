@@ -4,7 +4,7 @@
 
 namespace MrKWatkins::Rendering::Shading
 {
-	Colour Phong::ShadePoint(const Scene::Scene& scene, const SceneObject& sceneObject, const Intersection& intersection) const
+	Colour Phong::ShadePoint(const Scene::Scene& scene, const Object& sceneObject, const Intersection& intersection) const
 	{
 		auto material = sceneObject.GetMaterialAtPoint(intersection.Point());
 		auto colour = material.Ambient() * scene.AmbientLight();
@@ -21,21 +21,23 @@ namespace MrKWatkins::Rendering::Shading
 				continue;
 			}
 
-			auto lightRay = light->GetLightRayToPoint(intersection.Point());
-			if (IsRayToPointOnObjectBlocked(scene, lightRay, sceneObject, intersection.Point()))
+			// Check if there is an object in the way of the light.
+			auto lightRay = light->GetRayToPoint(intersection.Point());
+			auto closestObjectToLight = scene.GetClosestIntersection(lightRay);
+			if (*closestObjectToLight.value().Object() != sceneObject)	// No need to check has_value - we must intersect.
 			{
 				continue;
 			}
 
 			auto l = -lightRay.Direction();
-			auto phong = colour + material.Diffuse() * l.Dot(n);	// Diffuse contribution.
+			auto lDotN = l.Dot(n);
+			auto phong = colour + material.Diffuse() * lDotN;	// Diffuse contribution.
 
-			auto shininess = material.Shininess();
-			if (shininess > 0 && l.Dot(n) > 0)
+			if (!material.Specular().IsBlack() && lDotN > 0)
 			{
-				auto r = (2 * l.Dot(n) * n - l).Normalize();
+				auto r = (2 * lDotN * n - l).Normalize();
 
-				phong = phong + material.Specular() * pow(std::max(0.0, r.Dot(v)), shininess);
+				phong = phong + material.Specular() * pow(std::max(0.0, r.Dot(v)), material.Shininess());
 			}
 
 			colour = colour + phong * light->Colour() * intensity;

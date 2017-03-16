@@ -17,6 +17,8 @@ namespace MrKWatkins::Rendering
         Colour operator*(double multiple) const;
         friend Colour operator*(double multiple, const Colour& colour);
 
+		bool IsBlack() const noexcept;
+
         double R() const noexcept { return r; }
         double G() const noexcept { return g; }
         double B() const noexcept { return b; }

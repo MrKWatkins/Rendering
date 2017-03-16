@@ -4,30 +4,15 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    class Intersection final
+    class Intersection
     {
-        bool hasIntersection;
         Point point;
         Vector surfaceNormal;
-
-        void VerifyIntersection() const
-        {
-            if (!hasIntersection)
-            {
-                throw std::logic_error("No intersection.");
-            }
-        }
-
-        Intersection();
 
     public:
         Intersection(const Point& point, const Vector& surfaceNormal);
 
-        bool HasIntersection() const noexcept { return hasIntersection; }
-
-        const Point& Point() const;
-        const Vector& SurfaceNormal() const;
-
-        static Intersection None() { return Intersection(); }
+		const Point& Point() const noexcept { return point; }
+        const Vector& SurfaceNormal() const noexcept { return surfaceNormal; }
     };
 }

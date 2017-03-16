@@ -26,6 +26,11 @@ namespace MrKWatkins::Rendering
         return Colour(r * multiplier, g * multiplier, b * multiplier);
     }
 
+	bool Colour::IsBlack() const noexcept
+	{
+		return r == 0 && g == 0 && b == 0;
+	}
+
     Colour operator*(double multiple, const Colour& colour)
     {
         return colour * multiple;
