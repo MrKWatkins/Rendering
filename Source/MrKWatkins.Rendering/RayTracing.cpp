@@ -18,12 +18,12 @@ namespace MrKWatkins::Rendering::Algorithms
         auto rayOrigin = Point(x, y, 0);
         auto ray = Ray(rayOrigin, rayOrigin - camera);
 
-		return CalculateColour(ray, std::optional<Scene::Object*>(), 0);
+		return CalculateColour(ray, std::optional<Scene::ObjectIntersection>(), 0);
     }
 
-	Colour RayTracing::CalculateColour(const Ray& ray, const std::optional<Scene::Object*> sourceObject, int recursionDepth)
+	Colour RayTracing::CalculateColour(const Ray& ray, const std::optional<Scene::ObjectIntersection> previousIntersection, int recursionDepth)
 	{
-		auto possibleIntersection = scene->GetClosestIntersection(ray, sourceObject);
+		auto possibleIntersection = scene->GetClosestIntersection(ray, previousIntersection.has_value() ? previousIntersection.value().Object() : std::optional<const Scene::Object*>());
 		if (!possibleIntersection.has_value())
 		{
 			return scene->GetBackground(ray);
@@ -34,8 +34,7 @@ namespace MrKWatkins::Rendering::Algorithms
 		auto material = intersection.Object()->GetMaterialAtPoint(intersection.Point());
 		auto colour = material.Ambient() * scene->AmbientLight();
 
-		// TODO: Replace with proper normalized vector to camera.
-		auto toViewer = -Vector::K();
+		auto toViewer = (camera - intersection.Point()).Normalize();
 
 		// Loop over all the lights in the scene to get their contribution.
 		for (auto& light : scene->Lights())
@@ -62,6 +61,18 @@ namespace MrKWatkins::Rendering::Algorithms
 			auto surfacePoint = SurfacePoint(material, intersection.SurfaceNormal(), -lightRay.Direction(), toViewer);
 
 			colour = colour + shadingModel->ShadePoint(surfacePoint) * light->Colour() * intensity;
+		}
+
+		// Reflection.
+		if (material.Reflectivity() > 0 && recursionDepth < 100)
+		{
+			auto rayOrigin = intersection.Point();
+
+			auto pointToRay = -ray.Direction();
+			auto rayDirection = 2 * pointToRay.Dot(intersection.SurfaceNormal()) * intersection.SurfaceNormal() - pointToRay;
+			auto ray = Ray(rayOrigin, rayDirection);
+
+			colour = colour + material.Reflectivity() * CalculateColour(ray, possibleIntersection, recursionDepth + 1);
 		}
 
 		return colour;

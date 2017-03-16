@@ -2,7 +2,7 @@
 #include <memory>
 #include "Algorithm.h"
 #include "Scene.h"
-#include "Object.h"
+#include "ObjectIntersection.h"
 #include "ShadingModel.h"
 
 namespace MrKWatkins::Rendering::Algorithms
@@ -15,7 +15,7 @@ namespace MrKWatkins::Rendering::Algorithms
 		// TODO: Camera should be in scene, along with something describing the view portal.
         Point camera;
 
-		Colour CalculateColour(const Ray& ray, const std::optional<Scene::Object*> sourceObject, int recursionDepth);
+		Colour CalculateColour(const Ray& ray, const std::optional<Scene::ObjectIntersection> previousIntersection, int recursionDepth);
     public:
         RayTracing(std::unique_ptr<Shading::ShadingModel>&& shadingModel, std::unique_ptr<Scene::Scene>&& scene, double cameraDistance);
 

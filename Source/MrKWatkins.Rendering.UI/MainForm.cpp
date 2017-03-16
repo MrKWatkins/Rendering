@@ -39,13 +39,17 @@ namespace MrKWatkins::Rendering::UI
 
 		auto shadingModel = ShadingModel::Create<Phong>();
 
-		auto scene = std::make_unique<Scene::Scene>(Colour(0.2, 0.2, 0.2), Texture::Create<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8)));
-		scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Texture::Create<Chequerboard>(Material::RedPlastic(), Material::BlackPlastic(), 0.25));
-		scene->AddSphere(Sphere(0.1, 0.2, 1.25, 0.2), Material::Chrome());
-		scene->AddSphere(Sphere(0.5, 0.5, 1.25, 0.2), Material::Chrome());
-		scene->AddSphere(Sphere(0.9, 0.2, 1.25, 0.2), Material::Chrome());
+		auto scene = std::make_unique<Scene::Scene>(Colour(0.25, 0.25, 0.25), Texture::Create<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8)));
+
+		auto red = Material(Colour(0.1, 0.01, 0.01), Colour(1, 0, 0), Colour(0.1, 0.01, 0.01), 1, 0.075);
+		auto black = Material(Colour(0.01, 0.01, 0.01), Colour(0, 0, 0), Colour(0.01, 0.01, 0.01), 1, 0.075);
+
+		scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Texture::Create<Chequerboard>(red, black, 0.25));
+		scene->AddSphere(Sphere(0.1, 0.2, 0.75, 0.2), Material::Chrome());
+		scene->AddSphere(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
+		scene->AddSphere(Sphere(0.9, 0.2, 0.75, 0.2), Material::Chrome());
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(10), Colour(1, 1, 1));
-		scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
+		//scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
 
         renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1);
 
