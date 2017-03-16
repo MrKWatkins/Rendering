@@ -8,7 +8,7 @@
 #include <Scene.h>
 #include <RayTracing.h>
 #include <Phong.h>
-#include <Chequerboard.h>
+#include <Flat.h>
 #include <SkyGradient.h>
 
 using namespace nana;
@@ -44,14 +44,28 @@ namespace MrKWatkins::Rendering::UI
 		auto red = Material(Colour(0.1, 0.01, 0.01), Colour(1, 0, 0), Colour(0.1, 0.01, 0.01), 1, 0.2);
 		auto black = Material(Colour(0.01, 0.01, 0.01), Colour(0, 0, 0), Colour(0.01, 0.01, 0.01), 1, 0.3);
 
+		scene->AddPlane(Plane(Point(0, 0, 0.5), Vector(0, 0, 1)), Texture::Create<Flat>(black));
+		scene->AddPointLight(Point(0.5, 0.5, 0), Attenuation::InverseSquare(10), Colour(1, 1, 1));
+
+		for (auto x = 0.0; x <= 1.0; x += 0.2)
+		{
+			for (auto y = 0.0; y <= 1.0; y += 0.2)
+			{
+				auto material = Material(Colour(0.25, 0.25, 0.25), Colour(0.4, 0.4, 0.4), Colour(0.774597, 0.774597, 0.774597), x == 0 ? 6 : x * 128, y);
+
+				scene->AddSphere(Sphere(x, y, 0.45, 0.075), material);
+			}
+		}
+
+		/*
 		scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Texture::Create<Chequerboard>(red, black, 0.25));
 		scene->AddSphere(Sphere(0.1, 0.2, 0.75, 0.2), Material::Chrome());
 		scene->AddSphere(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
 		scene->AddSphere(Sphere(0.9, 0.2, 0.75, 0.2), Material::Chrome());
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(10), Colour(1, 1, 1));
 		//scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
-
-        renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1, 3);
+		*/
+        renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1);
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));
