@@ -11,7 +11,7 @@ namespace MrKWatkins::Rendering::Algorithms
     {
     }
 
-    Colour Random::RenderPoint(double x, double y)
+    Colour Random::RenderPoint(double x, double y) const
     {
         return Colour{ distribution(generator),  distribution(generator),  distribution(generator) };
     }

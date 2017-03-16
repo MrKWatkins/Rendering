@@ -173,7 +173,6 @@
     <ClInclude Include="Vector.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="Attenuation.cpp" />
     <ClCompile Include="Chequerboard.cpp" />
     <ClCompile Include="Colour.cpp" />

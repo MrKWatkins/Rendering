@@ -47,7 +47,7 @@ namespace MrKWatkins::Rendering
 		static Material	Turquoise() noexcept { return Material(Colour(0.1, 0.18725, 0.1745), Colour(0.396, 0.74151, 0.69102), Colour(0.297254, 0.30829, 0.306678), 0.1 * 128, 0); }
 		static Material	Brass() noexcept { return Material(Colour(0.329412, 0.223529, 0.027451), Colour(0.780392, 0.568627, 0.113725), Colour(0.992157, 0.941176, 0.807843), 0.21794872 * 128, 0); }
 		static Material	Bronze() noexcept { return Material(Colour(0.2125, 0.1275, 0.054), Colour(0.714, 0.4284, 0.18144), Colour(0.393548, 0.271906, 0.166721), 0.2 * 128, 0); }
-		static Material	Chrome() noexcept { return Material(Colour(0.25, 0.25, 0.25), Colour(0.4, 0.4, 0.4), Colour(0.774597, 0.774597, 0.774597), 0.6 * 128, 0.4); }
+		static Material	Chrome() noexcept { return Material(Colour(0.25, 0.25, 0.25), Colour(0.4, 0.4, 0.4), Colour(0.774597, 0.774597, 0.774597), 0.6 * 128, 0.7); }
 		static Material	Copper() noexcept { return Material(Colour(0.19125, 0.0735, 0.0225), Colour(0.7038, 0.27048, 0.0828), Colour(0.256777, 0.137622, 0.086014), 0.1 * 128, 0); }
 		static Material	Gold() noexcept { return Material(Colour(0.24725, 0.1995, 0.0745), Colour(0.75164, 0.60648, 0.22648), Colour(0.628281, 0.555802, 0.366065), 0.4 * 128, 0); }
 		static Material	Silver() noexcept { return Material(Colour(0.19225, 0.19225, 0.19225), Colour(0.50754, 0.50754, 0.50754), Colour(0.508273, 0.508273, 0.508273), 0.4 * 128, 0); }

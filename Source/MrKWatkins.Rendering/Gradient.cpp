@@ -11,7 +11,7 @@ namespace MrKWatkins::Rendering::Algorithms
     {
     }
 
-    Colour Gradient::RenderPoint(double x, double y)
+    Colour Gradient::RenderPoint(double x, double y) const
     {
         return Colour(
             Interpolate(from.R(), to.R(), x * y),

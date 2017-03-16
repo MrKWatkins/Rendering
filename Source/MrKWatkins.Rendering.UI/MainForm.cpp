@@ -41,8 +41,8 @@ namespace MrKWatkins::Rendering::UI
 
 		auto scene = std::make_unique<Scene::Scene>(Colour(0.25, 0.25, 0.25), Texture::Create<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8)));
 
-		auto red = Material(Colour(0.1, 0.01, 0.01), Colour(1, 0, 0), Colour(0.1, 0.01, 0.01), 1, 0.075);
-		auto black = Material(Colour(0.01, 0.01, 0.01), Colour(0, 0, 0), Colour(0.01, 0.01, 0.01), 1, 0.075);
+		auto red = Material(Colour(0.1, 0.01, 0.01), Colour(1, 0, 0), Colour(0.1, 0.01, 0.01), 1, 0.2);
+		auto black = Material(Colour(0.01, 0.01, 0.01), Colour(0, 0, 0), Colour(0.01, 0.01, 0.01), 1, 0.3);
 
 		scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Texture::Create<Chequerboard>(red, black, 0.25));
 		scene->AddSphere(Sphere(0.1, 0.2, 0.75, 0.2), Material::Chrome());

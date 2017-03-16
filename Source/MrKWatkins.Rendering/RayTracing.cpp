@@ -8,11 +8,12 @@ using namespace MrKWatkins::Rendering::Shading;
 
 namespace MrKWatkins::Rendering::Algorithms
 {
-	RayTracing::RayTracing(std::unique_ptr<ShadingModel>&& shadingModel, std::unique_ptr<Scene::Scene>&& scene, double cameraDistance) : shadingModel{ move(shadingModel) }, scene{ move(scene) }, camera(0.5, 0.5, -cameraDistance)
+	RayTracing::RayTracing(std::unique_ptr<ShadingModel>&& shadingModel, std::unique_ptr<Scene::Scene>&& scene, double cameraDistance, int maximumRecursionDepth) 
+		: shadingModel{ move(shadingModel) }, scene{ move(scene) }, camera{ 0.5, 0.5, -cameraDistance }, maximumRecursionDepth{ maximumRecursionDepth }
 	{
 	}
 
-    Colour RayTracing::RenderPoint(double x, double y)
+    Colour RayTracing::RenderPoint(double x, double y) const
     {
         // Create a ray from the (x,y) point at 0 on the z-axis. It should point from the camera
         auto rayOrigin = Point(x, y, 0);
@@ -21,8 +22,9 @@ namespace MrKWatkins::Rendering::Algorithms
 		return CalculateColour(ray, std::optional<Scene::ObjectIntersection>(), 0);
     }
 
-	Colour RayTracing::CalculateColour(const Ray& ray, const std::optional<Scene::ObjectIntersection> previousIntersection, int recursionDepth)
+	Colour RayTracing::CalculateColour(const Ray& ray, const std::optional<Scene::ObjectIntersection> previousIntersection, int recursionDepth) const
 	{
+		// Ignore the previous object when calculating the nearest intersection in case it turns up. This will break when we have more complicated objects!
 		auto possibleIntersection = scene->GetClosestIntersection(ray, previousIntersection.has_value() ? previousIntersection.value().Object() : std::optional<const Scene::Object*>());
 		if (!possibleIntersection.has_value())
 		{
@@ -30,8 +32,24 @@ namespace MrKWatkins::Rendering::Algorithms
 		}
 
 		auto intersection = possibleIntersection.value();
-
 		auto material = intersection.Object()->GetMaterialAtPoint(intersection.Point());
+
+		auto colour = Colour::Black();
+
+		auto reflectivity = recursionDepth < maximumRecursionDepth ? material.Reflectivity() : 0;
+		if (reflectivity != 1)
+		{
+			colour = colour + (1 - reflectivity) * CalculateDirectLight(material, intersection);
+		}
+		if (reflectivity != 0)
+		{
+			colour = colour + reflectivity * CalculateReflection(ray, material, intersection, recursionDepth);
+		}
+		return colour;
+	}
+
+	Colour RayTracing::CalculateDirectLight(const Material& material, const Scene::ObjectIntersection intersection) const
+	{
 		auto colour = material.Ambient() * scene->AmbientLight();
 
 		auto toViewer = (camera - intersection.Point()).Normalize();
@@ -63,18 +81,17 @@ namespace MrKWatkins::Rendering::Algorithms
 			colour = colour + shadingModel->ShadePoint(surfacePoint) * light->Colour() * intensity;
 		}
 
-		// Reflection.
-		if (material.Reflectivity() > 0 && recursionDepth < 100)
-		{
-			auto rayOrigin = intersection.Point();
-
-			auto pointToRay = -ray.Direction();
-			auto rayDirection = 2 * pointToRay.Dot(intersection.SurfaceNormal()) * intersection.SurfaceNormal() - pointToRay;
-			auto ray = Ray(rayOrigin, rayDirection);
-
-			colour = colour + material.Reflectivity() * CalculateColour(ray, possibleIntersection, recursionDepth + 1);
-		}
 
 		return colour;
+	}
+
+	Colour RayTracing::CalculateReflection(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection, int recursionDepth) const
+	{
+		auto surfaceToRayOrigin = -ray.Direction();
+		auto reflectionOrigin = intersection.Point();
+		auto reflectionDirection = 2 * surfaceToRayOrigin.Dot(intersection.SurfaceNormal()) * intersection.SurfaceNormal() - surfaceToRayOrigin;
+
+		auto reflection = Ray(reflectionOrigin, reflectionDirection);
+		return material.Reflectivity() * CalculateColour(reflection, intersection, recursionDepth + 1);
 	}
 }

@@ -6,7 +6,7 @@ namespace MrKWatkins::Rendering::Algorithms
 {
     class Random final : public Algorithm
     {
-        std::default_random_engine generator;
+        mutable std::default_random_engine generator;
         std::uniform_real_distribution<double> distribution{ 0, 1 };
     public:
         Random();
@@ -14,6 +14,6 @@ namespace MrKWatkins::Rendering::Algorithms
 
         ~Random() = default;
 
-        Colour RenderPoint(double x, double y) override;
+        Colour RenderPoint(double x, double y) const override;
     };
 }

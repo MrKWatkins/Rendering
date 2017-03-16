@@ -17,6 +17,6 @@ namespace MrKWatkins::Rendering::Algorithms
 
         ~Gradient() = default;
 
-        Colour RenderPoint(double x, double y) override;
+        Colour RenderPoint(double x, double y) const override;
     };
 }

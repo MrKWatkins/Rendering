@@ -161,9 +161,6 @@
     <ClCompile Include="Colour.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Algorithm.cpp">
-      <Filter>Source Files\Algorithms</Filter>
-    </ClCompile>
     <ClCompile Include="Gradient.cpp">
       <Filter>Source Files\Algorithms</Filter>
     </ClCompile>
