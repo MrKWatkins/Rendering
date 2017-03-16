@@ -51,7 +51,7 @@ namespace MrKWatkins::Rendering::UI
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(10), Colour(1, 1, 1));
 		//scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
 
-        renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1);
+        renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1, 3);
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));
