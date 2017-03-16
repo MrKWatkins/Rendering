@@ -13,6 +13,8 @@ namespace MrKWatkins::Rendering::Geometry
     public:
         virtual ~Solid() = default;
 
+		virtual bool IsSphere() const { return false; }
+
         virtual std::optional<Intersection> NearestIntersection(const Ray& ray) const = 0;
     };
 }

@@ -1,13 +1,11 @@
 #pragma once
 #include "Colour.h"
-#include "Intersection.h"
 #include "Scene.h"
-
-using namespace MrKWatkins::Rendering::Scene;
+#include "SurfacePoint.h"
 
 namespace MrKWatkins::Rendering::Shading
 {
-	// TODO: Shading model should be on a per object level, ideally with a default at ray tracer level.
+	// TODO: Shading model should be on a per object level, maybe even material level, ideally with a default at ray tracer level.
     class ShadingModel
     {
     public:
@@ -21,6 +19,6 @@ namespace MrKWatkins::Rendering::Shading
 
         virtual ~ShadingModel() = default;
 
-        virtual Colour ShadePoint(const Scene::Scene& scene, const Object& sceneObject, const Intersection& intersection) const = 0;
+		virtual Colour ShadePoint(const SurfacePoint& surfacePoint) const = 0;
     };
 }

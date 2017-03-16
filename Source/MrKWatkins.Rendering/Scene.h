@@ -36,7 +36,7 @@ namespace MrKWatkins::Rendering::Scene
         const std::vector<std::unique_ptr<Object>>& Objects() const noexcept { return objects; }
         const std::vector<std::unique_ptr<Light>>& Lights() const noexcept { return lights; }
 
-		std::optional<ObjectIntersection> GetClosestIntersection(const Ray& ray) const;
+		std::optional<ObjectIntersection> GetClosestIntersection(const Ray& ray, const std::optional<const Object*> exclude = std::optional<const Object*>()) const;
 
 		Colour GetBackground(const Ray& ray) const;
 

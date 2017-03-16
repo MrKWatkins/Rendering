@@ -150,6 +150,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="ObjectIntersection.h" />
     <ClInclude Include="Phong.h" />
+    <ClInclude Include="SurfacePoint.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="SkyGradient.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="SkyGradient.cpp" />
     <ClCompile Include="Flat.cpp" />
+    <ClCompile Include="SurfacePoint.cpp" />
     <ClCompile Include="Uniform.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="PointLight.cpp" />

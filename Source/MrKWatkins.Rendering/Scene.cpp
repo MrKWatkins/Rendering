@@ -54,14 +54,18 @@ namespace MrKWatkins::Rendering::Scene
         return *this;
     }
 
-	std::optional<ObjectIntersection> Scene::GetClosestIntersection(const Ray & ray) const
+	std::optional<ObjectIntersection> Scene::GetClosestIntersection(const Ray & ray, const std::optional<const Object*> exclude) const
 	{
 		auto closest = std::optional<ObjectIntersection>();
-		auto closestx = std::optional<int>();
 		auto distanceToClosest = std::numeric_limits<double>::max();
 
 		for (auto const& object : objects)
 		{
+			if (exclude.has_value() && *exclude.value() == *object)
+			{
+				continue;
+			}
+
 			auto intersection = object->NearestIntersection(ray);
 			if (!intersection.has_value())
 			{
@@ -72,7 +76,6 @@ namespace MrKWatkins::Rendering::Scene
 			auto distance = ray.Origin().DistanceFrom(intersection.value().Point());
 			if (distance < distanceToClosest)
 			{
-				closestx = 5;
 				closest = ObjectIntersection(object.get(), intersection.value());
 				distanceToClosest = distance;
 			}

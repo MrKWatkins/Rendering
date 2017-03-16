@@ -6,6 +6,6 @@ namespace MrKWatkins::Rendering::Shading
 	class Phong final : public ShadingModel
 	{
 	public:
-		Colour ShadePoint(const Scene::Scene& scene, const Object& sceneObject, const Intersection& intersection) const override;
+		Colour ShadePoint(const SurfacePoint& surfacePoint) const override;
 	};
 }

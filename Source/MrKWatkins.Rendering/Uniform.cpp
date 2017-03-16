@@ -3,8 +3,8 @@
 
 namespace MrKWatkins::Rendering::Shading
 {
-    Colour Uniform::ShadePoint(const Scene::Scene& scene, const Object& object, const Intersection& intersection) const
+	Colour Uniform::ShadePoint(const SurfacePoint& surfacePoint) const
     {
-        return object.GetMaterialAtPoint(intersection.Point()).Ambient();
+        return surfacePoint.Material().Ambient();
     }
 }

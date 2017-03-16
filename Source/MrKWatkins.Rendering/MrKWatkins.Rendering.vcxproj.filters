@@ -144,6 +144,9 @@
     <ClInclude Include="ObjectIntersection.h">
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="SurfacePoint.h">
+      <Filter>Header Files\Shading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -226,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="ObjectIntersection.cpp">
       <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SurfacePoint.cpp">
+      <Filter>Source Files\Shading</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
