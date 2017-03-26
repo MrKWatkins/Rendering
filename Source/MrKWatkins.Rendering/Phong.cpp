@@ -7,7 +7,7 @@ namespace MrKWatkins::Rendering::Shading
 	Colour Phong::ShadePoint(const SurfacePoint & surfacePoint) const
 	{
 		auto material = surfacePoint.Material();
-		auto phong = material.Diffuse() * surfacePoint.ToLightDotNormal();	// Diffuse contribution.
+		auto phong = surfacePoint.ToLightDotNormal() * material.Diffuse();	// Diffuse contribution.
 
 		// Specular contribution.
 		if (!material.Specular().IsBlack() && surfacePoint.ToLightDotNormal() > 0)

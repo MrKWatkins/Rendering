@@ -15,11 +15,7 @@ namespace MrKWatkins::Rendering::Shading
 		//  Cl = Colour of light.
 		//  I  = Intensity of light at the point.
 
-		if (surfacePoint.Material().Shininess() >  0.5 * 128)
-		{
-			auto ldb = surfacePoint.ToLightDotNormal();
-		}
-
+		// Cl and I are performed in RayTracing::CalculateDirectLight so we just need to return L.N Cs here.
 		return surfacePoint.ToLightDotNormal() * surfacePoint.Material().Diffuse();
 	}
 }
