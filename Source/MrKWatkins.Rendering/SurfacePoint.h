@@ -14,7 +14,7 @@ namespace MrKWatkins::Rendering::Shading
 		Vector toViewer;
 
 		mutable bool toLightDotNormalCalculated = false;
-		mutable double toLightDotNormal;
+		mutable double toLightDotNormal = 0.0;
 
 		mutable bool reflectionCalculated = false;
 		mutable Vector reflection{ 0, 0, 0 };

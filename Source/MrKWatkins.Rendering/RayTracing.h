@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 #include "Algorithm.h"
 #include "Scene.h"
 #include "ObjectIntersection.h"

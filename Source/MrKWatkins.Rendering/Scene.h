@@ -1,7 +1,4 @@
 #pragma once
-#include <optional>
-#include <vector>
-#include <memory>
 #include "Light.h"
 #include "Plane.h"
 #include "Object.h"

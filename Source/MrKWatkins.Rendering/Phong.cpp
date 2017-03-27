@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include <algorithm>
 #include "Phong.h"
 
 namespace MrKWatkins::Rendering::Shading

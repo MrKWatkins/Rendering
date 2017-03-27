@@ -2,9 +2,9 @@
 #include "catch.hpp"
 #include "Random.h"
 // TODO: Use include directory to get rid of path.
-#include "../MrKWatkins.Rendering/Sphere.h"
 #include "Matchers.hpp"
 #include <complex.h>
+#include "../MrKWatkins.Rendering/Sphere.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
 

@@ -1,6 +1,5 @@
 #pragma once
 #include "Colour.h"
-#include <vector>
 
 namespace MrKWatkins::Rendering
 {

@@ -1,6 +1,5 @@
 #pragma once
 #include "Image.h"
-#include <memory>
 #include "Algorithm.h"
 
 namespace MrKWatkins::Rendering

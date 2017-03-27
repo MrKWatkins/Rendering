@@ -1,6 +1,5 @@
 ﻿#include "stdafx.h"
 #include "Colour.h"
-#include <algorithm>
 
 namespace MrKWatkins::Rendering
 {

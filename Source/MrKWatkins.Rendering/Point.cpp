@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Point.h"
-#include <sstream>
 
 namespace MrKWatkins::Rendering::Geometry
 {

@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "Vector.h"
 
 namespace MrKWatkins::Rendering::Geometry

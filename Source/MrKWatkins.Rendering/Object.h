@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 #include "Solid.h"
 #include "Intersection.h"
 #include "Texture.h"

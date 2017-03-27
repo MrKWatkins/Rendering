@@ -3,7 +3,7 @@
 
 namespace MrKWatkins::Rendering::Shading
 {
-	SurfacePoint::SurfacePoint(const MrKWatkins::Rendering::Material & material, const Vector & normal, const Vector & toLight, const Vector & toViewer)
+	SurfacePoint::SurfacePoint(const Rendering::Material & material, const Vector & normal, const Vector & toLight, const Vector & toViewer)
 		: material { material }, normal { normal }, toLight { toLight }, toViewer { toViewer }
 	{
 	}

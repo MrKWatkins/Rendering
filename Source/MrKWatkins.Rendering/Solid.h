@@ -1,5 +1,5 @@
 #pragma once
-#include <optional>
+#include <optional>	// Needed here because we don't have a Solid.cpp that would include stdafx.h.
 #include "Intersection.h"
 #include "Ray.h"
 
