@@ -15,6 +15,8 @@ namespace MrKWatkins::Rendering
 		mutable Colour specular = Colour::Black();
 		mutable double shininess = 0;
 		mutable double reflectivity = 0;
+		mutable double transmittance = 0;
+		mutable double refractiveIndex = 0;
 
 		Material(const Colour& ambient, const Colour& diffuse, const Colour& specular, double shininess, double reflectivity);
 
@@ -27,6 +29,8 @@ namespace MrKWatkins::Rendering
 		const Colour& Ambient() const noexcept { return ambient; }
 		double Shininess() const noexcept { return shininess; }
 		double Reflectivity() const noexcept { return reflectivity; }
+		double Transmittance() const noexcept { return transmittance; }
+		double RefractiveIndex() const noexcept { return refractiveIndex; }
 
 		// Definitions from http://devernay.free.fr/cours/opengl/materials.html.
 		static Material Emerald() noexcept { return Material(Colour(0.0215, 0.1745, 0.0215), Colour(0.07568, 0.61424, 0.07568), Colour(0.633, 0.727811, 0.633), 0.6 * 128, 0); }
@@ -69,12 +73,11 @@ namespace MrKWatkins::Rendering
 		explicit MaterialBuilder(const Material& baseMaterial);
 
 		MaterialBuilder& WithSpecular(double shininess, const Colour& colour = Colour::White());
-
 		MaterialBuilder& WithReflectivity(double reflectivity);
-
-		Material ToMaterial() const { return material; }
+		MaterialBuilder& WithTransmittance(double transmittance, double refractiveIndex);
 
 		// ReSharper disable once CppNonExplicitConversionOperator
 		operator Material() const { return material; }
+		Material ToMaterial() const { return material; }
 	};
 }

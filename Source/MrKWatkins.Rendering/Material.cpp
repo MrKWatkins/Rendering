@@ -4,7 +4,6 @@
 namespace MrKWatkins::Rendering
 {
 	// TODO: Parameter validation.
-
 	Material::Material(const Colour& ambientAndDiffuse) : Material(ambientAndDiffuse, ambientAndDiffuse)
 	{
 	}
@@ -55,6 +54,14 @@ namespace MrKWatkins::Rendering
 	MaterialBuilder& MaterialBuilder::WithReflectivity(double reflectivity)
 	{
 		material.reflectivity = reflectivity;
+
+		return *this;
+	}
+
+	MaterialBuilder& MaterialBuilder::WithTransmittance(double transmittance, double refractiveIndex)
+	{
+		material.transmittance = transmittance;
+		material.refractiveIndex = refractiveIndex;
 
 		return *this;
 	}
