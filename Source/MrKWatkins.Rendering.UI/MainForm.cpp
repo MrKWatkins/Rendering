@@ -1,16 +1,11 @@
 #include "stdafx.h"
 #include "MainForm.h"
-#include <nana/gui.hpp>
-#include <nana/paint/pixel_buffer.hpp>
-#include <nana/gui/widgets/picture.hpp>
-#include <nana/gui/detail/inner_fwd_implement.hpp>
-#include <nana/gui/filebox.hpp>
 #include <Scene.h>
 #include <RayTracing.h>
 #include <Phong.h>
 #include <Flat.h>
 #include <SkyGradient.h>
-#include "Chequerboard.h"
+#include <Chequerboard.h>
 
 using namespace nana;
 using namespace MrKWatkins::Rendering::Shading;

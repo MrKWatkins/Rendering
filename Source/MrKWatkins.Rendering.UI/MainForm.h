@@ -1,11 +1,4 @@
 #pragma once
-#include <nana/gui/widgets/form.hpp>
-#include <nana/gui/widgets/label.hpp>
-#include <nana/gui/widgets/panel.hpp>
-#include <nana/gui/timer.hpp>
-#include <nana/threads/pool.hpp>
-#include <nana/gui/drawing.hpp>
-#include <nana/gui/widgets/button.hpp>
 #include <Renderer.h>
 
 using namespace nana;
