@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "catch.hpp"
-#include "Matchers.hpp"
-#include "Random.h"
-#include "../MrKWatkins.Rendering/Ray.h"
+#include "Matchers.h"
+#include "Ray.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
 

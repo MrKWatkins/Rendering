@@ -30,6 +30,9 @@
     <ClInclude Include="Random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Matchers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -40,9 +43,6 @@
     </ClCompile>
     <ClCompile Include="VectorTests.cpp">
       <Filter>Source Files\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="Matchers.hpp">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="Random.cpp">
       <Filter>Source Files</Filter>
@@ -58,6 +58,9 @@
     </ClCompile>
     <ClCompile Include="PlaneTests.cpp">
       <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Matchers.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
