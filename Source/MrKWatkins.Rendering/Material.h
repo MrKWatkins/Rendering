@@ -3,34 +3,24 @@
 
 namespace MrKWatkins::Rendering
 {
+	class MaterialBuilder;
+
 	// TODO: No specular should have specular colour black rather than shininess 0.
 	class Material final
 	{
-		Colour diffuse;
-		Colour specular;
-		Colour ambient;
-		double shininess;
-		double reflectivity;
-	public:
-		/// <summary>
-		/// Initializes an instance of a perfectly matte material.
-		/// </summary>
-		explicit Material(const Colour& matte);
+		friend class MaterialBuilder;
 
-		/// <summary>
-		/// Initializes an instance of a material with white specular highlights.
-		/// </summary>
-		Material(const Colour& matte, double shininess, double reflectivity);
+		mutable Colour ambient;
+		mutable Colour diffuse;
+		mutable Colour specular = Colour::Black();
+		mutable double shininess = 0;
+		mutable double reflectivity = 0;
 
-		/// <summary>
-		/// Initializes an instance of a material.
-		/// </summary>
-		Material(const Colour& matte, const Colour& specular, double shininess, double reflectivity);
-
-		/// <summary>
-		/// Initializes an instance of a material with separate diffuse and ambient colours.
-		/// </summary>
 		Material(const Colour& ambient, const Colour& diffuse, const Colour& specular, double shininess, double reflectivity);
+
+	public:
+		explicit Material(const Colour& ambientAndDiffuse);
+		Material(const Colour& ambient, const Colour& diffuse);
 
 		const Colour& Specular() const noexcept { return specular; }
 		const Colour& Diffuse() const noexcept { return diffuse; }
@@ -63,5 +53,28 @@ namespace MrKWatkins::Rendering
 		static Material	RedRubber() noexcept { return Material(Colour(0.05, 0.0, 0.0), Colour(0.5, 0.4, 0.4), Colour(0.7, 0.04, 0.04), 0.078125 * 128, 0); }
 		static Material	WhiteRubber() noexcept { return Material(Colour(0.05, 0.05, 0.05), Colour(0.5, 0.5, 0.5), Colour(0.7, 0.7, 0.7), 0.078125 * 128, 0); }
 		static Material	YellowRubber() noexcept { return Material(Colour(0.05, 0.05, 0.0), Colour(0.5, 0.5, 0.4), Colour(0.7, 0.7, 0.04), 0.078125 * 128, 0); }
+
+		static MaterialBuilder Build(const Colour& ambientAndDiffuse);
+		static MaterialBuilder Build(const Colour& ambient, const Colour& diffuse);
+		static MaterialBuilder Build(const Material& baseMaterial);
+	};
+
+	// TODO: Check we're not doing too many copies here. Maybe can we force a move?
+	class MaterialBuilder
+	{
+		Material material;
+	public:
+		explicit MaterialBuilder(const Colour& ambientAndDiffuse);
+		explicit MaterialBuilder(const Colour& ambient, const Colour& diffuse);
+		explicit MaterialBuilder(const Material& baseMaterial);
+
+		MaterialBuilder& WithSpecular(double shininess, const Colour& colour = Colour::White());
+
+		MaterialBuilder& WithReflectivity(double reflectivity);
+
+		Material ToMaterial() const { return material; }
+
+		// ReSharper disable once CppNonExplicitConversionOperator
+		operator Material() const { return material; }
 	};
 }
