@@ -1,8 +1,8 @@
 #include "stdafx.h"
+#include <Point.h>
 #include "catch.hpp"
 #include "Matchers.h"
 #include "Random.h"
-#include "Point.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
 

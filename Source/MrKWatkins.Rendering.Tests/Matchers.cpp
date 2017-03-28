@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Vector.h"
-#include "Point.h"
+#include <Vector.h>
+#include <Point.h>
 #include "Matchers.h"
 
 namespace MrKWatkins::Rendering::Tests

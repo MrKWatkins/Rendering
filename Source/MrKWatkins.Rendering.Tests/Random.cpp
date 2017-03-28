@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include <random>
-#include "Vector.h"
-#include "Point.h"
+#include <Vector.h>
+#include <Point.h>
 #include "Random.h"
 
 namespace MrKWatkins::Rendering::Tests

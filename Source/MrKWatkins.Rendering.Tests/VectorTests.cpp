@@ -1,8 +1,8 @@
 ﻿#include "stdafx.h"
+#include <Vector.h>
 #include "catch.hpp"
 #include "Matchers.h"
 #include "Random.h"
-#include "Vector.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
 

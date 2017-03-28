@@ -1,7 +1,7 @@
 #include "stdafx.h"
+#include <Plane.h>
 #include "catch.hpp"
 #include "Random.h"
-#include "Plane.h"
 #include "Matchers.h"
 
 using namespace MrKWatkins::Rendering::Geometry;

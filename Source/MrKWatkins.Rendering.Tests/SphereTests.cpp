@@ -1,8 +1,8 @@
 #include "stdafx.h"
+#include <Sphere.h>
 #include "catch.hpp"
 #include "Random.h"
 #include "Matchers.h"
-#include "Sphere.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
 
