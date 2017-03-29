@@ -4,11 +4,6 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    Vector Vector::zero{ 0, 0, 0 };
-    Vector Vector::i{ 1, 0, 0 };
-    Vector Vector::j{ 0, 1, 0 };
-    Vector Vector::k{ 0, 0, 1 };
-
     Vector::Vector(const Point& point) : x{ point.X() }, y{ point.Y() }, z{ point.Z() }
     {
     }
@@ -89,9 +84,37 @@ namespace MrKWatkins::Rendering::Geometry
         return oss.str();
     }
 
-    std::ostream& operator<<(std::ostream& os, const Vector& vector)
+	std::ostream& operator<<(std::ostream& os, const Vector& vector)
     {
         os << vector.ToString();
         return os;
     }
+
+	const Vector& Vector::Zero() noexcept
+	{
+		static auto zero = Vector(0, 0, 0);
+
+		return zero;
+	}
+
+	const Vector& Vector::I() noexcept
+	{
+		static auto i = Vector(1, 0, 0);
+
+		return i;
+	}
+
+	const Vector& Vector::J() noexcept
+	{
+		static auto j = Vector(0, 1, 0);
+
+		return j;
+	}
+
+	const Vector& Vector::K() noexcept
+	{
+		static auto k = Vector(0, 0, 1);
+
+		return k;
+	}
 }

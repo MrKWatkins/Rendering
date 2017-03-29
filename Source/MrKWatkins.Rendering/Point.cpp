@@ -3,8 +3,6 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    Point Point::origin{ 0, 0, 0 };
-
     Point::Point(double x, double y, double z) : x{ x }, y{ y }, z{ z }
     {
     }
@@ -31,9 +29,16 @@ namespace MrKWatkins::Rendering::Geometry
         return oss.str();
     }
 
-    std::ostream& operator<<(std::ostream& os, const Point& point)
+	std::ostream& operator<<(std::ostream& os, const Point& point)
     {
         os << point.ToString();
         return os;
     }
+
+	const Point& Point::Origin() noexcept
+	{
+		static auto origin = Point(0, 0, 0);
+
+		return origin;
+	}
 }

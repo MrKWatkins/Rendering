@@ -18,12 +18,9 @@ namespace MrKWatkins::Rendering::Geometry
         // M = O - C.
         auto M = ray.Origin() - centre;
 
-        // Ray starts inside the sphere if M.M - r² <= 0.
+        // Ray starts outside the sphere if M.M - r² > 0.
         auto c = M.Dot(M) - radius * radius;
-        if (c <= 0)
-        {
-            throw std::exception("Ray's origin is inside this sphere.");
-        }
+		auto outsideSphere = c > 0;
 
         // Solutions are -D.M ± √((D.M)² - M.M + r²)
         auto DM = ray.Direction().Dot(M);
@@ -36,7 +33,8 @@ namespace MrKWatkins::Rendering::Geometry
         }
 
         // Smallest solution is the one closest to the ray; will occur with the negative solution as the result of the sqrt will always be positive. (Or zero)
-        auto d = -DM - sqrt(discriminant);
+		// The exception to this is if we're inside the sphere then it will be the greater solution as the smallest one starts behind us.
+        auto d = outsideSphere ? -DM - sqrt(discriminant) : -DM + sqrt(discriminant);
         if (d < 0)
         {
             return std::optional<Intersection>();
@@ -45,8 +43,8 @@ namespace MrKWatkins::Rendering::Geometry
         // Plug d back into the ray's equation to get the intersection point.
         auto intersection = ray.Origin() + d * ray.Direction();
 
-        // The normal at the surface will be the vector from the centre to the intersection point.
-        auto normal = intersection - centre;
+        // The normal at the surface will be the vector from the centre to the intersection point, unless we're inside the sphere in which case it will be in the opposite direction.
+        auto normal = outsideSphere ? intersection - centre : centre - intersection;
 
         return Intersection(intersection, normal);
     }

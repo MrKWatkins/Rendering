@@ -47,6 +47,8 @@ namespace MrKWatkins::Rendering::UI
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(20), Colour(1, 1, 1));
 		scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
 
+		scene->AddSphere(Sphere(0, 0, 0, 2), Material::YellowRubber());
+
         renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1);
 
         caption("Rendering");

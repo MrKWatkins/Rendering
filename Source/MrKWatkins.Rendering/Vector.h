@@ -10,11 +10,6 @@ namespace MrKWatkins::Rendering::Geometry
     /// </summary>
     class Vector final
     {
-        static Vector zero;
-        static Vector i;
-        static Vector j;
-        static Vector k;
-
         double x;
         double y;
         double z;
@@ -43,9 +38,9 @@ namespace MrKWatkins::Rendering::Geometry
         std::string ToString() const;
         friend std::ostream& operator<<(std::ostream& os, const Vector& vector);
 
-        static const Vector& Zero() noexcept { return zero; }
-        static const Vector& I() noexcept { return i; }
-        static const Vector& J() noexcept { return j; }
-        static const Vector& K() noexcept { return k; }
+		static const Vector& Zero() noexcept;
+		static const Vector& I() noexcept;
+		static const Vector& J() noexcept;
+		static const Vector& K() noexcept;
     };
 }
