@@ -6,7 +6,7 @@
 
 using namespace MrKWatkins::Rendering::Geometry;
 
-namespace MrKWatkins::Rendering::Tests::PointTests
+namespace MrKWatkins::Rendering::Tests::Geometry::PointTests
 {
     // TODO: Optional equals class.
     TEST_CASE("Sphere - NearestIntersection - sphere behind ray", "[Sphere]")

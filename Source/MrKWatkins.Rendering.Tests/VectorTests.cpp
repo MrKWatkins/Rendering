@@ -6,7 +6,7 @@
 
 using namespace MrKWatkins::Rendering::Geometry;
 
-namespace MrKWatkins::Rendering::Tests::VectorTests
+namespace MrKWatkins::Rendering::Tests::Geometry::VectorTests
 {
     auto a = Random::Vector();
     auto b = Random::Vector();

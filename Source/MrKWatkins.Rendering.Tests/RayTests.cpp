@@ -5,7 +5,7 @@
 
 using namespace MrKWatkins::Rendering::Geometry;
 
-namespace MrKWatkins::Rendering::Tests::RayTests
+namespace MrKWatkins::Rendering::Tests::Geometry::RayTests
 {
     TEST_CASE("Ray - Construction normalizes direction vector", "[Ray]")
     {

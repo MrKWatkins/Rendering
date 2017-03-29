@@ -1,11 +1,14 @@
 ﻿#include "stdafx.h"
 #include "Colour.h"
+#include "Verify.h"
 
 namespace MrKWatkins::Rendering
 {
-    // TODO: Parameter validation OR clamp.
     Colour::Colour(double r, double g, double b) : r{ r }, g{ g }, b{ b }
     {
+		Verify::ZeroToOne(r, "r");
+		Verify::ZeroToOne(g, "g");
+		Verify::ZeroToOne(b, "b");
     }
 
     Colour Colour::operator*(const Colour& colour) const

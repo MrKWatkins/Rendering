@@ -9,7 +9,7 @@ using namespace MrKWatkins::Rendering::Shading;
 namespace MrKWatkins::Rendering::Algorithms
 {
 	RayTracing::RayTracing(std::unique_ptr<ShadingModel>&& shadingModel, std::unique_ptr<Scene::Scene>&& scene, double cameraDistance, int maximumRecursionDepth) 
-		: shadingModel{ move(shadingModel) }, scene{ move(scene) }, camera{ 0.5, 0.5, -cameraDistance }, maximumRecursionDepth{ maximumRecursionDepth }
+		: shadingModel{ move(shadingModel) }, scene{ move(scene) }, maximumRecursionDepth{ maximumRecursionDepth }, camera{ 0.5, 0.5, -cameraDistance }
 	{
 	}
 

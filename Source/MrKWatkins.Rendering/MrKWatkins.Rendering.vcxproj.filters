@@ -147,6 +147,9 @@
     <ClInclude Include="SurfacePoint.h">
       <Filter>Header Files\Shading</Filter>
     </ClInclude>
+    <ClInclude Include="Verify.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

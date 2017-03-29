@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Image.h"
+#include "Verify.h"
 
 namespace MrKWatkins::Rendering
 {
@@ -7,13 +8,16 @@ namespace MrKWatkins::Rendering
     {
     }
 
-    Image::Image(unsigned int width, unsigned int height, Colour initialColour) : width{ width }, height{ height }, image{width * height, initialColour}
-    {
-    }
+	Image::Image(unsigned int width, unsigned int height, Colour initialColour) : width{ width }, height{ height }, image{ width * height, initialColour }
+	{
+	}
 
     Colour Image::GetPixel(unsigned int x, unsigned int y) const
     {
-        // TODO: Parameter validation. Could use at() of course but we want a better error message.
+		// We could use at() to verify but we want a better error message.
+		Verify::LessThan(width, x, "x");
+		Verify::LessThan(height, y, "y");
+
         return image[x + y * height];
     }
 
@@ -30,7 +34,10 @@ namespace MrKWatkins::Rendering
 
 	void MutableImage::SetPixel(unsigned int x, unsigned int y, Colour colour)
 	{
-        // TODO: Parameter validation. Could use at() of course but we want a better error message.
+		// We could use at() to verify but we want a better error message.
+		Verify::LessThan(width, x, "x");
+		Verify::LessThan(height, y, "y");
+
         image[x + y * height] = colour;
     }
 }

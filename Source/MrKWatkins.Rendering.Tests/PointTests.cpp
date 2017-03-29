@@ -6,7 +6,7 @@
 
 using namespace MrKWatkins::Rendering::Geometry;
 
-namespace MrKWatkins::Rendering::Tests::PointTests
+namespace MrKWatkins::Rendering::Tests::Geometry::PointTests
 {
     auto a = Random::Point();
     auto b = Random::Point();
