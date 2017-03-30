@@ -100,8 +100,19 @@ namespace MrKWatkins::Rendering::Algorithms
 
 	Ray CalculateExitRayForTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection)
 	{
-		// TODO: Take refractive index into account rather than just using ray.Direction().
-		auto rayPassingThroughObject = Ray(intersection.Point(), ray.Direction());
+		// Refracted direction = ra(d - n(d.n))/ro - n sqrt(1 - (ra^2(1-(d.n)^2)/ro^2))
+		// Where:
+		//	ra = Refractive index of air.
+		//  ro = Refractive index of object.
+		//  d  = Direction of ray.
+		//  n  = Surface normal.
+		auto ra = 1;
+		auto ro = material.RefractiveIndex();
+		auto d = ray.Direction();
+		auto n = intersection.SurfaceNormal();
+		auto dDotN = d.Dot(n);
+		auto refractedDirection = ra * (d - n * dDotN) / ro - n * sqrt(1 - ra * ra * (1 - dDotN * dDotN) / (ro * ro));
+		auto rayPassingThroughObject = Ray(intersection.Point(), refractedDirection);
 
 		// This assumes there are no objects inside the object! TODO: Allow overlapping objects.
 		auto exitPoint = intersection.Object()->NearestIntersection(rayPassingThroughObject);
@@ -111,7 +122,7 @@ namespace MrKWatkins::Rendering::Algorithms
 			return rayPassingThroughObject;
 		}
 
-		// TODO: Take refractive index into account rather than just using ray.Direction().
+		// Assumes we're passing back into the same material.
 		return Ray(exitPoint.value().Point(), ray.Direction());
 	}
 
