@@ -20,7 +20,8 @@ namespace MrKWatkins::Rendering::Geometry
 
         // Ray starts outside the sphere if M.M - r² > 0.
         auto c = M.Dot(M) - radius * radius;
-		auto outsideSphere = c > 0;
+		// TODO: Avoid this hack or generally massage floating point errors into stuff.
+		auto outsideSphere = c > 0.0000000000000001;	// FLOATING POINT PRECISION HACK!
 
         // Solutions are -D.M ± √((D.M)² - M.M + r²)
         auto DM = ray.Direction().Dot(M);

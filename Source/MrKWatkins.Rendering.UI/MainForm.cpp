@@ -45,8 +45,8 @@ namespace MrKWatkins::Rendering::UI
 		scene->AddSphere(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
 		scene->AddSphere(Sphere(0.9, 0.2, 0.75, 0.2), Material::Chrome());
 
-		Material glass = Material::Build(Colour(0.5, 0.5, 0.5))/*.WithSpecular(500).WithReflectivity(0.1)*/.WithTransmittance(0.5, 1.33);
-		scene->AddSphere(Sphere(0.6, 0.2, 0.2, 0.2), glass);
+		Material glass = Material::Build(Colour(0, 0.4, 0.4)).WithSpecular(500).WithReflectivity(0.1).WithTransmittance(0.7, 1.33);
+		scene->AddSphere(Sphere(0.65, 0.2, 0.3, 0.2), glass);
 		
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(20), Colour(1, 1, 1));
 		scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));

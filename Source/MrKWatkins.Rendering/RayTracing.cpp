@@ -6,6 +6,7 @@
 
 using namespace MrKWatkins::Rendering::Shading;
 
+// TODO: Add debug tracing that can be turned on/off for a given point.
 namespace MrKWatkins::Rendering::Algorithms
 {
 	RayTracing::RayTracing(std::unique_ptr<ShadingModel>&& shadingModel, std::unique_ptr<Scene::Scene>&& scene, double cameraDistance, int maximumRecursionDepth) 
