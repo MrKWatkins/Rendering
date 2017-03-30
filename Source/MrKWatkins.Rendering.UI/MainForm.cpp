@@ -37,17 +37,19 @@ namespace MrKWatkins::Rendering::UI
 
 		auto scene = std::make_unique<Scene::Scene>(Colour(0.25, 0.25, 0.25), Texture::Create<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8)));
 
-		Material red = Material::Build(Colour(0.1, 0.01, 0.01), Colour(1, 0, 0)).WithReflectivity(0.2);
-		Material black = Material::Build(Colour(0.01, 0.01, 0.01), Colour(0, 0, 0)).WithReflectivity(0.3);
-
+		Material red = Material::Build(Colour(0.1, 0.01, 0.01), Colour(1, 0, 0)).WithReflectivity(0.1);
+		Material black = Material::Build(Colour(0.01, 0.01, 0.01), Colour(0, 0, 0)).WithReflectivity(0.2);
 		scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Texture::Create<Chequerboard>(red, black, 0.25));
+
 		scene->AddSphere(Sphere(0.1, 0.2, 0.75, 0.2), Material::Chrome());
 		scene->AddSphere(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
 		scene->AddSphere(Sphere(0.9, 0.2, 0.75, 0.2), Material::Chrome());
+
+		Material glass = Material::Build(Colour(0.5, 0.5, 0.5)).WithSpecular(500).WithReflectivity(0.1).WithTransmittance(0.55, 1.33);
+		scene->AddSphere(Sphere(0.6, 0.2, 0.2, 0.2), glass);
+		
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(20), Colour(1, 1, 1));
 		scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
-
-		scene->AddSphere(Sphere(0, 0, 0, 2), Material::YellowRubber());
 
         renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1);
 

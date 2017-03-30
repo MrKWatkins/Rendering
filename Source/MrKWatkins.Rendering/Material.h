@@ -28,6 +28,8 @@ namespace MrKWatkins::Rendering
 		const Colour& Diffuse() const noexcept { return diffuse; }
 		const Colour& Ambient() const noexcept { return ambient; }
 		double Shininess() const noexcept { return shininess; }
+
+		// TODO: Reflectivity and Transmittance should probably be colours.
 		double Reflectivity() const noexcept { return reflectivity; }
 		double Transmittance() const noexcept { return transmittance; }
 		double RefractiveIndex() const noexcept { return refractiveIndex; }

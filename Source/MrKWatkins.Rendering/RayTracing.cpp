@@ -34,17 +34,16 @@ namespace MrKWatkins::Rendering::Algorithms
 		auto intersection = possibleIntersection.value();
 		auto material = intersection.Object()->GetMaterialAtPoint(intersection.Point());
 
-		auto colour = Colour::Black();
+		// If we're at the recursion depth then only include direct light.
+		if (recursionDepth == maximumRecursionDepth)
+		{
+			return CalculateDirectLight(material, intersection);
+		}
 
-		auto reflectivity = recursionDepth < maximumRecursionDepth ? material.Reflectivity() : 0;
-		if (reflectivity != 1)
-		{
-			colour = colour + (1 - reflectivity) * CalculateDirectLight(material, intersection);
-		}
-		if (reflectivity != 0)
-		{
-			colour = colour + reflectivity * CalculateReflection(ray, material, intersection, recursionDepth);
-		}
+		auto colour = Colour::Black();
+		colour = colour + (1.0 - material.Reflectivity() - material.Transmittance()) * CalculateDirectLight(material, intersection);
+		colour = colour + CalculateReflection(ray, material, intersection, recursionDepth);
+		colour = colour + CalculateTransmittance(ray, material, intersection, recursionDepth);
 		return colour;
 	}
 
@@ -81,17 +80,50 @@ namespace MrKWatkins::Rendering::Algorithms
 			colour = colour + shadingModel->ShadePoint(surfacePoint) * light->Colour() * intensity;
 		}
 
-
 		return colour;
 	}
 
 	Colour RayTracing::CalculateReflection(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection, int recursionDepth) const
 	{
+		if (material.Reflectivity() == 0)
+		{
+			return Colour::Black();
+		}
+
 		auto surfaceToRayOrigin = -ray.Direction();
 		auto reflectionOrigin = intersection.Point();
 		auto reflectionDirection = 2 * surfaceToRayOrigin.Dot(intersection.SurfaceNormal()) * intersection.SurfaceNormal() - surfaceToRayOrigin;
 
 		auto reflection = Ray(reflectionOrigin, reflectionDirection);
 		return material.Reflectivity() * CalculateColour(reflection, intersection, recursionDepth + 1);
+	}
+
+	Ray CalculateExitRayForTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection)
+	{
+		// TODO: Take refractive index into account rather than just using ray.Direction().
+		auto rayPassingThroughObject = Ray(intersection.Point(), ray.Direction());
+
+		// This assumes there are no objects inside the object! TODO: Allow overlapping objects.
+		auto exitPoint = intersection.Object()->NearestIntersection(rayPassingThroughObject);
+		if (!exitPoint.has_value())
+		{
+			// Must've been a 2D object.
+			return rayPassingThroughObject;
+		}
+
+		// TODO: Take refractive index into account rather than just using ray.Direction().
+		return Ray(exitPoint.value().Point(), ray.Direction());
+	}
+
+	Colour RayTracing::CalculateTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection, int recursionDepth) const
+	{
+		if (material.Transmittance() == 0)
+		{
+			return Colour::Black();
+		}
+
+		auto exitRay = CalculateExitRayForTransmittance(ray, material, intersection);
+
+		return material.Transmittance() * CalculateColour(exitRay, intersection, recursionDepth + 1);
 	}
 }
