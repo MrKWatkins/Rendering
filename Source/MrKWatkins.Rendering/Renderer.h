@@ -67,7 +67,7 @@ namespace MrKWatkins::Rendering
 
         RendererStatus Status() const;
 
-		std::string Error() const;
+		std::string StatusMessage() const;
 
         Image TakeSnapshot() const;
         

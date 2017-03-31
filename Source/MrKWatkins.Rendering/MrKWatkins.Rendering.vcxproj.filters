@@ -233,5 +233,8 @@
     <ClCompile Include="SurfacePoint.cpp">
       <Filter>Source Files\Shading</Filter>
     </ClCompile>
+    <ClCompile Include="Verify.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -5,23 +5,32 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-    Vector::Vector(const Point& point) : x{ point.X() }, y{ point.Y() }, z{ point.Z() }
-    {
-    }
+	Vector::Vector(double x, double y, double z, bool isNormalized) : x{ x }, y{ y }, z{ z }, isNormalized{ isNormalized }
+	{
+	}
 
-    Vector::Vector(double x, double y, double z) : x{ x }, y{ y }, z{ z }
-    {
+	Vector::Vector(double x, double y, double z) : Vector(x, y, z, false)
+	{
 		Verify::ValidNumber(x, "x");
 		Verify::ValidNumber(y, "y");
 		Verify::ValidNumber(z, "z");
-    }
+	}
 
-    double Vector::Length() const
+    Vector::Vector(const Point& point) : Vector(point.X(), point.Y(), point.Z())
     {
-        return sqrt(x*x + y*y + z*z);
     }
 
-    Vector Vector::operator+(const Vector& other) const
+	double Vector::LengthSquared() const
+	{
+		return x*x + y*y + z*z;
+	}
+
+	double Vector::Length() const
+	{
+		return sqrt(LengthSquared());
+	}
+
+	Vector Vector::operator+(const Vector& other) const
     {
         return Vector(x + other.x, y + other.y, z + other.z);
     }
@@ -55,6 +64,7 @@ namespace MrKWatkins::Rendering::Geometry
 		Verify::ValidNumber(scalar, "scalar");
 		Verify::NotZero(scalar, "scalar");
 
+		// TODO: Quicker to invert then multiply?
         return Vector(x / scalar, y / scalar, z / scalar);
     }
 
@@ -73,18 +83,30 @@ namespace MrKWatkins::Rendering::Geometry
 
     Vector Vector::Normalize() const
     {
+		if (isNormalized)
+		{
+			return *this;
+		}
+
         const auto length = Length();
         if (length == 0)
         {
             return Zero();
         }
 
-        const auto multiplier = 1.0 / Length();
+        const auto multiplier = 1.0 / length;
 
-        return Vector(x * multiplier, y * multiplier, z * multiplier);
+        return Vector(x * multiplier, y * multiplier, z * multiplier, true);
     }
 
-    std::string Vector::ToString() const
+	Vector Vector::ReflectAbout(const Vector& normal) const
+	{
+		Verify::IsNormalized(normal, "normal");
+
+		return 2 * Dot(normal) * normal - *this;
+	}
+
+	std::string Vector::ToString() const
     {
         std::ostringstream oss;
         oss << "Vector (" << x + 0.0 << "," << y + 0.0 << "," << z + 0.0 << ")";   // + 0.0 converts -0.0 into +0.0.
@@ -99,28 +121,28 @@ namespace MrKWatkins::Rendering::Geometry
 
 	const Vector& Vector::Zero() noexcept
 	{
-		static auto zero = Vector(0, 0, 0);
+		static const auto zero = Vector(0, 0, 0, false);
 
 		return zero;
 	}
 
 	const Vector& Vector::I() noexcept
 	{
-		static auto i = Vector(1, 0, 0);
+		static const auto i = Vector(1, 0, 0, true);
 
 		return i;
 	}
 
 	const Vector& Vector::J() noexcept
 	{
-		static auto j = Vector(0, 1, 0);
+		static const auto j = Vector(0, 1, 0, true);
 
 		return j;
 	}
 
 	const Vector& Vector::K() noexcept
 	{
-		static auto k = Vector(0, 0, 1);
+		static const auto k = Vector(0, 0, 1, true);
 
 		return k;
 	}

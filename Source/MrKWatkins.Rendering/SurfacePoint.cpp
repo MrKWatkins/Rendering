@@ -22,7 +22,8 @@ namespace MrKWatkins::Rendering::Shading
 	{
 		if (!reflectionCalculated)
 		{
-			reflection = (2 * ToLightDotNormal() * normal - toLight).Normalize();
+			// Not using Vector::ReflectAbout as we might have already calculated ToLightDotNormal.
+			reflection =  (2 * ToLightDotNormal() * normal - toLight).Normalize();
 			reflectionCalculated = true;
 		}
 		return reflection;

@@ -12,7 +12,7 @@ namespace MrKWatkins::Rendering
         std::mutex lock {};
         RendererStatus status{ InProgress };
         double progress{ 0 };
-		std::string error{ "" };
+		std::string statusMessage{ "" };
         std::thread thread;
 
         void SetPixel(int x, int y, Colour colour)
@@ -31,6 +31,11 @@ namespace MrKWatkins::Rendering
         {
             const double width = image.Width();
             const double height = image.Height();
+
+			using namespace std::chrono;
+
+			high_resolution_clock clock;
+			auto startTime = clock.now();
 
 			try
 			{
@@ -53,14 +58,20 @@ namespace MrKWatkins::Rendering
 			{
 				std::lock_guard<std::mutex> take(lock);
 
-				status = RendererStatus::Error;
-				error = exception.what();
+				status = Error;
+				statusMessage = exception.what();
 				return;
 			}
+
+			auto endTime = clock.now();
+
+			// convert from the clock rate to a millisecond clock
+			auto seconds = duration_cast<std::chrono::milliseconds>(endTime - startTime);
 
             std::lock_guard<std::mutex> take(lock);
 
             status = Finished;
+			statusMessage = "Time taken: " + std::to_string(seconds.count() / 1000.0) + "s";
         }
 
     public:
@@ -96,11 +107,11 @@ namespace MrKWatkins::Rendering
             return progress;
         }
 
-        std::string Error()
+        std::string StatusMessage()
         {
             std::lock_guard<std::mutex> take(lock);
 
-            return error;
+            return statusMessage;
         }
 
         RendererStatus Status()
@@ -156,9 +167,9 @@ namespace MrKWatkins::Rendering
         return implementation->Status();
     }
 
-	std::string Renderer::Error() const
+	std::string Renderer::StatusMessage() const
 	{
-		return implementation->Error();
+		return implementation->StatusMessage();
 	}
 
 	Image Renderer::TakeSnapshot() const

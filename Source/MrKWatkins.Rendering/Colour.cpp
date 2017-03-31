@@ -55,14 +55,14 @@ namespace MrKWatkins::Rendering
 
 	const Colour& Colour::Black() noexcept
 	{
-		static auto black = Colour(0, 0, 0);
+		static const auto black = Colour(0, 0, 0);
 
 		return black;
 	}
 
 	const Colour& Colour::White() noexcept
 	{
-		static auto white = Colour(1, 1, 1);
+		static const auto white = Colour(1, 1, 1);
 
 		return white;
 	}

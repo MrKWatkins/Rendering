@@ -15,9 +15,9 @@ namespace MrKWatkins::Rendering::UI
 	void MainForm::Layout() const
     {
         place layout{ *this };
-        layout.div("margin=10 gap=10 vert<weight=35 <weight=120 margin=[5,0,0,0] progressText><margin=[5,0,0,0] errorText><weight=100 margin=[0,0,10,10] save><weight=100 margin=[0,0,10,10] cancel>><view>");
+        layout.div("margin=10 gap=10 vert<weight=35 <weight=130 margin=[5,0,0,0] progressText><margin=[5,0,0,0] statusText><weight=100 margin=[0,0,10,10] save><weight=100 margin=[0,0,10,10] cancel>><view>");
         layout["progressText"] << progressText;
-        layout["errorText"] << errorText;
+        layout["statusText"] << statusText;
         layout["view"] << view;
         layout["save"] << save;
         layout["cancel"] << cancel;
@@ -59,7 +59,6 @@ namespace MrKWatkins::Rendering::UI
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));
-		errorText.fgcolor(colors::dark_red);
         save.enabled(false);
 
         Layout();
@@ -101,7 +100,12 @@ namespace MrKWatkins::Rendering::UI
 				// If we've errored pop up a message box.
 				if (status == Error)
 				{
-					errorText.caption("Error: " + renderer->Error());
+					statusText.caption("Error: " + renderer->StatusMessage());
+					statusText.fgcolor(colors::dark_red);
+				}
+				else if (status == Finished)
+				{
+					statusText.caption("Finished: " + renderer->StatusMessage());
 				}
 
                 // If we're not still in the process of cancelling then we can stop the timer too; after the next

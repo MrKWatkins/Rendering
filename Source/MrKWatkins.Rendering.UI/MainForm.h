@@ -9,7 +9,7 @@ namespace MrKWatkins::Rendering::UI
     class MainForm final : public form
     {
         label progressText{ *this };
-        label errorText{ *this };
+        label statusText{ *this };
         button save{ *this, "Save" };
         button cancel{ *this, "Cancel" };
         panel<true> view{ *this };

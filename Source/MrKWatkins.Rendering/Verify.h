@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector.h"
 
 namespace MrKWatkins::Rendering::Verify
 {
@@ -84,4 +85,6 @@ namespace MrKWatkins::Rendering::Verify
 			throw std::out_of_range("Value of " + parameterName + " is " + std::to_string(value) + " which is not greater than or equal to " + std::to_string(minimumInclusive) + ".");
 		}
 	}
+
+	void IsNormalized(const Geometry::Vector& value, const std::string& parameterName);
 }

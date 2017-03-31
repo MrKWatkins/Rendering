@@ -93,7 +93,7 @@ namespace MrKWatkins::Rendering::Algorithms
 
 		auto surfaceToRayOrigin = -ray.Direction();
 		auto reflectionOrigin = intersection.Point();
-		auto reflectionDirection = 2 * surfaceToRayOrigin.Dot(intersection.SurfaceNormal()) * intersection.SurfaceNormal() - surfaceToRayOrigin;
+		auto reflectionDirection = surfaceToRayOrigin.ReflectAbout(intersection.SurfaceNormal());
 
 		auto reflection = Ray(reflectionOrigin, reflectionDirection);
 		return material.Reflectivity() * CalculateColour(reflection, intersection, recursionDepth + 1);
