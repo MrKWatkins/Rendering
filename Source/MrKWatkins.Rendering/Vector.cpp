@@ -11,9 +11,9 @@ namespace MrKWatkins::Rendering::Geometry
 
 	Vector::Vector(double x, double y, double z) : Vector(x, y, z, false)
 	{
-		Verify::IsFinite(x, "x");
-		Verify::IsFinite(y, "y");
-		Verify::IsFinite(z, "z");
+		VERIFY_IS_FINITE(x);
+		VERIFY_IS_FINITE(y);
+		VERIFY_IS_FINITE(z);
 	}
 
     Vector::Vector(const Point& point) : Vector(point.X(), point.Y(), point.Z())
@@ -47,22 +47,22 @@ namespace MrKWatkins::Rendering::Geometry
 
     Vector Vector::operator*(double scalar) const
     {
-		Verify::IsFinite(scalar, "scalar");
+		VERIFY_IS_FINITE(scalar);
 
         return Vector(x * scalar, y * scalar, z * scalar);
     }
 
     Vector operator*(double scalar, const Vector& vector)
     {
-		Verify::IsFinite(scalar, "scalar");
+		VERIFY_IS_FINITE(scalar);
 
         return vector * scalar;
     }
 
     Vector Vector::operator/(double scalar) const
     {
-		Verify::IsFinite(scalar, "scalar");
-		Verify::NotZero(scalar, "scalar");
+		VERIFY_IS_FINITE(scalar);
+		VERIFY_NOT_ZERO(scalar);
 
 		// TODO: Quicker to invert then multiply?
         return Vector(x / scalar, y / scalar, z / scalar);
@@ -101,7 +101,7 @@ namespace MrKWatkins::Rendering::Geometry
 
 	Vector Vector::ReflectAbout(const Vector& normal) const
 	{
-		Verify::IsNormalized(normal, "normal");
+		VERIFY_IS_NORMALIZED(normal);
 
 		return 2 * Dot(normal) * normal - *this;
 	}

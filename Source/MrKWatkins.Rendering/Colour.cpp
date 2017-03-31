@@ -6,9 +6,9 @@ namespace MrKWatkins::Rendering
 {
     Colour::Colour(double r, double g, double b) : r{ r }, g{ g }, b{ b }
     {
-		Verify::ZeroToOne(r, "r");
-		Verify::ZeroToOne(g, "g");
-		Verify::ZeroToOne(b, "b");
+		VERIFY_ZERO_TO_ONE(r);
+		VERIFY_ZERO_TO_ONE(g);
+		VERIFY_ZERO_TO_ONE(b);
     }
 
     Colour Colour::operator*(const Colour& colour) const

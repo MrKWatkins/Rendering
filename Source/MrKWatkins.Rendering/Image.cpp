@@ -15,8 +15,8 @@ namespace MrKWatkins::Rendering
 	const Colour& Image::GetPixel(unsigned int x, unsigned int y) const
     {
 		// We could use at() to verify but we want a better error message.
-		Verify::LessThan(width, x, "x");
-		Verify::LessThan(height, y, "y");
+		VERIFY_LESS_THAN(width, x);
+		VERIFY_LESS_THAN(height, y);
 
         return image[x + y * height];
     }
@@ -35,8 +35,8 @@ namespace MrKWatkins::Rendering
 	void MutableImage::SetPixel(unsigned int x, unsigned int y, const Colour& colour)
 	{
 		// We could use at() to verify but we want a better error message.
-		Verify::LessThan(width, x, "x");
-		Verify::LessThan(height, y, "y");
+		VERIFY_LESS_THAN(width, x);
+		VERIFY_LESS_THAN(height, y);
 
         image[x + y * height] = colour;
     }

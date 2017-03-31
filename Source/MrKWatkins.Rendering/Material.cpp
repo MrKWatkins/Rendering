@@ -4,7 +4,6 @@
 
 namespace MrKWatkins::Rendering
 {
-	// TODO: Parameter validation.
 	Material::Material(const Colour& ambientAndDiffuse) : Material(ambientAndDiffuse, ambientAndDiffuse)
 	{
 	}
@@ -15,8 +14,8 @@ namespace MrKWatkins::Rendering
 
 	Material::Material(const Colour& ambient, const Colour& diffuse, const Colour& specular, double shininess, double reflectivity) : ambient{ ambient }, diffuse{ diffuse }, specular{ specular }, shininess{ shininess }, reflectivity{ reflectivity }
 	{
-		Verify::GreaterThan(0.0, shininess, "shininess");
-		Verify::ZeroToOne(reflectivity, "reflectivity");
+		//Verify::GreaterThan(0.0, shininess, "shininess");
+		VERIFY_ZERO_TO_ONE(reflectivity);
 	}
 
 	MaterialBuilder Material::Build(const Colour& ambientAndDiffuse)
@@ -48,7 +47,7 @@ namespace MrKWatkins::Rendering
 
 	MaterialBuilder& MaterialBuilder::WithSpecular(double shininess, const Colour& colour)
 	{
-		Verify::GreaterThan(0.0, shininess, "shininess");
+		//Verify::GreaterThan(0.0, shininess, "shininess");
 
 		material.shininess = shininess;
 		material.specular = colour;
@@ -58,7 +57,8 @@ namespace MrKWatkins::Rendering
 
 	MaterialBuilder& MaterialBuilder::WithReflectivity(double reflectivity)
 	{
-		Verify::ZeroToOne(reflectivity, "reflectivity");
+		VERIFY_ZERO_TO_ONE(reflectivity);
+
 		if (reflectivity + material.transmittance > 1.0)
 		{
 			throw std::out_of_range("Reflectivity + transmittance must be in the range 0 -> 1.");
@@ -71,7 +71,8 @@ namespace MrKWatkins::Rendering
 
 	MaterialBuilder& MaterialBuilder::WithTransmittance(double transmittance, double refractiveIndex)
 	{
-		Verify::ZeroToOne(transmittance, "transmittance");
+		VERIFY_ZERO_TO_ONE(transmittance);
+
 		if (material.reflectivity + transmittance > 1.0)
 		{
 			throw std::out_of_range("Reflectivity + transmittance must be in the range 0 -> 1.");
