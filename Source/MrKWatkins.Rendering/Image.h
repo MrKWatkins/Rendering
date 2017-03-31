@@ -13,12 +13,12 @@ namespace MrKWatkins::Rendering
         std::vector<Colour> image;
     public:
         Image(unsigned int width, unsigned int height);
-        Image(unsigned int width, unsigned int height, Colour initialColour);
+        Image(unsigned int width, unsigned int height, const Colour& initialColour);
 
         unsigned int Width() const noexcept { return width; }
         unsigned int Height() const noexcept { return height; }
 
-        Colour GetPixel(unsigned int x, unsigned int y) const;
+        const Colour& GetPixel(unsigned int x, unsigned int y) const;
         void CopyTo(MutableImage& target);
     };
 
@@ -26,6 +26,6 @@ namespace MrKWatkins::Rendering
     {
     public:
         MutableImage(unsigned int width, unsigned int height);
-        void SetPixel(unsigned int x, unsigned int y, Colour colour);
+        void SetPixel(unsigned int x, unsigned int y, const Colour& colour);
     };
 }

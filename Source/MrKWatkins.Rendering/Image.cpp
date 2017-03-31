@@ -4,15 +4,15 @@
 
 namespace MrKWatkins::Rendering
 {
-    Image::Image(unsigned int width, unsigned int height) : Image(width, height, Colour { 0, 0, 0 })
+    Image::Image(unsigned int width, unsigned int height) : Image(width, height, Colour::Black())
     {
     }
 
-	Image::Image(unsigned int width, unsigned int height, Colour initialColour) : width{ width }, height{ height }, image{ width * height, initialColour }
+	Image::Image(unsigned int width, unsigned int height, const Colour& initialColour) : width{ width }, height{ height }, image{ width * height, initialColour }
 	{
 	}
 
-    Colour Image::GetPixel(unsigned int x, unsigned int y) const
+	const Colour& Image::GetPixel(unsigned int x, unsigned int y) const
     {
 		// We could use at() to verify but we want a better error message.
 		Verify::LessThan(width, x, "x");
@@ -32,7 +32,7 @@ namespace MrKWatkins::Rendering
     {
     }
 
-	void MutableImage::SetPixel(unsigned int x, unsigned int y, Colour colour)
+	void MutableImage::SetPixel(unsigned int x, unsigned int y, const Colour& colour)
 	{
 		// We could use at() to verify but we want a better error message.
 		Verify::LessThan(width, x, "x");

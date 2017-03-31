@@ -11,9 +11,9 @@ namespace MrKWatkins::Rendering::Geometry
 
 	Vector::Vector(double x, double y, double z) : Vector(x, y, z, false)
 	{
-		Verify::ValidNumber(x, "x");
-		Verify::ValidNumber(y, "y");
-		Verify::ValidNumber(z, "z");
+		Verify::IsFinite(x, "x");
+		Verify::IsFinite(y, "y");
+		Verify::IsFinite(z, "z");
 	}
 
     Vector::Vector(const Point& point) : Vector(point.X(), point.Y(), point.Z())
@@ -47,21 +47,21 @@ namespace MrKWatkins::Rendering::Geometry
 
     Vector Vector::operator*(double scalar) const
     {
-		Verify::ValidNumber(scalar, "scalar");
+		Verify::IsFinite(scalar, "scalar");
 
         return Vector(x * scalar, y * scalar, z * scalar);
     }
 
     Vector operator*(double scalar, const Vector& vector)
     {
-		Verify::ValidNumber(scalar, "scalar");
+		Verify::IsFinite(scalar, "scalar");
 
         return vector * scalar;
     }
 
     Vector Vector::operator/(double scalar) const
     {
-		Verify::ValidNumber(scalar, "scalar");
+		Verify::IsFinite(scalar, "scalar");
 		Verify::NotZero(scalar, "scalar");
 
 		// TODO: Quicker to invert then multiply?
