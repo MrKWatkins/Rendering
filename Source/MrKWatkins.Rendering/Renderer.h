@@ -34,10 +34,11 @@ namespace MrKWatkins::Rendering
 
     class Renderer final
     {
+		// TODO: Don't use PIMPL.
         class Implementation;
         std::unique_ptr<Implementation> implementation;
 
-        Renderer(std::unique_ptr<Implementation> implementation);
+	    explicit Renderer(std::unique_ptr<Implementation> implementation);
 
         static std::unique_ptr<Renderer> StartInternal(std::unique_ptr<Algorithms::Algorithm> algorithm, int size);
 
@@ -65,6 +66,8 @@ namespace MrKWatkins::Rendering
         double Progress() const;
 
         RendererStatus Status() const;
+
+		std::string Error() const;
 
         Image TakeSnapshot() const;
         

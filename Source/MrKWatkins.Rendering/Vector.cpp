@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Verify.h"
 #include "Vector.h"
 #include "Point.h"
 
@@ -10,6 +11,9 @@ namespace MrKWatkins::Rendering::Geometry
 
     Vector::Vector(double x, double y, double z) : x{ x }, y{ y }, z{ z }
     {
+		Verify::ValidNumber(x, "x");
+		Verify::ValidNumber(y, "y");
+		Verify::ValidNumber(z, "z");
     }
 
     double Vector::Length() const
@@ -34,20 +38,23 @@ namespace MrKWatkins::Rendering::Geometry
 
     Vector Vector::operator*(double scalar) const
     {
+		Verify::ValidNumber(scalar, "scalar");
+
         return Vector(x * scalar, y * scalar, z * scalar);
     }
 
     Vector operator*(double scalar, const Vector& vector)
     {
+		Verify::ValidNumber(scalar, "scalar");
+
         return vector * scalar;
     }
 
     Vector Vector::operator/(double scalar) const
     {
-        if (scalar == 0)
-        {
-            throw std::invalid_argument("scalar cannot be 0.");
-        }
+		Verify::ValidNumber(scalar, "scalar");
+		Verify::NotZero(scalar, "scalar");
+
         return Vector(x / scalar, y / scalar, z / scalar);
     }
 

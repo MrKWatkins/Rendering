@@ -2,11 +2,37 @@
 
 namespace MrKWatkins::Rendering::Verify
 {
+	/// <summary>
+	/// Verifies that the specified number is valid, i.e. is not NaN or infinite.
+	/// </summary>
+	template<typename T>
+	void ValidNumber(T value, const std::string& parameterName)
+	{
+		static_assert(std::is_arithmetic<T>::value, "T is not an arithmetic type.");
+
+		if (isnan(value) || isinf(value))
+		{
+			throw std::invalid_argument("Value of " + parameterName + " is not a valid number.");
+		}
+	}
+
+	template<typename T>
+	void NotZero(T value, const std::string& parameterName)
+	{
+		static_assert(std::is_arithmetic<T>::value, "T is not an arithmetic type.");
+
+		if (value == 0)	// TODO: Should this be a tolerant comparison?
+		{
+			throw std::invalid_argument("Value of " + parameterName + " cannot be zero.");
+		}
+	}
+
 	template<typename T>
 	void ZeroToOne(T value, const std::string& parameterName)
 	{
 		static_assert(std::is_arithmetic<T>::value, "T is not an arithmetic type.");
 
+		Verify::ValidNumber(value, parameterName);
 		if (value < 0 || value > 1)
 		{
 			throw std::out_of_range("Value of " + parameterName + " is " + std::to_string(value) + " which is not in the range 0 -> 1.");

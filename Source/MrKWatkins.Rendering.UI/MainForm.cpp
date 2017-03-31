@@ -15,8 +15,9 @@ namespace MrKWatkins::Rendering::UI
 	void MainForm::Layout() const
     {
         place layout{ *this };
-        layout.div("margin=10 gap=10 vert<weight=35 <margin=[5,0,0,0] progressText><weight=100 margin=[0,0,10,10] save><weight=100 margin=[0,0,10,10] cancel>><view>");
+        layout.div("margin=10 gap=10 vert<weight=35 <weight=120 margin=[5,0,0,0] progressText><margin=[5,0,0,0] errorText><weight=100 margin=[0,0,10,10] save><weight=100 margin=[0,0,10,10] cancel>><view>");
         layout["progressText"] << progressText;
+        layout["errorText"] << errorText;
         layout["view"] << view;
         layout["save"] << save;
         layout["cancel"] << cancel;
@@ -45,8 +46,11 @@ namespace MrKWatkins::Rendering::UI
 		scene->AddSphere(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
 		scene->AddSphere(Sphere(0.9, 0.2, 0.75, 0.2), Material::Chrome());
 
-		Material glass = Material::Build(Colour(0, 0.4, 0.4)).WithSpecular(500).WithReflectivity(0.1).WithTransmittance(0.7, 1.33);
-		scene->AddSphere(Sphere(0.65, 0.2, 0.3, 0.2), glass);
+		Material clear = Material::Build(Colour(0, 0.4, 0.4)).WithSpecular(500).WithReflectivity(0.1).WithTransmittance(0.7, 1.05);
+		scene->AddSphere(Sphere(0.65, 0.2, 0.3, 0.2), clear);
+
+		Material glass = Material::Build(Colour(0, 0.4, 0)).WithSpecular(500).WithReflectivity(0.1).WithTransmittance(0.7, 1.33);
+		scene->AddSphere(Sphere(0.05, 0.45, 0.3, 0.1), glass);
 		
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(20), Colour(1, 1, 1));
 		scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
@@ -55,6 +59,7 @@ namespace MrKWatkins::Rendering::UI
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));
+		errorText.fgcolor(colors::dark_red);
         save.enabled(false);
 
         Layout();
@@ -92,6 +97,12 @@ namespace MrKWatkins::Rendering::UI
                 // Disable cancel if we're no longer in progress.
                 cancel.enabled(false);
                 save.enabled(true);
+
+				// If we've errored pop up a message box.
+				if (status == Error)
+				{
+					errorText.caption("Error: " + renderer->Error());
+				}
 
                 // If we're not still in the process of cancelling then we can stop the timer too; after the next
                 // update it won't get any more new pixels.

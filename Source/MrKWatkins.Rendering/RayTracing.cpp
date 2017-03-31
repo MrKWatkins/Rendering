@@ -99,20 +99,26 @@ namespace MrKWatkins::Rendering::Algorithms
 		return material.Reflectivity() * CalculateColour(reflection, intersection, recursionDepth + 1);
 	}
 
-	Ray CalculateExitRayForTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection)
+	Vector CalculateRefractionDirection(const double sourceRefractiveIndex, const double targetRefractiveIndex, const Vector& rayDirection, const Vector& surfaceNormal)
 	{
-		// Refracted direction = ra(d - n(d.n))/ro - n sqrt(1 - (ra^2(1-(d.n)^2)/ro^2))
+		// Refracted direction = rs(d - n(d.n))/rt - n sqrt(1 - (rs^2(1-(d.n)^2)/rt^2))
 		// Where:
-		//	ra = Refractive index of air.
-		//  ro = Refractive index of object.
+		//	rs = Refractive index of source material, i.e. the material the ray is currently inside.
+		//  rt = Refractive index of target material, i.e. the material the ray is passing into.
 		//  d  = Direction of ray.
 		//  n  = Surface normal.
-		auto ra = 1;
-		auto ro = material.RefractiveIndex();
-		auto d = ray.Direction();
-		auto n = intersection.SurfaceNormal();
-		auto dDotN = d.Dot(n);
-		auto refractedDirection = ra * (d - n * dDotN) / ro - n * sqrt(1 - ra * ra * (1 - dDotN * dDotN) / (ro * ro));
+		auto dDotN = rayDirection.Dot(surfaceNormal);
+		auto toBeRooted = 1 - sourceRefractiveIndex * sourceRefractiveIndex * (1 - dDotN * dDotN) / (targetRefractiveIndex * targetRefractiveIndex);
+		if (toBeRooted < 0)
+		{
+			throw std::logic_error("Total internal reflection not currently supported.");
+		}
+		return sourceRefractiveIndex * (rayDirection - surfaceNormal * dDotN) / targetRefractiveIndex - surfaceNormal * sqrt(toBeRooted);
+	}
+
+	Ray CalculateExitRayForTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection)
+	{
+		auto refractedDirection = CalculateRefractionDirection(1, material.RefractiveIndex(), ray.Direction(), intersection.SurfaceNormal());
 		auto rayPassingThroughObject = Ray(intersection.Point(), refractedDirection);
 
 		// This assumes there are no objects inside the object! TODO: Allow overlapping objects.
@@ -123,8 +129,8 @@ namespace MrKWatkins::Rendering::Algorithms
 			return rayPassingThroughObject;
 		}
 
-		// Assumes we're passing back into the same material.
-		return Ray(exitPoint.value().Point(), ray.Direction());
+		auto exitDirection = CalculateRefractionDirection(material.RefractiveIndex(), 1, rayPassingThroughObject.Direction(), exitPoint.value().SurfaceNormal());
+		return Ray(exitPoint.value().Point(), exitDirection);
 	}
 
 	Colour RayTracing::CalculateTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection, int recursionDepth) const

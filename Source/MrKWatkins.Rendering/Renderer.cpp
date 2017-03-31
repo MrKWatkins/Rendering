@@ -12,6 +12,7 @@ namespace MrKWatkins::Rendering
         std::mutex lock {};
         RendererStatus status{ InProgress };
         double progress{ 0 };
+		std::string error{ "" };
         std::thread thread;
 
         void SetPixel(int x, int y, Colour colour)
@@ -31,20 +32,31 @@ namespace MrKWatkins::Rendering
             const double width = image.Width();
             const double height = image.Height();
 
-            for (unsigned int x = 0; x < width; x++)
-            {
-                for (unsigned int y = 0; y < height; y++)
-                {
-                    auto point = algorithm->RenderPoint(x / width, 1 - y / height);
+			try
+			{
+				for (unsigned int x = 0; x < width; x++)
+				{
+					for (unsigned int y = 0; y < height; y++)
+					{
+						auto point = algorithm->RenderPoint(x / width, 1 - y / height);
 
-                    SetPixel(x, y, point);
+						SetPixel(x, y, point);
 
-                    if (Status() == Cancelling)
-                    {
-                        return;
-                    }
-                }
-            }
+						if (Status() == Cancelling)
+						{
+							return;
+						}
+					}
+				}
+			}
+			catch(const std::exception& exception)
+			{
+				std::lock_guard<std::mutex> take(lock);
+
+				status = RendererStatus::Error;
+				error = exception.what();
+				return;
+			}
 
             std::lock_guard<std::mutex> take(lock);
 
@@ -82,6 +94,13 @@ namespace MrKWatkins::Rendering
             std::lock_guard<std::mutex> take(lock);
 
             return progress;
+        }
+
+        std::string Error()
+        {
+            std::lock_guard<std::mutex> take(lock);
+
+            return error;
         }
 
         RendererStatus Status()
@@ -137,7 +156,12 @@ namespace MrKWatkins::Rendering
         return implementation->Status();
     }
 
-    Image Renderer::TakeSnapshot() const
+	std::string Renderer::Error() const
+	{
+		return implementation->Error();
+	}
+
+	Image Renderer::TakeSnapshot() const
     {
         return implementation->TakeSnapshot();
     }
