@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="Algorithm.h" />
     <ClInclude Include="Attenuation.h" />
+    <ClInclude Include="AxisAlignedBox.h" />
     <ClInclude Include="Chequerboard.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Gradient.h" />
@@ -177,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Attenuation.cpp" />
+    <ClCompile Include="AxisAlignedBox.cpp" />
     <ClCompile Include="Chequerboard.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Gradient.cpp" />

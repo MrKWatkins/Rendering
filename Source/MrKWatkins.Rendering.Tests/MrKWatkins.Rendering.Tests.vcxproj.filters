@@ -65,5 +65,8 @@
     <ClCompile Include="VerifyTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AxisAlignedBoxTests.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

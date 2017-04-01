@@ -7,14 +7,14 @@
 
 using namespace MrKWatkins::Rendering::Geometry;
 
-namespace MrKWatkins::Rendering::Tests::Geometry::PointTests
+namespace MrKWatkins::Rendering::Tests::Geometry::SphereTests
 {
     TEST_CASE("Sphere - NearestIntersection - sphere behind ray", "[Sphere]")
     {
         // Sphere centered at point on negative x-axis with radius less than distance along x-axis so sphere entirely in negative x.
         // No intersection with ray along positive x-axis.
-        auto radius = Random::Double();
-        auto xOrigin = -Random::Double() * radius;
+        auto radius = Random::GreaterThanZero();
+        auto xOrigin = Random::LessThanZero() * radius;
         auto result = Sphere(Point(xOrigin, 0, 0), radius).NearestIntersection(Ray(Point::Origin(), Vector::I()));
         REQUIRE(!result.has_value());
     }
@@ -24,8 +24,8 @@ namespace MrKWatkins::Rendering::Tests::Geometry::PointTests
         // Sphere centered at point on x-axis with radius less than distance along x-axis so sphere entirely in positive x.
         // Intersection with ray along x-axis will be at origin - radius on x-axis.
         // Surface normal will be pointing along negative x.
-        auto radius = Random::Double();
-        auto xOrigin = Random::Double() * radius;
+        auto radius = Random::GreaterThanZero();
+        auto xOrigin = Random::GreaterThanZero() * radius;
         auto result = Sphere(Point(xOrigin, 0, 0), radius).NearestIntersection(Ray(Point::Origin(), Vector::I()));
         REQUIRE(result.has_value());
         CHECK_THAT(result.value().Point(), Equals(Point(xOrigin - radius, 0, 0)));
@@ -36,7 +36,7 @@ namespace MrKWatkins::Rendering::Tests::Geometry::PointTests
 	{
 		// Sphere centered on origin. Ray starts from behind the y-axis, pointing into positive x. Starts radius along y so it strikes the sphere at the tangent.
 		// Intersection will be radius along y. Surface normal will point along y.
-		auto radius = Random::Double();
+		auto radius = Random::GreaterThanZero();
 		auto result = Sphere(Point::Origin(), radius).NearestIntersection(Ray(Point(-radius, radius, 0), Vector::I()));
 		REQUIRE(result.has_value());
 		CHECK_THAT(result.value().Point(), Equals(Point(0, radius, 0)));
@@ -45,7 +45,7 @@ namespace MrKWatkins::Rendering::Tests::Geometry::PointTests
 
 	void RayInsideSphere(std::function<double(double)> rayOriginOnXAxisFromRadius)
     {
-		auto radius = Random::Double();
+		auto radius = Random::GreaterThanZero();
 		auto result = Sphere(Point::Origin(), radius).NearestIntersection(Ray(Point(rayOriginOnXAxisFromRadius(radius), 0, 0), Vector::I()));
 		REQUIRE(result.has_value());
 		CHECK_THAT(result.value().Point(), Equals(Point(radius, 0, 0)));	// Intersection will be at the sphere's radius on the x axis.

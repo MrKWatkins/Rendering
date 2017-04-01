@@ -150,6 +150,9 @@
     <ClInclude Include="Verify.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AxisAlignedBox.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -235,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="Verify.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AxisAlignedBox.cpp">
+      <Filter>Source Files\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

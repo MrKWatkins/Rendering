@@ -13,8 +13,6 @@ namespace MrKWatkins::Rendering::Geometry
         Sphere(const Point& centre, double radius);
         Sphere(double x, double y, double z, double r);
 
-		virtual bool IsSphere() const override { return true; }
-
 		std::optional<Intersection> NearestIntersection(const Ray& ray) const override;
 
         const Point& Centre() const { return centre; }

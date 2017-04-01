@@ -22,8 +22,6 @@ namespace MrKWatkins::Rendering::Scene
         bool operator==(const Object& other) const;
         bool operator!=(const Object& other) const;
 
-		bool IsSphere() const { return solid->IsSphere(); }
-
 		std::optional<Intersection> NearestIntersection(const Ray& ray) const;
 
 		Material GetMaterialAtPoint(const Point& point) const;

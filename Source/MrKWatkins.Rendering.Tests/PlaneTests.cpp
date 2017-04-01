@@ -6,15 +6,15 @@
 
 using namespace MrKWatkins::Rendering::Geometry;
 
-namespace MrKWatkins::Rendering::Tests::Geometry::PointTests
+namespace MrKWatkins::Rendering::Tests::Geometry::PlaneTests
 {
     TEST_CASE("Plane - NearestIntersection - ray above plane intersecting orthogonally", "[Plane]")
     {
         // Plane on origin covering x,y axes with normal pointing into positive z.
-        auto plane = Plane(Point(Random::Double(), Random::Double(), 0), Vector(0, 0, Random::Double()));
+        auto plane = Plane(Point(Random::Double(), Random::Double(), 0), Vector(0, 0, Random::GreaterThanZero()));
 
-        // Ray starts above plane, points straight into negative z.
-        auto ray = Ray(Point(Random::Double(), Random::Double(), 1 + Random::Double()), Vector(0, 0, -Random::Double()));
+        // Ray starts above (above meaning +ve z) plane, points straight into negative z.
+        auto ray = Ray(Point(Random::Double(), Random::Double(), Random::GreaterThanZero()), Vector(0, 0, Random::LessThanZero()));
 
         auto result = plane.NearestIntersection(ray);
         REQUIRE(result.has_value());
@@ -27,8 +27,8 @@ namespace MrKWatkins::Rendering::Tests::Geometry::PointTests
     TEST_CASE("Plane - NearestIntersection - ray below plane intersecting orthogonally", "[Plane]")
     {
         // Plane on origin covering x,y axes. Negative z is 'below' the plane.
-        auto plane = Plane(Point(Random::Double(), Random::Double(), 0), Vector(0, 0, Random::Double()));
-        auto ray = Ray(Point(Random::Double(), Random::Double(), -5 - Random::Double()), Vector(0, 0, Random::Double()));
+        auto plane = Plane(Point(Random::Double(), Random::Double(), 0), Vector(0, 0, Random::GreaterThanZero()));
+        auto ray = Ray(Point(Random::Double(), Random::Double(), Random::LessThanZero()), Vector(0, 0, Random::GreaterThanZero()));
 
         auto result = plane.NearestIntersection(ray);
 		REQUIRE(result.has_value());
