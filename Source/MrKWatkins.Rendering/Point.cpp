@@ -17,7 +17,22 @@ namespace MrKWatkins::Rendering::Geometry
         return Vector(x - other.x, y - other.y, z - other.z);
     }
 
-    double Point::DistanceFrom(const Point& other) const
+	double Point::operator[](unsigned int index) const
+	{
+		switch (index)
+		{
+		case 0:
+			return x;
+		case 1:
+			return y;
+		case 2:
+			return z;
+		}
+
+		throw std::out_of_range("index equals " + std::to_string(index) + " which is not in the range 0 -> 2.");
+	}
+
+	double Point::DistanceFrom(const Point& other) const
     {
         return (*this - other).Length();
     }

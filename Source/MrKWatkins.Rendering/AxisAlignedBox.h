@@ -9,6 +9,8 @@ namespace MrKWatkins::Rendering::Geometry
 	{
 		Point minimum;
 		Point maximum;
+
+		Vector CalculateSurfaceNormal(const Point& intersection, bool insideBox) const;
 	public:
 		AxisAlignedBox(const Point& minimum, const Point& maximum);
 		AxisAlignedBox(const Point& closestCorner, double width, double height, double depth);

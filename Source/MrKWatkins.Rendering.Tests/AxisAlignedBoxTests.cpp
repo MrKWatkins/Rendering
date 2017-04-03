@@ -29,7 +29,7 @@ namespace MrKWatkins::Rendering::Tests::Geometry::AxisAlignedBoxTests
 
 			// Outside of box in z.
 			CHECK(!box.NearestIntersection(Ray(Point(rayOriginX, pointInside.Y(), box.Maximum().Z() + Random::GreaterThanZero()), Vector::I())).has_value());
-			CHECK(!box.NearestIntersection(Ray(Point(rayOriginX, pointInside.Y(), box.Maximum().Z() - Random::GreaterThanZero()), Vector::I())).has_value());
+			CHECK(!box.NearestIntersection(Ray(Point(rayOriginX, pointInside.Y(), box.Minimum().Z() - Random::GreaterThanZero()), Vector::I())).has_value());
 
 			// Intersecting.
 			auto result = box.NearestIntersection(Ray(Point(rayOriginX, pointInside.Y(), pointInside.Z()), Vector::I()));
@@ -40,7 +40,19 @@ namespace MrKWatkins::Rendering::Tests::Geometry::AxisAlignedBoxTests
 
 		SECTION("Inside box on x-axis")
 		{
+			// Facing maximum side.
+			auto result = box.NearestIntersection(Ray(pointInside, Vector::I()));
+			REQUIRE(result.has_value());
+			CHECK_THAT(result.value().Point(), Equals(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(result.value().SurfaceNormal(), Equals(-Vector::I()));
+
+			// Facing minimum side.
+			result = box.NearestIntersection(Ray(pointInside, -Vector::I()));
+			REQUIRE(result.has_value());
+			CHECK_THAT(result.value().Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(result.value().SurfaceNormal(), Equals(Vector::I()));
 		}
+
 		SECTION("Box behind on x-axis")
 		{
 		}

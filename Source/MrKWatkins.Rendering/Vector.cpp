@@ -64,11 +64,25 @@ namespace MrKWatkins::Rendering::Geometry
 		VERIFY_IS_FINITE(scalar);
 		VERIFY_NOT_ZERO(scalar);
 
-		// TODO: Quicker to invert then multiply?
         return Vector(x / scalar, y / scalar, z / scalar);
     }
 
-    double Vector::Dot(const Vector& other) const
+	double Vector::operator[](unsigned int index) const
+	{
+		switch (index)
+		{
+			case 0:
+				return x;
+			case 1:
+				return y;
+			case 2:
+				return z;
+		}
+
+		throw std::out_of_range("index equals " + std::to_string(index) + " which is not in the range 0 -> 2.");
+	}
+
+	double Vector::Dot(const Vector& other) const
     {
         return x*other.x + y*other.y + z*other.z;
     }
@@ -145,5 +159,20 @@ namespace MrKWatkins::Rendering::Geometry
 		static const auto k = Vector(0, 0, 1, true);
 
 		return k;
+	}
+
+	const Vector& Vector::Axis(unsigned int index)
+	{
+		switch (index)
+		{
+		case 0:
+			return I();
+		case 1:
+			return J();
+		case 2:
+			return K();
+		}
+
+		throw std::out_of_range("index equals " + std::to_string(index) + " which is not in the range 0 -> 2.");
 	}
 }

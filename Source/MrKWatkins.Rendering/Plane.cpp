@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Plane.h"
+#include "Doubles.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -13,14 +14,14 @@ namespace MrKWatkins::Rendering::Geometry
         // Plane => (P - p).n = 0
         // d = (p - O).n / D.n
         auto Dn = ray.Direction().Dot(normal);
-        if (Dn == 0)
+        if (Doubles::IsZero(Dn))
         {
             // Ray is parallel to the plane. We'll treat being parallel and in the plane ( (p - O).n = 0 ) as not an intersection.
             return std::optional<Intersection>();
         }
 
         auto d = (pointOnPlane - ray.Origin()).Dot(normal) / Dn;
-        if (d < 0)
+        if (Doubles::IsLessThanZero(d))
         {
             // Intersection is behind the ray's origin.
 			return std::optional<Intersection>();
@@ -33,7 +34,7 @@ namespace MrKWatkins::Rendering::Geometry
         // The dot product between two vector is positive for 0 -> 90 degress, then negative for 90 -> 180 degrees, *when both vectors start at the
         // same point*. With our vectors however the ray is in the opposite direction. Therefore when the ray strikes the top our dot product will be
         // negative, and when it strikes the underneath it will be positive.
-        if (Dn < 0)
+        if (Doubles::IsLessThanZero(Dn))
         {
             return Intersection(intersection, normal);
         }

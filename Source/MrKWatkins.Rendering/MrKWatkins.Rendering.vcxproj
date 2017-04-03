@@ -151,6 +151,7 @@
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="Lambertian.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="Doubles.h" />
     <ClInclude Include="ObjectIntersection.h" />
     <ClInclude Include="Phong.h" />
     <ClInclude Include="SurfacePoint.h" />

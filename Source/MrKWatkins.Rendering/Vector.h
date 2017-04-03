@@ -40,6 +40,8 @@ namespace MrKWatkins::Rendering::Geometry
         friend Vector operator*(double scalar, const Vector& vector);
         Vector operator/(double scalar) const;
 
+		double operator [](unsigned int index) const;
+
         double Dot(const Vector& other) const;
         Vector Cross(const Vector& other) const;
         Vector Normalize() const;
@@ -53,5 +55,6 @@ namespace MrKWatkins::Rendering::Geometry
 		static const Vector& I() noexcept;
 		static const Vector& J() noexcept;
 		static const Vector& K() noexcept;
+		static const Vector& Axis(unsigned int index);
     };
 }
