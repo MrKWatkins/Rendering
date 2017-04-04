@@ -17,28 +17,37 @@ namespace MrKWatkins::Rendering::Tests::Geometry::AxisAlignedBoxTests
 		auto box = AxisAlignedBox(nearCorner, width, height, depth);
 		auto pointInside = Random::PointInside(box);
 
-		SECTION("Box in front on x-axis")
+		// TODO: Same tests for y, x axes. Can we pull out the test code and use axis indexers to share code?
+		SECTION("Outside box with rays parallel to the x-axis")
 		{
-			// Create an origin that will hit the box with direction in positive X. Position X before the near side and
-			// position y and z in the boundaries of the box.
+			// Create an origin that will hit the box with direction in positive X. Position X before the near side and position y and z in the boundaries of the box.
 			auto rayOriginX = nearCorner.X() - Random::GreaterThanZero();
 
-			// Outside of box in y.
+			// Box in front on x-axis, outside of box in y-axis.
 			CHECK(!box.NearestIntersection(Ray(Point(rayOriginX, box.Maximum().Y() + Random::GreaterThanZero(), pointInside.Z()), Vector::I())).has_value());
 			CHECK(!box.NearestIntersection(Ray(Point(rayOriginX, box.Minimum().Y() - Random::GreaterThanZero(), pointInside.Z()), Vector::I())).has_value());
 
-			// Outside of box in z.
+			// Box in front on x-axis, outside of box in z-axis.
 			CHECK(!box.NearestIntersection(Ray(Point(rayOriginX, pointInside.Y(), box.Maximum().Z() + Random::GreaterThanZero()), Vector::I())).has_value());
 			CHECK(!box.NearestIntersection(Ray(Point(rayOriginX, pointInside.Y(), box.Minimum().Z() - Random::GreaterThanZero()), Vector::I())).has_value());
 
-			// Intersecting.
+			// Box in front on x-axis.
 			auto result = box.NearestIntersection(Ray(Point(rayOriginX, pointInside.Y(), pointInside.Z()), Vector::I()));
 			REQUIRE(result.has_value());
 			CHECK_THAT(result.value().Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
 			CHECK_THAT(result.value().SurfaceNormal(), Equals(-Vector::I()));
+
+			// Box behind on x-axis.
+			CHECK(!box.NearestIntersection(Ray(Point(box.Maximum().X() + Random::GreaterThanZero(), pointInside.Y(), pointInside.Z()), Vector::I())).has_value());
+
+			// Box behind on x-axis, ray pointing backwards.
+			result = box.NearestIntersection(Ray(Point(box.Maximum().X() + Random::GreaterThanZero(), pointInside.Y(), pointInside.Z()), -Vector::I()));
+			REQUIRE(result.has_value());
+			CHECK_THAT(result.value().Point(), Equals(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(result.value().SurfaceNormal(), Equals(Vector::I()));
 		}
 
-		SECTION("Inside box on x-axis")
+		SECTION("Inside box with rays parallel to the x-axis")
 		{
 			// Facing maximum side.
 			auto result = box.NearestIntersection(Ray(pointInside, Vector::I()));
@@ -52,11 +61,5 @@ namespace MrKWatkins::Rendering::Tests::Geometry::AxisAlignedBoxTests
 			CHECK_THAT(result.value().Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
 			CHECK_THAT(result.value().SurfaceNormal(), Equals(Vector::I()));
 		}
-
-		SECTION("Box behind on x-axis")
-		{
-		}
-
-		// Same for y, z.
 	}
 }
