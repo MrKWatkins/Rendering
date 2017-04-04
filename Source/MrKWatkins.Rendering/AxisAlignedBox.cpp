@@ -63,7 +63,7 @@ namespace MrKWatkins::Rendering::Geometry
 			}
 		}
 
-		if (dFar < dNear)
+		if (dFar < 0.0 || dFar < dNear)
 		{
 			return std::optional<Intersection>();
 		}

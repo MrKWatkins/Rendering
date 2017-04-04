@@ -19,6 +19,20 @@ namespace MrKWatkins::Rendering::Scene
     {
     }
 
+    Scene& Scene::AddAxisAlignedBox(const AxisAlignedBox& box, const Material& material)
+    {
+        return AddAxisAlignedBox(box, std::shared_ptr<Texture>(std::make_shared<Flat>(material)));
+    }
+
+    Scene& Scene::AddAxisAlignedBox(const AxisAlignedBox& box, const std::shared_ptr<Texture> texture)
+    {
+        auto pointerToBox = std::unique_ptr<Solid>(std::make_unique<AxisAlignedBox>(box));
+        auto pointerToSceneObject = std::make_unique<Object>(move(pointerToBox), texture);
+        objects.push_back(move(pointerToSceneObject));
+
+        return *this;
+    }
+
     Scene& Scene::AddPlane(const Plane& plane, const Material& material)
     {
         return AddPlane(plane, std::shared_ptr<Texture>(std::make_shared<Flat>(material)));

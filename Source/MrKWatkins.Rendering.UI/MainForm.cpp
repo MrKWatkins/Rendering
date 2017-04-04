@@ -29,13 +29,8 @@ namespace MrKWatkins::Rendering::UI
         return "Progress: " + std::to_string(progress * 100) + "%";
     }
 
-    MainForm::MainForm() : form(API::make_center(740, 775), appear::decorate<appear::taskbar>()), imageBuffer { 720, 720 }
-    {
-        graphicsBuffer = { nana::size{ 720, 720 } };
-        graphicsBuffer.make(nana::size{ 720, 720 });
-
-		auto shadingModel = ShadingModel::Create<Phong>();
-
+	std::unique_ptr<Scene::Scene> BuildScene()
+	{
 		auto scene = std::make_unique<Scene::Scene>(Colour(0.25, 0.25, 0.25), Texture::Create<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8)));
 
 		Material red = Material::Build(Colour(0.1, 0.01, 0.01), Colour(1, 0, 0)).WithReflectivity(0.1);
@@ -51,11 +46,23 @@ namespace MrKWatkins::Rendering::UI
 
 		Material glass = Material::Build(Colour(0, 0.4, 0)).WithSpecular(500).WithReflectivity(0.1).WithTransmittance(0.7, 1.33);
 		scene->AddSphere(Sphere(0.05, 0.45, 0.3, 0.1), glass);
-		
+
+		scene->AddAxisAlignedBox(AxisAlignedBox(Point(0.1, 0.9, 0.1), 0.8, 0.1, 1), glass);
+
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(20), Colour(1, 1, 1));
 		scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
 
-        renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(scene), 1);
+		return scene;
+	}
+
+    MainForm::MainForm() : form(API::make_center(740, 775), appear::decorate<appear::taskbar>()), imageBuffer { 720, 720 }
+    {
+        graphicsBuffer = { nana::size{ 720, 720 } };
+        graphicsBuffer.make(nana::size{ 720, 720 });
+
+		auto shadingModel = ShadingModel::Create<Phong>();
+
+        renderer = Renderer::Start<Algorithms::RayTracing>(720, std::move(shadingModel), std::move(BuildScene()), 1);
 
         caption("Rendering");
         progressText.caption(BuildProgressMessage(0));

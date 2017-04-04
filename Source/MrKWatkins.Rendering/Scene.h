@@ -1,8 +1,9 @@
 #pragma once
+#include "AxisAlignedBox.h"
 #include "Light.h"
-#include "Plane.h"
 #include "Object.h"
 #include "ObjectIntersection.h"
+#include "Plane.h"
 #include "Sphere.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
@@ -21,6 +22,9 @@ namespace MrKWatkins::Rendering::Scene
         explicit Scene(const Colour& ambientLight);
         Scene(const Colour& ambientLight, const Colour& backgroundColour);
         Scene(const Colour& ambientLight, const std::shared_ptr<Texture> background);
+
+        Scene& AddAxisAlignedBox(const AxisAlignedBox& box, const Material& material);
+        Scene& AddAxisAlignedBox(const AxisAlignedBox& box, const std::shared_ptr<Texture> texture);
 
         Scene& AddPlane(const Plane& plane, const Material& material);
         Scene& AddPlane(const Plane& plane, const std::shared_ptr<Texture> texture);
