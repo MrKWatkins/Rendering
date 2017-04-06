@@ -113,20 +113,23 @@ namespace MrKWatkins::Rendering::Algorithms
 
 	std::optional<Vector> CalculateRefractedDirection(const double sourceRefractiveIndex, const double targetRefractiveIndex, const Vector& rayDirection, const Vector& surfaceNormal)
 	{
-		// Refracted direction = rs(d - n(d.n))/rt - n sqrt(1 - (rs^2(1-(d.n)^2)/rt^2))
+		// From https://en.wikipedia.org/wiki/Snell%27s_law#Vector_form:
+		// Refracted direction = rl + n (rc - sqrt(1 - r²(1 - c²))
 		// Where:
-		//	rs = Refractive index of source material, i.e. the material the ray is currently inside.
-		//  rt = Refractive index of target material, i.e. the material the ray is passing into.
-		//  d  = Direction of ray.
-		//  n  = Surface normal.
-		auto dDotN = rayDirection.Dot(surfaceNormal);
-		auto toBeRooted = 1 - sourceRefractiveIndex * sourceRefractiveIndex * (1 - dDotN * dDotN) / (targetRefractiveIndex * targetRefractiveIndex);
+		//	r = Ratio of refractive index of source material (rs), i.e. the material the ray is currently inside, to the refractive index of target material (rt),
+		//      i.e. the material the ray is passing into. r = rs/rt.
+		//  l = Direction of ray.
+		//  n = Surface normal.
+		//  c = -n.l.
+		auto r = sourceRefractiveIndex / targetRefractiveIndex;
+		auto c = -surfaceNormal.Dot(rayDirection);
+		auto toBeRooted = 1 - r * r * (1 - c * c);
 		if (toBeRooted < 0)
 		{
 			// Total internal reflection.
 			return std::optional<Vector>();
 		}
-		return sourceRefractiveIndex * (rayDirection - surfaceNormal * dDotN) / targetRefractiveIndex - surfaceNormal * sqrt(toBeRooted);
+		return r * rayDirection + surfaceNormal * (r * c - sqrt(toBeRooted));
 	}
 
 	std::optional<Ray> RayTracing::CalculateExitRayForTransmittance(const Ray& refractedRay, const Material& material, const Scene::Object* object, int* recursionDepth) const
