@@ -1,4 +1,6 @@
 #pragma once
+#include "Doubles.h"
+
 // Verifications are implemented as macros so we can easily turn them off for super fast code. I tried using functions whose internals were wrapped in an #ifdef but to
 // include the parameter name involved (lots) of string allocations which slowed the program down by a factor of two...
 
@@ -17,7 +19,7 @@ if (parameter == 0)	/* TODO: Should this be a tolerant comparison? */ \
 }
 
 #define VERIFY_ZERO_TO_ONE(parameter) \
-if (parameter < 0 || parameter > 1) \
+if (!Doubles::IsZeroToOne(parameter)) \
 { \
 	throw std::out_of_range(#parameter " equals " + std::to_string(parameter) + " which is not in the range 0 -> 1."); \
 }

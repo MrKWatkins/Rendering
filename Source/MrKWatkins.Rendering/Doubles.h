@@ -26,11 +26,35 @@ namespace MrKWatkins::Rendering::Doubles
 	}
 
 	/// <summary>
+	///	Is the double greater than or equal to zero within floating point tolerance?
+	/// </summary>
+	constexpr bool IsGreaterThanOrEqualToZero(double x)
+	{
+		return x > -Tolerance;
+	}
+
+	/// <summary>
+	///	Is the double greater than one within floating point tolerance?
+	/// </summary>
+	constexpr bool IsGreaterThanOne(double x)
+	{
+		return x > 1 + Tolerance;
+	}
+
+	/// <summary>
+	///	Is the double in the range zero to one inclusive within floating point tolerance?
+	/// </summary>
+	constexpr bool IsZeroToOne(double x)
+	{
+		return IsGreaterThanOrEqualToZero(x) && !IsGreaterThanOne(x);
+	}
+
+	/// <summary>
 	///	Is the double less than zero within floating point tolerance?
 	/// </summary>
 	constexpr bool IsLessThanZero(double x)
 	{
-		return x < Tolerance;
+		return x < -Tolerance;
 	}
 
 	/// <summary>
@@ -55,5 +79,13 @@ namespace MrKWatkins::Rendering::Doubles
 			return x > Tolerance;
 		}
 		return -x > Tolerance;
+	}
+
+	/// <summary>
+	///	Is the double greater than the specified value within floating point tolerance?
+	/// </summary>
+	constexpr bool IsGreaterThan(double x, double minimum)
+	{
+		return x > minimum + Tolerance;
 	}
 }

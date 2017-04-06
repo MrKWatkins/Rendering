@@ -61,7 +61,21 @@ namespace MrKWatkins::Rendering::Scene
         return *this;
     }
 
-    Scene& Scene::AddPointLight(const Point& position, const Attenuation& attenuation, const Colour& colour)
+	Scene& Scene::AddTriangle(const Triangle& triangle, const Material& material)
+	{
+		return AddTriangle(triangle, std::shared_ptr<Texture>(std::make_shared<Flat>(material)));
+	}
+
+	Scene& Scene::AddTriangle(const Triangle& triangle, const std::shared_ptr<Texture> texture)
+	{
+		auto pointerToTriangle = std::unique_ptr<Solid>(std::make_unique<Triangle>(triangle));
+		auto pointerToSceneObject = std::make_unique<Object>(move(pointerToTriangle), texture);
+		objects.push_back(move(pointerToSceneObject));
+
+		return *this;
+	}
+
+	Scene& Scene::AddPointLight(const Point& position, const Attenuation& attenuation, const Colour& colour)
     {
         lights.push_back(std::make_unique<PointLight>(colour, attenuation, position));
 

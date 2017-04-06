@@ -41,13 +41,8 @@ namespace MrKWatkins::Rendering::UI
 		scene->AddSphere(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
 		scene->AddSphere(Sphere(0.9, 0.2, 0.75, 0.2), Material::Chrome());
 
-		Material clear = Material::Build(Colour(0, 0.4, 0.4)).WithSpecular(500).WithReflectivity(0.1).WithTransmittance(0.7, 1.05);
-		scene->AddSphere(Sphere(0.65, 0.2, 0.3, 0.2), clear);
-
-		Material glass = Material::Build(Colour(0, 0.4, 0)).WithSpecular(500).WithReflectivity(0.1).WithTransmittance(0.7, 1.33);
-		scene->AddSphere(Sphere(0.05, 0.45, 0.3, 0.1), glass);
-
-		scene->AddAxisAlignedBox(AxisAlignedBox(Point(0.1, 0.9, 0.1), 0.8, 0.1, 1), glass);
+		scene->AddTriangle(Triangle(Point(0.1, 0.4, 0.1), Point(0.2, 0.4, 0.5), Point(0.2, 0.9, 0.5)), Material::Bronze());
+		scene->AddTriangle(Triangle(Point(0.6, 0.0, 0.05), Point(0.6, 0.3, 0.05), Point(0.5, 0.0, 0.05)), Material::Jade());
 
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(20), Colour(1, 1, 1));
 		scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));

@@ -5,6 +5,7 @@
 #include "ObjectIntersection.h"
 #include "Plane.h"
 #include "Sphere.h"
+#include "Triangle.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
 using namespace MrKWatkins::Rendering::Lighting;
@@ -23,6 +24,7 @@ namespace MrKWatkins::Rendering::Scene
         Scene(const Colour& ambientLight, const Colour& backgroundColour);
         Scene(const Colour& ambientLight, const std::shared_ptr<Texture> background);
 
+		// TODO: Use a template method for these.
         Scene& AddAxisAlignedBox(const AxisAlignedBox& box, const Material& material);
         Scene& AddAxisAlignedBox(const AxisAlignedBox& box, const std::shared_ptr<Texture> texture);
 
@@ -31,6 +33,9 @@ namespace MrKWatkins::Rendering::Scene
 
         Scene& AddSphere(const Sphere& sphere, const Material& material);
         Scene& AddSphere(const Sphere& sphere, const std::shared_ptr<Texture> texture);
+
+		Scene& AddTriangle(const Triangle& triangle, const Material& material);
+		Scene& AddTriangle(const Triangle& triangle, const std::shared_ptr<Texture> texture);
 
         Scene& AddPointLight(const Point& position, const Attenuation& attenuation, const Colour& colour);
 

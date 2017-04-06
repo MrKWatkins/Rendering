@@ -159,6 +159,7 @@
     <ClInclude Include="Plane.h" />
     <ClInclude Include="SkyGradient.h" />
     <ClInclude Include="Flat.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Uniform.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Solid.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="SkyGradient.cpp" />
     <ClCompile Include="Flat.cpp" />
     <ClCompile Include="SurfacePoint.cpp" />
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Uniform.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="PointLight.cpp" />
@@ -211,7 +213,6 @@
     </ClCompile>
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Vector.cpp" />
-    <ClCompile Include="Verify.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="DebugVisualization.natvis" />

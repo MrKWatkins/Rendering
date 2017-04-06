@@ -156,6 +156,9 @@
     <ClInclude Include="Doubles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -239,10 +242,10 @@
     <ClCompile Include="SurfacePoint.cpp">
       <Filter>Source Files\Shading</Filter>
     </ClCompile>
-    <ClCompile Include="Verify.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AxisAlignedBox.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
