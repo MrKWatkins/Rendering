@@ -16,28 +16,6 @@ namespace MrKWatkins::Rendering::Geometry
 	{
 	}
 
-	Vector AxisAlignedBox::CalculateSurfaceNormal(const Point& intersection, bool insideBox) const
-	{
-		// Test both sides in each axis to find the one we intersect. If we intersect multiple, i.e. an edge or corner, then just return the first one we find. We don't try to do
-		// anything complex and arguably wrong like have the normal at an angle.
-		for (unsigned int axis = 0; axis < 3; axis++)
-		{
-			// Are we intersecting on the near side?
-			if (Doubles::AreEqual(intersection[axis], minimum[axis]))
-			{
-				return insideBox ? Vector::Axis(axis) : -Vector::Axis(axis);
-			}
-
-			// What about the far side?
-			if (Doubles::AreEqual(intersection[axis], maximum[axis]))
-			{
-				return insideBox ? -Vector::Axis(axis) : Vector::Axis(axis);
-			}
-		}
-
-		throw std::logic_error("Could not determine side of box for intersection.");
-	}
-
 	std::optional<Intersection> AxisAlignedBox::NearestIntersection(const Ray& ray) const
 	{
 		auto dNear = -std::numeric_limits<double>::infinity();
@@ -71,6 +49,29 @@ namespace MrKWatkins::Rendering::Geometry
 		auto insideBox = Doubles::IsLessThanZero(dNear);
 		auto intersection = ray.Origin() + (insideBox ? dFar : dNear) * ray.Direction();
 		auto normal = CalculateSurfaceNormal(intersection, insideBox);
+
 		return Intersection(intersection, normal);
+	}
+
+	Vector AxisAlignedBox::CalculateSurfaceNormal(const Point& intersection, bool insideBox) const
+	{
+		// Test both sides in each axis to find the one we intersect. If we intersect multiple, i.e. an edge or corner, then just return the first one we find. We don't try to do
+		// anything complex and arguably wrong like have the normal at an angle.
+		for (unsigned int axis = 0; axis < 3; axis++)
+		{
+			// Are we intersecting on the near side?
+			if (Doubles::AreEqual(intersection[axis], minimum[axis]))
+			{
+				return insideBox ? Vector::Axis(axis) : -Vector::Axis(axis);
+			}
+
+			// What about the far side?
+			if (Doubles::AreEqual(intersection[axis], maximum[axis]))
+			{
+				return insideBox ? -Vector::Axis(axis) : Vector::Axis(axis);
+			}
+		}
+
+		throw std::logic_error("Could not determine side of box for intersection.");
 	}
 }

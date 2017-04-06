@@ -19,9 +19,11 @@ namespace MrKWatkins::Rendering::Algorithms
 
 		Colour CalculateDirectLight(const Material& material, const Scene::ObjectIntersection intersection) const;
 
-		Colour CalculateReflection(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection, int recursionDepth) const;
+		Colour CalculateReflection(const Ray& ray, double reflectivity, const Scene::ObjectIntersection intersection, int recursionDepth) const;
 
-		Colour CalculateTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection, int recursionDepth) const;
+		std::optional<Ray> CalculateExitRayForTransmittance(const Ray& refractedRay, const Material& material, const Scene::Object* object, int* recursionDepth) const;
+
+		std::optional<Colour> CalculateTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection, int recursionDepth) const;
     public:
         RayTracing(std::unique_ptr<Shading::ShadingModel>&& shadingModel, std::unique_ptr<Scene::Scene>&& scene, double cameraDistance, int maximumRecursionDepth = 100);
 

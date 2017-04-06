@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Doubles.h"
 #include "RayTracing.h"
 #include "ShadingModel.h"
 #include "SurfacePoint.h"
@@ -43,8 +44,19 @@ namespace MrKWatkins::Rendering::Algorithms
 
 		auto colour = Colour::Black();
 		colour = colour + (1.0 - material.Reflectivity() - material.Transmittance()) * CalculateDirectLight(material, intersection);
-		colour = colour + CalculateReflection(ray, material, intersection, recursionDepth);
-		colour = colour + CalculateTransmittance(ray, material, intersection, recursionDepth);
+
+		auto reflectivity = material.Reflectivity();
+		auto transmittance = CalculateTransmittance(ray, material, intersection, recursionDepth);
+		if (transmittance.has_value())
+		{
+			colour = colour + transmittance.value();
+		}
+		else
+		{
+			// Total internal reflection on the exterior. Add the amount of transmittance to reflectivity instead.
+			reflectivity += material.Transmittance();
+		}
+		colour = colour + CalculateReflection(ray, reflectivity, intersection, recursionDepth);
 		return colour;
 	}
 
@@ -84,22 +96,22 @@ namespace MrKWatkins::Rendering::Algorithms
 		return colour;
 	}
 
-	Colour RayTracing::CalculateReflection(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection, int recursionDepth) const
+	Colour RayTracing::CalculateReflection(const Ray& ray, double reflectivity, const Scene::ObjectIntersection intersection, int recursionDepth) const
 	{
-		if (material.Reflectivity() == 0)
+		if (Doubles::IsZero(reflectivity))
 		{
 			return Colour::Black();
 		}
 
 		auto surfaceToRayOrigin = -ray.Direction();
 		auto reflectionOrigin = intersection.Point();
-		auto reflectionDirection = surfaceToRayOrigin.ReflectAbout(intersection.SurfaceNormal());
+		auto reflectionDirection = Vector::ReflectAboutNormal(surfaceToRayOrigin, intersection.SurfaceNormal());
 
 		auto reflection = Ray(reflectionOrigin, reflectionDirection);
-		return material.Reflectivity() * CalculateColour(reflection, intersection, recursionDepth + 1);
+		return reflectivity * CalculateColour(reflection, intersection, recursionDepth + 1);
 	}
 
-	Vector CalculateRefractionDirection(const double sourceRefractiveIndex, const double targetRefractiveIndex, const Vector& rayDirection, const Vector& surfaceNormal)
+	std::optional<Vector> CalculateRefractedDirection(const double sourceRefractiveIndex, const double targetRefractiveIndex, const Vector& rayDirection, const Vector& surfaceNormal)
 	{
 		// Refracted direction = rs(d - n(d.n))/rt - n sqrt(1 - (rs^2(1-(d.n)^2)/rt^2))
 		// Where:
@@ -111,37 +123,65 @@ namespace MrKWatkins::Rendering::Algorithms
 		auto toBeRooted = 1 - sourceRefractiveIndex * sourceRefractiveIndex * (1 - dDotN * dDotN) / (targetRefractiveIndex * targetRefractiveIndex);
 		if (toBeRooted < 0)
 		{
-			throw std::logic_error("Total internal reflection not currently supported.");
+			// Total internal reflection.
+			return std::optional<Vector>();
 		}
 		return sourceRefractiveIndex * (rayDirection - surfaceNormal * dDotN) / targetRefractiveIndex - surfaceNormal * sqrt(toBeRooted);
 	}
 
-	Ray CalculateExitRayForTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection)
+	std::optional<Ray> RayTracing::CalculateExitRayForTransmittance(const Ray& refractedRay, const Material& material, const Scene::Object* object, int* recursionDepth) const
 	{
-		auto refractedDirection = CalculateRefractionDirection(1, material.RefractiveIndex(), ray.Direction(), intersection.SurfaceNormal());
-		auto rayPassingThroughObject = Ray(intersection.Point(), refractedDirection);
-
 		// This assumes there are no objects inside the object! TODO: Allow overlapping objects.
-		auto exitPoint = intersection.Object()->NearestIntersection(rayPassingThroughObject);
+		auto exitPoint = object->NearestIntersection(refractedRay);
 		if (!exitPoint.has_value())
 		{
 			// Must've been a 2D object.
-			return rayPassingThroughObject;
+			return refractedRay;
 		}
 
-		auto exitDirection = CalculateRefractionDirection(material.RefractiveIndex(), 1, rayPassingThroughObject.Direction(), exitPoint.value().SurfaceNormal());
-		return Ray(exitPoint.value().Point(), exitDirection);
+		auto internalRay = refractedRay;
+		auto exitDirection = CalculateRefractedDirection(material.RefractiveIndex(), 1, internalRay.Direction(), exitPoint->SurfaceNormal());
+		// If there is no value then we have total internal reflection.
+		while (!exitDirection.has_value())
+		{
+			if (*recursionDepth == maximumRecursionDepth)
+			{
+				return std::optional<Ray>();
+			}
+			*recursionDepth = *recursionDepth + 1;	// Being 100% sure I'm not incrementing the pointer here...
+
+			auto internalReflectionDirection = Vector::ReflectAboutNormal(-internalRay.Direction(), exitPoint->SurfaceNormal());
+			internalRay = Ray(exitPoint->Point(), internalReflectionDirection);
+			exitPoint = object->NearestIntersection(internalRay);
+			exitDirection = CalculateRefractedDirection(material.RefractiveIndex(), 1, internalRay.Direction(), exitPoint->SurfaceNormal());
+		}
+
+		return Ray(exitPoint->Point(), exitDirection.value());
 	}
 
-	Colour RayTracing::CalculateTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection, int recursionDepth) const
+	std::optional<Colour> RayTracing::CalculateTransmittance(const Ray& ray, const Material& material, const Scene::ObjectIntersection intersection, int recursionDepth) const
 	{
-		if (material.Transmittance() == 0)
+		if (Doubles::IsZero(material.Transmittance()))
 		{
 			return Colour::Black();
 		}
 
-		auto exitRay = CalculateExitRayForTransmittance(ray, material, intersection);
+		// Work out the direction of refraction.
+		auto refractedDirection = CalculateRefractedDirection(1, material.RefractiveIndex(), ray.Direction(), intersection.SurfaceNormal());
+		if (!refractedDirection.has_value())
+		{
+			// Total internal reflection on the exterior. Return no Colour to indicate to that we should use the amount of transmittance for reflection instead.
+			return std::optional<Colour>();
+		}
 
-		return material.Transmittance() * CalculateColour(exitRay, intersection, recursionDepth + 1);
+		auto refractedRay = Ray(intersection.Point(), refractedDirection.value());
+		auto exitRay = CalculateExitRayForTransmittance(refractedRay, material, intersection.Object(), &recursionDepth);
+		if (!exitRay.has_value())
+		{
+			// No exit ray - must be bouncing around inside.
+			return Colour::Black();
+		}
+
+		return material.Transmittance() * CalculateColour(exitRay.value(), intersection, recursionDepth + 1);
 	}
 }

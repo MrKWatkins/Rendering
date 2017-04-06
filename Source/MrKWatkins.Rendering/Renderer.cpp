@@ -37,6 +37,8 @@ namespace MrKWatkins::Rendering
 			high_resolution_clock clock;
 			auto startTime = clock.now();
 
+			//auto debug = algorithm->RenderPoint(186 / width, 1 - 186 / height);
+
 			try
 			{
 				for (unsigned int x = 0; x < width; x++)

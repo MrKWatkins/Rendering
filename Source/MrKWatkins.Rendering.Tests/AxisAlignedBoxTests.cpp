@@ -60,6 +60,26 @@ namespace MrKWatkins::Rendering::Tests::Geometry::AxisAlignedBoxTests
 			REQUIRE(result.has_value());
 			CHECK_THAT(result.value().Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
 			CHECK_THAT(result.value().SurfaceNormal(), Equals(Vector::I()));
+
+			// On minimum side, facing maximum side - intersection should be with the maximum side and not the side we're overlapping.
+			result = box.NearestIntersection(Ray(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z()), Vector::I()));
+			REQUIRE(result.has_value());
+			CHECK_THAT(result.value().Point(), Equals(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(result.value().SurfaceNormal(), Equals(-Vector::I()));
+
+			// On maximum side, facing minimum side - intersection should be with the minimum side and not the side we're overlapping.
+			result = box.NearestIntersection(Ray(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z()), -Vector::I()));
+			REQUIRE(result.has_value());
+			CHECK_THAT(result.value().Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(result.value().SurfaceNormal(), Equals(Vector::I()));
 		}
+	}
+
+	TEST_CASE("AxisAlignedBox - Bug", "[AxisAlignedBox]")
+	{
+		auto box = AxisAlignedBox(Point(0.1, 0.9, 0.1), 0.8, 0.1, 1);
+		auto ray = Ray(Point(0.1, 1, 0.42551694027005382), Vector(0.20333247500773682, 0.25416559375967102, 0.94554521602936681));
+
+		auto intersection = box.NearestIntersection(ray);
 	}
 }

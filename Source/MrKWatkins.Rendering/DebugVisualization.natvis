@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- See https://msdn.microsoft.com/en-us/library/jj620914.aspx for more information. -->
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+  <Type Name="MrKWatkins::Rendering::Geometry::Point">
+    <DisplayString>({x,g}, {y,g}, {z,g})</DisplayString>
+  </Type>
+  <Type Name="MrKWatkins::Rendering::Geometry::Vector">
+    <DisplayString>({x,g}, {y,g}, {z,g})</DisplayString>
+  </Type>
+</AutoVisualizer>

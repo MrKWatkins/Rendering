@@ -246,4 +246,7 @@
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="DebugVisualization.natvis" />
+  </ItemGroup>
 </Project>

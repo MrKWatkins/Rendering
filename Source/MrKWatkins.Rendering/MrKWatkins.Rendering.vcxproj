@@ -213,6 +213,9 @@
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Verify.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="DebugVisualization.natvis" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

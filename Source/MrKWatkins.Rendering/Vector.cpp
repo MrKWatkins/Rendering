@@ -113,13 +113,6 @@ namespace MrKWatkins::Rendering::Geometry
         return Vector(x * multiplier, y * multiplier, z * multiplier, true);
     }
 
-	Vector Vector::ReflectAbout(const Vector& normal) const
-	{
-		VERIFY_IS_NORMALIZED(normal);
-
-		return 2 * Dot(normal) * normal - *this;
-	}
-
 	std::string Vector::ToString() const
     {
         std::ostringstream oss;
@@ -174,5 +167,13 @@ namespace MrKWatkins::Rendering::Geometry
 		}
 
 		throw std::out_of_range("index equals " + std::to_string(index) + " which is not in the range 0 -> 2.");
+	}
+
+	Vector Vector::ReflectAboutNormal(const Vector& vectorPointingToNormal, const Vector& normal)
+	{
+		VERIFY_IS_NORMALIZED(normal);
+
+		// TODO: Is result normalized if vectorPointingToNormal is normalized?
+		return 2 * vectorPointingToNormal.Dot(normal) * normal - vectorPointingToNormal;
 	}
 }

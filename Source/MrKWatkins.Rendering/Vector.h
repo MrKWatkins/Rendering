@@ -46,8 +46,6 @@ namespace MrKWatkins::Rendering::Geometry
         Vector Cross(const Vector& other) const;
         Vector Normalize() const;
 
-		Vector ReflectAbout(const Vector& normal) const;
-
         std::string ToString() const;
         friend std::ostream& operator<<(std::ostream& os, const Vector& vector);
 
@@ -56,5 +54,7 @@ namespace MrKWatkins::Rendering::Geometry
 		static const Vector& J() noexcept;
 		static const Vector& K() noexcept;
 		static const Vector& Axis(unsigned int index);
+
+		static Vector ReflectAboutNormal(const Vector& vectorPointingToNormal, const Vector& normal);
     };
 }

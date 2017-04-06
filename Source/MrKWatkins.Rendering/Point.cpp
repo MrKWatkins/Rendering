@@ -40,7 +40,7 @@ namespace MrKWatkins::Rendering::Geometry
     std::string Point::ToString() const
     {
         std::ostringstream oss;
-        oss << "Vector (" << x + 0.0 << "," << y + 0.0 << "," << z + 0.0 << ")";   // + 0.0 converts -0.0 into +0.0.
+        oss << "Point (" << x + 0.0 << "," << y + 0.0 << "," << z + 0.0 << ")";   // + 0.0 converts -0.0 into +0.0.
         return oss.str();
     }
 
