@@ -18,6 +18,7 @@ namespace MrKWatkins::Rendering::Geometry
 
 	std::optional<Intersection> AxisAlignedBox::NearestIntersection(const Ray& ray) const
 	{
+		// Use the slabs method (http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter3.htm) to find the intersection.
 		auto dNear = -std::numeric_limits<double>::infinity();
 		auto dFar = std::numeric_limits<double>::infinity();
 
@@ -26,13 +27,19 @@ namespace MrKWatkins::Rendering::Geometry
 			const auto origin = ray.Origin()[axis];
 			const auto direction = ray.Direction()[axis];
 
+			// If the direction in this axis is zero then the ray is parallel to the box.
 			if (Doubles::IsNotZero(direction))
 			{
-				auto dx1 = (minimum[axis] - origin) / direction;
-				auto dx2 = (maximum[axis] - origin) / direction;
+				// Ray is not parallel. Find out where intersects with the minimum and maximum sides.
+				auto dMinimum = (minimum[axis] - origin) / direction;
+				auto dMaximum = (maximum[axis] - origin) / direction;
 
-				dNear = std::max(dNear, std::min(dx1, dx2));
-				dFar = std::min(dFar, std::max(dx1, dx2));
+				// The value of d for the near side on this axis side is the smallest of dMinimum and dMaxmimum. Keep the largest value of the current
+				// dNear and our value for this axis.
+				dNear = std::max(dNear, std::min(dMinimum, dMaximum));
+
+				// Similar to above; the value of d for the far side on this axis is the largest of dMinimum and dMaxmimum. Keep the smallest dFar
+				dFar = std::min(dFar, std::max(dMinimum, dMaximum));
 			}
 			// Ray is parallel to the axis. The ray's origin in that axis therefore needs to lie be inside the box's boundaries.
 			else if (origin < minimum[axis] || origin > maximum[axis])
@@ -41,11 +48,14 @@ namespace MrKWatkins::Rendering::Geometry
 			}
 		}
 
+		// If the far point is before the near point then the ray does not intersect the box. If the far point is less than zero then both points are behind
+		// the origin of the ray.
 		if (dFar < 0.0 || dFar < dNear)
 		{
 			return std::optional<Intersection>();
 		}
 
+		// If dNear is less than zero then it is behind the ray's origin - therefore the ray starts inside the box.
 		auto insideBox = Doubles::IsLessThanZero(dNear);
 		auto intersection = ray.Origin() + (insideBox ? dFar : dNear) * ray.Direction();
 		auto normal = CalculateSurfaceNormal(intersection, insideBox);
