@@ -13,9 +13,9 @@ namespace MrKWatkins::Rendering::Geometry
 	public:
 		Triangle(const Point& corner1, const Point& corner2, const Point& corner3);
 
-		std::optional<Intersection> NearestIntersection(const Ray& ray) const override;
+		std::optional<Intersection> NearestIntersection_MöllerTrumbore(const Ray& ray) const;
 
-		Point ResolveBarycentricCoordinates(double u, double v) const;
+		std::optional<Intersection> NearestIntersection(const Ray& ray) const override;
 
 		const Point& Corner1() const { return corner1; }
 		const Point& Corner2() const { return corner2; }

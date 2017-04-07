@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Triangle.h"
 #include "Doubles.h"
-#include "Verify.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -9,7 +8,7 @@ namespace MrKWatkins::Rendering::Geometry
 	{
 	}
 
-	std::optional<Intersection> Triangle::NearestIntersection(const Ray& ray) const
+	std::optional<Intersection> Triangle::NearestIntersection_MöllerTrumbore(const Ray& ray) const
 	{
 		// See:
 		// https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
@@ -29,7 +28,7 @@ namespace MrKWatkins::Rendering::Geometry
 
 		auto t = ray.Origin() - corner1;
 		auto u = t.Dot(p) * inverseDeterminant;
-		if (Doubles::IsLessThanZero(u) || Doubles::IsGreaterThan(u, 1))	// TODO: Can we get away without tolerant checks here?
+		if (!Doubles::IsZeroToOne(u))	// TODO: Can we get away without tolerant checks here?
 		{
 			return std::optional<Intersection>();
 		}
@@ -41,12 +40,13 @@ namespace MrKWatkins::Rendering::Geometry
 			return std::optional<Intersection>();
 		}
 
-		//if (Doubles::IsLessThanZero(edge2.Dot(q) * inverseDeterminant))
-		//{
-		//	return std::optional<Intersection>();
-		//}
+		auto d = edge2.Dot(q) * inverseDeterminant;
+		if (Doubles::IsLessThanZero(d))
+		{
+			return std::optional<Intersection>();
+		}
 
-		auto point = ResolveBarycentricCoordinates(u, v);
+		auto point = ray.Origin() + d * ray.Direction();
 		auto normal = edge1.Cross(edge2);
 		if (Doubles::IsLessThanZero(determinant))
 		{
@@ -55,17 +55,8 @@ namespace MrKWatkins::Rendering::Geometry
 		return Intersection(point, normal);
 	}
 
-	Point Triangle::ResolveBarycentricCoordinates(double u, double v) const
+	std::optional<Intersection> Triangle::NearestIntersection(const Ray& ray) const
 	{
-		VERIFY_ZERO_TO_ONE(u);
-		VERIFY_ZERO_TO_ONE(v);
-
-		auto w = 1 - u - v;
-		VERIFY_ZERO_TO_ONE(w);
-
-		return Point(
-			u * corner1.X() + v * corner2.X() + w * corner3.X(),
-			u * corner1.Y() + v * corner2.Y() + w * corner3.Y(),
-			u * corner1.Z() + v * corner2.Z() + w * corner3.Z());
+		return NearestIntersection_MöllerTrumbore(ray);
 	}
 }
