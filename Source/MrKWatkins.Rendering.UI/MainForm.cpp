@@ -3,9 +3,10 @@
 #include <Scene.h>
 #include <RayTracing.h>
 #include <Phong.h>
-#include <Flat.h>
 #include <SkyGradient.h>
 #include <Chequerboard.h>
+#include "Mesh.h"
+#include "IO.h"
 
 using namespace nana;
 using namespace MrKWatkins::Rendering::Shading;
@@ -35,17 +36,16 @@ namespace MrKWatkins::Rendering::UI
 
 		Material red = Material::Build(Colour(0.1, 0.01, 0.01), Colour(1, 0, 0)).WithReflectivity(0.1);
 		Material black = Material::Build(Colour(0.01, 0.01, 0.01), Colour(0, 0, 0)).WithReflectivity(0.2);
-		scene->AddPlane(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Texture::Create<Chequerboard>(red, black, 0.25));
+		scene->Add(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Texture::Create<Chequerboard>(red, black, 0.25));
 
-		scene->AddSphere(Sphere(0.1, 0.2, 0.75, 0.2), Material::Chrome());
-		scene->AddSphere(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
-		scene->AddSphere(Sphere(0.9, 0.2, 0.75, 0.2), Material::Chrome());
+		//scene->Add(Sphere(0.1, 0.2, 0.75, 0.2), Material::Chrome());
+		//scene->Add(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
+		//scene->Add(Sphere(0.9, 0.2, 0.75, 0.2), Material::Chrome());
 
-		scene->AddTriangle(Triangle(Point(0.1, 0.4, 0.1), Point(0.2, 0.4, 0.5), Point(0.2, 0.9, 0.5)), Material::Bronze());
-		scene->AddTriangle(Triangle(Point(0.6, 0.0, 0.2), Point(0.6, 0.3, 0.1), Point(0.5, 0.0, 0.1)), Material::Jade());
+		scene->Add(Mesh::LoadObjFile(IO::ResolveModelPath(L"Teapot.obj")), Material::Obsidian());
 
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(20), Colour(1, 1, 1));
-		scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
+		//scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
 
 		return scene;
 	}

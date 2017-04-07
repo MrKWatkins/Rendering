@@ -6,6 +6,7 @@
 #include "Plane.h"
 #include "Sphere.h"
 #include "Triangle.h"
+#include "Flat.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
 using namespace MrKWatkins::Rendering::Lighting;
@@ -25,17 +26,35 @@ namespace MrKWatkins::Rendering::Scene
         Scene(const Colour& ambientLight, const std::shared_ptr<Texture> background);
 
 		// TODO: Use a template method for these.
-        Scene& AddAxisAlignedBox(const AxisAlignedBox& box, const Material& material);
-        Scene& AddAxisAlignedBox(const AxisAlignedBox& box, const std::shared_ptr<Texture> texture);
 
-        Scene& AddPlane(const Plane& plane, const Material& material);
-        Scene& AddPlane(const Plane& plane, const std::shared_ptr<Texture> texture);
 
-        Scene& AddSphere(const Sphere& sphere, const Material& material);
-        Scene& AddSphere(const Sphere& sphere, const std::shared_ptr<Texture> texture);
+		template<typename TTexture, class... TConstructorArguments>
+		static std::shared_ptr<Texture> Create(TConstructorArguments&&... constructorArguments)
+		{
+			static_assert(std::is_base_of<Texture, TTexture>::value, "TTexture is not an instance of Texture.");
 
-		Scene& AddTriangle(const Triangle& triangle, const Material& material);
-		Scene& AddTriangle(const Triangle& triangle, const std::shared_ptr<Texture> texture);
+			return std::shared_ptr<Texture>(new TTexture(std::forward<TConstructorArguments>(constructorArguments)...));
+		}
+
+		template<typename TSolid>
+		Scene& Add(const TSolid& solid, const Material& material)
+		{
+			static_assert(std::is_base_of<Solid, TSolid>::value, "TSolid is not an instance of Solid.");
+
+			return Add(solid, std::shared_ptr<Texture>(std::make_shared<Flat>(material)));
+		}
+
+		template<typename TSolid>
+		Scene& Add(const TSolid& solid, const std::shared_ptr<Texture> texture)
+		{
+			static_assert(std::is_base_of<Solid, TSolid>::value, "TSolid is not an instance of Solid.");
+
+			auto pointerToSolid = std::unique_ptr<Solid>(std::make_unique<TSolid>(solid));
+			auto pointerToSceneObject = std::make_unique<Object>(move(pointerToSolid), texture);
+			objects.push_back(move(pointerToSceneObject));
+
+			return *this;
+		}
 
         Scene& AddPointLight(const Point& position, const Attenuation& attenuation, const Colour& colour);
 

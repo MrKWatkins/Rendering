@@ -152,7 +152,9 @@
     <ClInclude Include="Lambertian.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Doubles.h" />
+    <ClInclude Include="Mesh.h" />
     <ClInclude Include="ObjectIntersection.h" />
+    <ClInclude Include="ObjFile.h" />
     <ClInclude Include="Phong.h" />
     <ClInclude Include="SurfacePoint.h" />
     <ClInclude Include="Texture.h" />
@@ -188,7 +190,9 @@
     <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="Lambertian.cpp" />
     <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="ObjectIntersection.cpp" />
+    <ClCompile Include="ObjFile.cpp" />
     <ClCompile Include="Phong.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="SkyGradient.cpp" />

@@ -172,6 +172,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IO.h" />
     <ClInclude Include="MainForm.h" />
     <ClInclude Include="MrKWatkins.Rendering.UI.h" />
     <ClInclude Include="Resource.h" />
@@ -179,6 +180,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="IO.cpp" />
     <ClCompile Include="MainForm.cpp" />
     <ClCompile Include="MrKWatkins.Rendering.UI.cpp" />
     <ClCompile Include="stdafx.cpp">
