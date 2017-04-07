@@ -50,8 +50,29 @@ namespace MrKWatkins::Rendering
 			throw std::runtime_error("Vertex line does not have enough components.");
 		}
 
-		auto point = Point(ToDouble(components[1]), ToDouble(components[2]), ToDouble(components[3]));
+		auto point = Point((ToDouble(components[1]) + 100) / 200, (ToDouble(components[2]) + 100) / 200, (ToDouble(components[3]) + 100) / 200);
 		vertices.push_back(point);
+
+		return true;
+	}
+
+	bool TryParseFace(const std::vector<std::string>& components, const std::vector<Point>& vertices, std::vector<Triangle>& triangles)
+	{
+		if (components[0] != "f")
+		{
+			return false;
+		}
+
+		if (components.size() != 4)
+		{
+			throw std::runtime_error("Only triangular faces are supported.");
+		}
+
+		auto corner1 = vertices[atoi(components[1].c_str()) - 1];
+		auto corner2 = vertices[atoi(components[2].c_str()) - 1];
+		auto corner3 = vertices[atoi(components[3].c_str()) - 1];
+
+		triangles.push_back(Triangle(corner1, corner2, corner3));
 
 		return true;
 	}
@@ -87,6 +108,8 @@ namespace MrKWatkins::Rendering
 			{
 				continue;
 			}
+
+			TryParseFace(components, vertices, objFile.triangles);
 		}
 
 		file.close();
