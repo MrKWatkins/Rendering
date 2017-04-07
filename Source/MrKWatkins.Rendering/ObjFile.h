@@ -11,6 +11,7 @@ namespace MrKWatkins::Rendering
 		mutable std::vector<Triangle> triangles;
 
 		ObjFile();
+
 	public:
 
 		const std::vector<Triangle>& Triangles() const noexcept { return triangles; }

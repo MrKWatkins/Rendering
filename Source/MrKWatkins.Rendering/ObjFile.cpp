@@ -10,6 +10,52 @@ namespace MrKWatkins::Rendering
 	{
 	}
 
+	// TODO: Move to a utility namespace somewhere?
+	std::vector<std::string> SplitLine(const std::string &line)
+	{
+		auto stringStream = std::stringstream(line);
+		auto components = std::vector<std::string>();
+		std::string component;
+		while (getline(stringStream, component, ' '))
+		{
+			if (!component.empty())
+			{
+				components.push_back(component);
+			}
+		}
+		return components;
+	}
+
+	// From https://isocpp.org/wiki/faq/misc-technical-issues#convert-string-to-num.
+	double ToDouble(const std::string& s)
+	{
+		std::istringstream i(s);
+		double x;
+		if (!(i >> x))
+		{
+			throw std::runtime_error("Could not convert " + s + " to a double.");
+		}
+		return x;
+	}
+
+	bool TryParseVertex(const std::vector<std::string>& components, std::vector<Point>& vertices)
+	{
+		if (components[0] != "v")
+		{
+			return false;
+		}
+
+		if (components.size() < 4)
+		{
+			throw std::runtime_error("Vertex line does not have enough components.");
+		}
+
+		auto point = Point(ToDouble(components[1]), ToDouble(components[2]), ToDouble(components[3]));
+		vertices.push_back(point);
+
+		return true;
+	}
+
 	ObjFile ObjFile::Load(const std::wstring& path)
 	{
 		ObjFile objFile;
@@ -22,8 +68,25 @@ namespace MrKWatkins::Rendering
 			throw std::invalid_argument("File not found.");
 		}
 
+		std::vector<Point> vertices;
+
 		while (getline(file, line))
 		{
+			if (line.empty() || line[0] == '#')
+			{
+				continue;
+			}
+
+			auto components = SplitLine(line);
+			if (components.size() < 2)
+			{
+				continue;
+			}
+
+			if (TryParseVertex(components, vertices))
+			{
+				continue;
+			}
 		}
 
 		file.close();
