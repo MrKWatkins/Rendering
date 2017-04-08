@@ -49,9 +49,6 @@
     <Filter Include="Header Files\Textures">
       <UniqueIdentifier>{0c021d25-75ef-487d-b9a6-cc5cf691d76c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\IO">
-      <UniqueIdentifier>{aeec1df1-b110-4e0f-960c-54b62dbe2d7d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

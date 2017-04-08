@@ -1,10 +1,15 @@
 #include "stdafx.h"
+#include "Doubles.h"
 #include "Point.h"
+#include "Verify.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
     Point::Point(double x, double y, double z) : x{ x }, y{ y }, z{ z }
     {
+		VERIFY_IS_FINITE(x);
+		VERIFY_IS_FINITE(y);
+		VERIFY_IS_FINITE(z);
     }
 
     Point Point::operator+(const Vector& vector) const
@@ -16,6 +21,16 @@ namespace MrKWatkins::Rendering::Geometry
     {
         return Vector(x - other.x, y - other.y, z - other.z);
     }
+
+	bool Point::operator==(const Point& other) const
+	{
+		return Doubles::AreEqual(x, other.x) && Doubles::AreEqual(y, other.y) && Doubles::AreEqual(z, other.z);
+	}
+
+	bool Point::operator!=(const Point& other) const
+	{
+		return !(*this == other);
+	}
 
 	double Point::operator[](unsigned int index) const
 	{

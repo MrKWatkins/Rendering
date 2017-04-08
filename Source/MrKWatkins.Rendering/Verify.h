@@ -54,6 +54,17 @@ if (!parameter.IsNormalized()) \
 	throw std::invalid_argument(#parameter " is not normalized."); \
 }
 
+#define VERIFY_NOT_EMPTY(parameter) \
+if (parameter.empty()) \
+{ \
+	throw std::invalid_argument(#parameter " is empty."); \
+}
+#define VERIFY_CONDITION(condition, message) \
+if (!condition) \
+{ \
+	throw std::logic_error(message); \
+}
+
 #else
 
 #define VERIFY_IS_FINITE(parameter)
@@ -64,5 +75,7 @@ if (!parameter.IsNormalized()) \
 #define VERIFY_GREATER_THAN(minimumInclusive, parameter)
 #define VERIFY_GREATER_THAN_OR_EQUAL_TO(minimumInclusive, parameter)
 #define VERIFY_IS_NORMALIZED(parameter)
+#define VERIFY_NOT_EMPTY(parameter)
+#define VERIFY_CONDITION(condition, message)
 
 #endif

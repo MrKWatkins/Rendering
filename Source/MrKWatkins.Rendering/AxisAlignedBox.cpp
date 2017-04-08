@@ -16,11 +16,11 @@ namespace MrKWatkins::Rendering::Geometry
 	{
 	}
 
-	std::optional<Intersection> AxisAlignedBox::NearestIntersection(const Ray& ray) const
+	bool AxisAlignedBox::Intersects(const Ray& ray, double& dNear, double& dFar) const
 	{
 		// Use the slabs method (http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter3.htm) to find the intersection.
-		auto dNear = -std::numeric_limits<double>::infinity();
-		auto dFar = std::numeric_limits<double>::infinity();
+		dNear = -std::numeric_limits<double>::infinity();
+		dFar = std::numeric_limits<double>::infinity();
 
 		for (unsigned int axis = 0; axis < 3; axis++)
 		{
@@ -44,7 +44,7 @@ namespace MrKWatkins::Rendering::Geometry
 			// Ray is parallel to the axis. The ray's origin in that axis therefore needs to lie be inside the box's boundaries.
 			else if (origin < minimum[axis] || origin > maximum[axis])
 			{
-				return std::optional<Intersection>();
+				return false;
 			}
 		}
 
@@ -52,15 +52,32 @@ namespace MrKWatkins::Rendering::Geometry
 		// the origin of the ray.
 		if (dFar < 0.0 || dFar < dNear)
 		{
+			return false;
+		}
+
+		return true;
+	}
+
+	std::optional<Intersection> AxisAlignedBox::NearestIntersection(const Ray& ray) const
+	{
+		double dNear, dFar;
+		if (!Intersects(ray, dNear, dFar))
+		{
 			return std::optional<Intersection>();
 		}
 
 		// If dNear is less than zero then it is behind the ray's origin - therefore the ray starts inside the box.
-		auto insideBox = Doubles::IsLessThanZero(dNear);
+		auto insideBox = Doubles::IsLessThanOrEqualToZero(dNear);
 		auto intersection = ray.Origin() + (insideBox ? dFar : dNear) * ray.Direction();
 		auto normal = CalculateSurfaceNormal(intersection, insideBox);
 
 		return Intersection(intersection, normal);
+	}
+
+	bool AxisAlignedBox::Intersects(const Ray& ray) const
+	{
+		double dNear, dFar;
+		return Intersects(ray, dNear, dFar);
 	}
 
 	Vector AxisAlignedBox::CalculateSurfaceNormal(const Point& intersection, bool insideBox) const

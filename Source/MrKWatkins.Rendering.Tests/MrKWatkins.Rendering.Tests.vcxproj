@@ -173,6 +173,7 @@
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="RayTests.cpp" />
     <ClCompile Include="SphereTests.cpp" />
+    <ClCompile Include="TriangleTests.cpp" />
     <ClCompile Include="VectorTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

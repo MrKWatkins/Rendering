@@ -22,6 +22,9 @@ namespace MrKWatkins::Rendering::Geometry
         Point operator+(const Vector& vector) const;
         Vector operator-(const Point& other) const;
 
+		bool operator==(const Point& other) const;
+		bool operator!=(const Point& other) const;
+
 		double operator [](unsigned int index) const;
 
         double DistanceFrom(const Point& other) const;

@@ -58,6 +58,14 @@ namespace MrKWatkins::Rendering::Doubles
 	}
 
 	/// <summary>
+	///	Is the double less than or equal to zero within floating point tolerance?
+	/// </summary>
+	constexpr bool IsLessThanOrEqualToZero(double x)
+	{
+		return x < Tolerance;
+	}
+
+	/// <summary>
 	///	Is the double zero within floating point tolerance?
 	/// </summary>
 	constexpr bool IsZero(double x)
