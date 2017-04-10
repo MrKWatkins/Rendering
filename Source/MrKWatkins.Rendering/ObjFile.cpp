@@ -4,7 +4,7 @@
 
 using namespace MrKWatkins::Rendering::Geometry;
 
-namespace MrKWatkins::Rendering
+namespace MrKWatkins::Rendering::IO
 {
 	ObjFile::ObjFile()
 	{
@@ -51,7 +51,7 @@ namespace MrKWatkins::Rendering
 		}
 
 		// TODO: Remove the temporary scaling.
-		auto point = Point((ToDouble(components[1]) + 100) / 200, (ToDouble(components[2]) + 100) / 200, (ToDouble(components[3]) + 100) / 200);
+		auto point = Point(ToDouble(components[1]) / 100 + 0.5, ToDouble(components[2]) / 100 + 0.5, ToDouble(components[3]) / 100 + 2.0);
 		vertices.push_back(point);
 
 		return true;

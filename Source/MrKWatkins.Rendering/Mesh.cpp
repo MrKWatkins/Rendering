@@ -8,7 +8,7 @@ namespace MrKWatkins::Rendering::Geometry
 	{
 	}
 
-	Mesh::Mesh(const ObjFile& objFile) : Mesh(objFile.Triangles())
+	Mesh::Mesh(const IO::ObjFile& objFile) : Mesh(objFile.Triangles())
 	{
 	}
 
@@ -43,6 +43,6 @@ namespace MrKWatkins::Rendering::Geometry
 
 	Mesh Mesh::LoadObjFile(const std::wstring path)
 	{
-		return Mesh(ObjFile::Load(path));
+		return Mesh(IO::ObjFile::Load(path));
 	}
 }

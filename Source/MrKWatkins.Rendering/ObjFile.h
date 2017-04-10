@@ -3,7 +3,7 @@
 
 using namespace MrKWatkins::Rendering::Geometry;
 
-namespace MrKWatkins::Rendering
+namespace MrKWatkins::Rendering::IO
 {
 	// TODO: Probably shouldn't be copyable.
 	class ObjFile

@@ -49,6 +49,12 @@
     <Filter Include="Header Files\Textures">
       <UniqueIdentifier>{0c021d25-75ef-487d-b9a6-cc5cf691d76c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\IO">
+      <UniqueIdentifier>{0deab9df-5fcb-4579-b705-4364c4d3ecff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\IO">
+      <UniqueIdentifier>{b685589c-9ce4-4c0d-ba36-e5608ab570f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -163,7 +169,7 @@
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="ObjFile.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\IO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -258,7 +264,7 @@
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="ObjFile.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\IO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
