@@ -3,19 +3,57 @@
 #include "Algorithm.h"
 #include <mutex>
 
+using namespace std::chrono;
+
 namespace MrKWatkins::Rendering
 {
 	const int BlockSize = 16;
 
+	// TODO: Don't use PIMPL and tidy this up.
     class Renderer::Implementation
     {
         std::unique_ptr<Algorithms::Algorithm> algorithm;
         MutableImage image;
         std::mutex lock {};
         RendererStatus status{ InProgress };
-        double progress{ 0 };
 		std::string statusMessage{ "" };
-        std::thread thread;
+		unsigned int nextBlock{ 0 };
+		unsigned int totalBlocks;
+        std::vector<std::thread> threads;
+		unsigned int threadsInProgress;
+
+		high_resolution_clock clock;
+		steady_clock::time_point startTime = clock.now();
+
+		void SetError(const std::exception& exception)
+		{
+			if (Status() != Error)
+			{
+				std::lock_guard<std::mutex> take(lock);
+
+				status = Error;
+				statusMessage = exception.what();
+			}
+		}
+
+		int DecrementThreadsInProgress()
+		{
+			std::lock_guard<std::mutex> take(lock);
+			threadsInProgress--;
+			return threadsInProgress;
+		}
+
+		std::optional<unsigned int> TakeBlock()
+		{
+			std::lock_guard<std::mutex> take(lock);
+			auto block = nextBlock;
+			if (block < totalBlocks)
+			{
+				nextBlock++;
+				return block;
+			}
+			return std::optional<unsigned int>();
+		}
 
 		void SetBlock(unsigned int xStart, unsigned int yStart, const Colour* block)
         {
@@ -28,15 +66,13 @@ namespace MrKWatkins::Rendering
 					image.SetPixel(xStart + x, yStart + y, block[x + y * BlockSize]);
 				}
 			}
-
-            double totalOperations = image.Width() * image.Height();
-            double operationsSoFar = xStart * image.Height() + yStart + 1;
-
-            progress = operationsSoFar / totalOperations;
         }
 
-		void RenderBlock(unsigned int xStart, unsigned int yStart)
+		void RenderBlock(unsigned int blockNumber)
         {
+			auto blocksInWidth = image.Width() / BlockSize;
+	        auto xStart = BlockSize * (blockNumber % blocksInWidth);
+	        auto yStart = BlockSize * (blockNumber / blocksInWidth);
 			double width = image.Width();
 			double height = image.Height();
 			Colour block[BlockSize * BlockSize];
@@ -46,7 +82,7 @@ namespace MrKWatkins::Rendering
 				{
 					block[x + y * BlockSize] = algorithm->RenderPoint((x + xStart) / width, 1 - (y + yStart) / height);
 
-					if (Status() == Cancelling)
+					if (Status() != InProgress)
 					{
 						return;
 					}
@@ -58,6 +94,47 @@ namespace MrKWatkins::Rendering
 
         void RenderingLoop()
         {
+			auto block = TakeBlock();
+			while (block.has_value())
+			{
+				try
+				{
+					RenderBlock(block.value());
+				}
+				catch (const std::exception& exception)
+				{
+					SetError(exception);
+
+					return;
+				}
+
+				if (Status() != InProgress)
+				{
+					break;
+				}
+
+				block = TakeBlock();
+			}
+
+			auto inProgress = DecrementThreadsInProgress();
+
+			std::lock_guard<std::mutex> take(lock);
+			if (inProgress == 0)
+			{
+				auto endTime = clock.now();
+
+				// convert from the clock rate to a millisecond clock
+				auto seconds = duration_cast<milliseconds>(endTime - startTime);
+
+				status = Finished;
+				statusMessage = "Time taken: " + std::to_string(seconds.count() / 1000.0) + "s";
+			}
+        }
+
+    public:
+
+        Implementation(std::unique_ptr<Algorithms::Algorithm> algorithm, int size) : algorithm{ move(algorithm) }, image{ size, size }
+        {
 			if (image.Width() % BlockSize != 0)
 			{
 				throw std::logic_error("Image width (" + std::to_string(image.Width()) + ") must be a multiple of the block size. (" + std::to_string(BlockSize) + ")");
@@ -67,65 +144,27 @@ namespace MrKWatkins::Rendering
 				throw std::logic_error("Image height (" + std::to_string(image.Height()) + ") must be a multiple of the block size " + std::to_string(BlockSize) + ".");
 			}
 
-            const double width = image.Width();
-            const double height = image.Height();
+			totalBlocks = (image.Width() / BlockSize) * (image.Height() / BlockSize);
 
-			using namespace std::chrono;
+			auto concurrentThreadsSupported = std::thread::hardware_concurrency();
+			auto threadsToCreate = std::max(1U, concurrentThreadsSupported - 1);		// Leave a thread spare for the UI.
+			threadsInProgress = threadsToCreate;
 
-			high_resolution_clock clock;
-			auto startTime = clock.now();
-
-			//auto debug = algorithm->RenderPoint(186 / width, 1 - 186 / height);
-
-			try
+			std::lock_guard<std::mutex> take(lock);
+			for (auto thread = 0U; thread < threadsToCreate; thread++)
 			{
-				for (unsigned int x = 0; x < width; x += BlockSize)
-				{
-					for (unsigned int y = 0; y < height; y += BlockSize)
-					{
-						RenderBlock(x, y);
-
-						if (Status() == Cancelling)
-						{
-							return;
-						}
-					}
-				}
+				threads.push_back(std::thread(&Implementation::RenderingLoop, this));
 			}
-			catch(const std::exception& exception)
-			{
-				std::lock_guard<std::mutex> take(lock);
-
-				status = Error;
-				statusMessage = exception.what();
-				return;
-			}
-
-			auto endTime = clock.now();
-
-			// convert from the clock rate to a millisecond clock
-			auto seconds = duration_cast<milliseconds>(endTime - startTime);
-
-            std::lock_guard<std::mutex> take(lock);
-
-            status = Finished;
-			statusMessage = "Time taken: " + std::to_string(seconds.count() / 1000.0) + "s";
-        }
-
-    public:
-
-        Implementation(std::unique_ptr<Algorithms::Algorithm> algorithm, int size) :
-            algorithm{ move(algorithm) },
-            image{ size, size }
-        {
-            thread = std::thread(&Implementation::RenderingLoop, this);
         }
 
         ~Implementation()
         {
             Cancel();
 
-            thread.join();
+			for (auto& thread : threads)
+			{
+				thread.join();
+			}
         }
 
         void Cancel()
@@ -142,7 +181,7 @@ namespace MrKWatkins::Rendering
         {
             std::lock_guard<std::mutex> take(lock);
 
-            return progress;
+            return static_cast<double>(std::max(0U, nextBlock - threadsInProgress)) / totalBlocks;;
         }
 
         std::string StatusMessage()
