@@ -5,6 +5,8 @@
 
 namespace MrKWatkins::Rendering
 {
+	const int BlockSize = 16;
+
     class Renderer::Implementation
     {
         std::unique_ptr<Algorithms::Algorithm> algorithm;
@@ -15,20 +17,56 @@ namespace MrKWatkins::Rendering
 		std::string statusMessage{ "" };
         std::thread thread;
 
-        void SetPixel(int x, int y, Colour colour)
+		void SetBlock(unsigned int xStart, unsigned int yStart, const Colour* block)
         {
             std::lock_guard<std::mutex> take(lock);
 
-            image.SetPixel(x, y, colour);
+			for (unsigned int x = 0; x < BlockSize; x++)
+			{
+				for (unsigned int y = 0; y < BlockSize; y++)
+				{
+					image.SetPixel(xStart + x, yStart + y, block[x + y * BlockSize]);
+				}
+			}
 
             double totalOperations = image.Width() * image.Height();
-            double operationsSoFar = x * image.Height() + y + 1;
+            double operationsSoFar = xStart * image.Height() + yStart + 1;
 
             progress = operationsSoFar / totalOperations;
         }
 
+		void RenderBlock(unsigned int xStart, unsigned int yStart)
+        {
+			double width = image.Width();
+			double height = image.Height();
+			Colour block[BlockSize * BlockSize];
+			for (unsigned int x = 0; x < BlockSize; x++)
+			{
+				for (unsigned int y = 0; y < BlockSize; y++)
+				{
+					block[x + y * BlockSize] = algorithm->RenderPoint((x + xStart) / width, 1 - (y + yStart) / height);
+
+					if (Status() == Cancelling)
+					{
+						return;
+					}
+				}
+			}
+			
+			SetBlock(xStart, yStart, block);
+        }
+
         void RenderingLoop()
         {
+			if (image.Width() % BlockSize != 0)
+			{
+				throw std::logic_error("Image width (" + std::to_string(image.Width()) + ") must be a multiple of the block size. (" + std::to_string(BlockSize) + ")");
+			}
+			if (image.Height() % BlockSize != 0)
+			{
+				throw std::logic_error("Image height (" + std::to_string(image.Height()) + ") must be a multiple of the block size " + std::to_string(BlockSize) + ".");
+			}
+
             const double width = image.Width();
             const double height = image.Height();
 
@@ -41,13 +79,11 @@ namespace MrKWatkins::Rendering
 
 			try
 			{
-				for (unsigned int x = 0; x < width; x++)
+				for (unsigned int x = 0; x < width; x += BlockSize)
 				{
-					for (unsigned int y = 0; y < height; y++)
+					for (unsigned int y = 0; y < height; y += BlockSize)
 					{
-						auto point = algorithm->RenderPoint(x / width, 1 - y / height);
-
-						SetPixel(x, y, point);
+						RenderBlock(x, y);
 
 						if (Status() == Cancelling)
 						{
@@ -68,7 +104,7 @@ namespace MrKWatkins::Rendering
 			auto endTime = clock.now();
 
 			// convert from the clock rate to a millisecond clock
-			auto seconds = duration_cast<std::chrono::milliseconds>(endTime - startTime);
+			auto seconds = duration_cast<milliseconds>(endTime - startTime);
 
             std::lock_guard<std::mutex> take(lock);
 
