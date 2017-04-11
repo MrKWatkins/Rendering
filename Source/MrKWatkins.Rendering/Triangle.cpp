@@ -5,18 +5,16 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-	Triangle::Triangle(const Point& corner1, const Point& corner2, const Point& corner3) : corner0{ corner1 }, corner1{ corner2 }, corner2{ corner3 }
+	Triangle::Triangle(const Point& corner0, const Point& corner1, const Point& corner2)
+		: corner0{ corner0 }, corner1{ corner1 }, corner2{ corner2 }, edge1{ corner1 - corner0 }, edge2{ corner2 - corner0 }, normal{ edge1.Cross(edge2) }
 	{
 	}
 
-	std::optional<Intersection> Triangle::NearestIntersection_MöllerTrumbore(const Ray& ray) const
+	std::optional<Intersection> Triangle::NearestIntersection(const Ray& ray) const
 	{
 		// See:
 		// https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
 		// https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
-		auto edge1 = corner1 - corner0;
-		auto edge2 = corner2 - corner0;
-
 		auto p = ray.Direction().Cross(edge2);
 		auto determinant = edge1.Dot(p);
 
@@ -48,17 +46,7 @@ namespace MrKWatkins::Rendering::Geometry
 		}
 
 		auto point = ray.Origin() + d * ray.Direction();
-		auto normal = edge1.Cross(edge2);
-		if (Doubles::IsLessThanZero(determinant))
-		{
-			normal = -normal;
-		}
-		return Intersection(point, normal);
-	}
-
-	std::optional<Intersection> Triangle::NearestIntersection(const Ray& ray) const
-	{
-		return NearestIntersection_MöllerTrumbore(ray);
+		return Intersection(point, Doubles::IsLessThanZero(determinant) ? -normal : normal);
 	}
 
 	const Point& Triangle::operator[](unsigned int index) const

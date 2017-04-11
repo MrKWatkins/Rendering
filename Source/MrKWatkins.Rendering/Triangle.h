@@ -2,7 +2,6 @@
 #include "Solid.h"
 #include "Point.h"
 #include "Intersection.h"
-#include "Verify.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -13,10 +12,11 @@ namespace MrKWatkins::Rendering::Geometry
 		Point corner0;
 		Point corner1;
 		Point corner2;
+		Vector edge1;
+		Vector edge2;
+		Vector normal;
 	public:
 		Triangle(const Point& corner0, const Point& corner1, const Point& corner2);
-
-		std::optional<Intersection> NearestIntersection_MöllerTrumbore(const Ray& ray) const;
 
 		std::optional<Intersection> NearestIntersection(const Ray& ray) const override;
 
