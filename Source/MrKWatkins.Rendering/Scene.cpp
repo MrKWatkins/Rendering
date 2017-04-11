@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Colour.h"
-#include "Sphere.h"
 #include "Scene.h"
 #include "PointLight.h"
 #include "Flat.h"
@@ -28,8 +27,8 @@ namespace MrKWatkins::Rendering::Scene
 
 	std::optional<ObjectIntersection> Scene::GetClosestIntersection(const Ray & ray, const std::optional<const Object*> exclude) const
 	{
-		auto closest = std::optional<ObjectIntersection>();
-		auto distanceToClosest = std::numeric_limits<double>::max();
+		Object* closestObject = nullptr;
+		auto closestRayIntersection = std::optional<RayIntersection>();
 
 		for (auto const& object : objects)
 		{
@@ -38,22 +37,25 @@ namespace MrKWatkins::Rendering::Scene
 				continue;
 			}
 
-			auto intersection = object->NearestIntersection(ray);
-			if (!intersection.has_value())
+			auto rayIntersection = object->Solid().NearestRayIntersection(ray);
+			if (!rayIntersection.has_value())
 			{
 				continue;
 			}
 
-			// TODO: Compare Length ^ 2 to avoid sqrts.
-			auto distance = ray.Origin().DistanceFrom(intersection.value().Point());
-			if (distance < distanceToClosest)
+			if (!closestRayIntersection.has_value() || rayIntersection->D() < closestRayIntersection->D())
 			{
-				closest = ObjectIntersection(object.get(), intersection.value());
-				distanceToClosest = distance;
+				closestObject = object.get();
+				closestRayIntersection = rayIntersection;
 			}
 		}
 
-		return closest;
+		if (closestRayIntersection.has_value())
+		{
+			return ObjectIntersection(closestObject->Solid().GetSurfaceIntersection(ray, closestRayIntersection.value()), closestObject);
+		}
+
+		return std::optional<ObjectIntersection>();
 	}
 
 	Colour Scene::GetBackground(const Ray& ray) const

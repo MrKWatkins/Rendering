@@ -1,7 +1,7 @@
 #pragma once
 #include "Solid.h"
 #include "Point.h"
-#include "Intersection.h"
+#include "RayIntersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -18,7 +18,9 @@ namespace MrKWatkins::Rendering::Geometry
 	public:
 		Triangle(const Point& corner0, const Point& corner1, const Point& corner2);
 
-		std::optional<Intersection> NearestIntersection(const Ray& ray) const override;
+		std::optional<RayIntersection> NearestRayIntersection(const Ray& ray) const override;
+
+		Vector GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const override;
 
 		const Point& Corner0() const { return corner0; }
 		const Point& Corner1() const { return corner1; }

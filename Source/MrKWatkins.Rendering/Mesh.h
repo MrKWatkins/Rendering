@@ -1,9 +1,9 @@
 #pragma once
 #include "Solid.h"
-#include "Intersection.h"
 #include "Triangle.h"
 #include "ObjFile.h"
 #include "AxisAlignedBox.h"
+#include "RayIntersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -16,8 +16,10 @@ namespace MrKWatkins::Rendering::Geometry
 		explicit Mesh(const IO::ObjFile& objFile);
 		Mesh(const std::vector<Point>& vertices, const std::vector<int>& triangleLookup);
 
-		std::optional<Intersection> NearestIntersection(const Ray& ray) const override;
+		std::optional<RayIntersection> NearestRayIntersection(const Ray& ray) const override;
 
 		static Mesh LoadObjFile(const std::wstring path);
+
+		Vector GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const override;
 	};
 }

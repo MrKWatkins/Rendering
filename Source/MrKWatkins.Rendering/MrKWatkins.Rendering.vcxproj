@@ -78,7 +78,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -93,7 +93,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -110,7 +110,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -129,10 +129,10 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -148,7 +148,7 @@
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Gradient.h" />
     <ClInclude Include="Image.h" />
-    <ClInclude Include="Intersection.h" />
+    <ClInclude Include="SurfaceIntersection.h" />
     <ClInclude Include="Lambertian.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Doubles.h" />
@@ -156,6 +156,7 @@
     <ClInclude Include="ObjectIntersection.h" />
     <ClInclude Include="ObjFile.h" />
     <ClInclude Include="Phong.h" />
+    <ClInclude Include="RayIntersection.h" />
     <ClInclude Include="SurfacePoint.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Plane.h" />
@@ -187,7 +188,8 @@
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Gradient.cpp" />
     <ClCompile Include="Image.cpp" />
-    <ClCompile Include="Intersection.cpp" />
+    <ClCompile Include="Solid.cpp" />
+    <ClCompile Include="SurfaceIntersection.cpp" />
     <ClCompile Include="Lambertian.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -195,6 +197,7 @@
     <ClCompile Include="ObjFile.cpp" />
     <ClCompile Include="Phong.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="RayIntersection.cpp" />
     <ClCompile Include="SkyGradient.cpp" />
     <ClCompile Include="Flat.cpp" />
     <ClCompile Include="SurfacePoint.cpp" />

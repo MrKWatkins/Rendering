@@ -16,11 +16,11 @@ namespace MrKWatkins::Rendering::Geometry
 	{
 	}
 
-	bool AxisAlignedBox::Intersects(const Ray& ray, double& dNear, double& dFar) const
+	std::optional<RayIntersection> AxisAlignedBox::NearestRayIntersection(const Ray& ray) const
 	{
 		// Use the slabs method (http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter3.htm) to find the intersection.
-		dNear = -std::numeric_limits<double>::infinity();
-		dFar = std::numeric_limits<double>::infinity();
+		auto dNear = -std::numeric_limits<double>::infinity();
+		auto dFar = std::numeric_limits<double>::infinity();
 
 		for (unsigned int axis = 0; axis < 3; axis++)
 		{
@@ -44,7 +44,7 @@ namespace MrKWatkins::Rendering::Geometry
 			// Ray is parallel to the axis. The ray's origin in that axis therefore needs to lie be inside the box's boundaries.
 			else if (origin < minimum[axis] || origin > maximum[axis])
 			{
-				return false;
+				return std::optional<RayIntersection>();
 			}
 		}
 
@@ -52,50 +52,30 @@ namespace MrKWatkins::Rendering::Geometry
 		// the origin of the ray.
 		if (dFar < 0.0 || dFar < dNear)
 		{
-			return false;
-		}
-
-		return true;
-	}
-
-	std::optional<Intersection> AxisAlignedBox::NearestIntersection(const Ray& ray) const
-	{
-		double dNear, dFar;
-		if (!Intersects(ray, dNear, dFar))
-		{
-			return std::optional<Intersection>();
+			return std::optional<RayIntersection>();
 		}
 
 		// If dNear is less than zero then it is behind the ray's origin - therefore the ray starts inside the box.
-		auto insideBox = Doubles::IsLessThanOrEqualToZero(dNear);
-		auto intersection = ray.Origin() + (insideBox ? dFar : dNear) * ray.Direction();
-		auto normal = CalculateSurfaceNormal(intersection, insideBox);
-
-		return Intersection(intersection, normal);
+		auto intersectsOutside = Doubles::IsGreaterThanZero(dNear);
+		return RayIntersection(intersectsOutside ? dNear : dFar, intersectsOutside);
 	}
 
-	bool AxisAlignedBox::Intersects(const Ray& ray) const
-	{
-		double dNear, dFar;
-		return Intersects(ray, dNear, dFar);
-	}
-
-	Vector AxisAlignedBox::CalculateSurfaceNormal(const Point& intersection, bool insideBox) const
+	Vector AxisAlignedBox::GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const
 	{
 		// Test both sides in each axis to find the one we intersect. If we intersect multiple, i.e. an edge or corner, then just return the first one we find. We don't try to do
-		// anything complex and arguably wrong like have the normal at an angle.
+		// anything complex (and arguably wrong!) like have the normal at an angle.
 		for (unsigned int axis = 0; axis < 3; axis++)
 		{
 			// Are we intersecting on the near side?
-			if (Doubles::AreEqual(intersection[axis], minimum[axis]))
+			if (Doubles::AreEqual(pointOnSurface[axis], minimum[axis]))
 			{
-				return insideBox ? Vector::Axis(axis) : -Vector::Axis(axis);
+				return rayIntersection.IntersectingOutside() ? -Vector::Axis(axis) : Vector::Axis(axis);
 			}
 
 			// What about the far side?
-			if (Doubles::AreEqual(intersection[axis], maximum[axis]))
+			if (Doubles::AreEqual(pointOnSurface[axis], maximum[axis]))
 			{
-				return insideBox ? -Vector::Axis(axis) : Vector::Axis(axis);
+				return rayIntersection.IntersectingOutside() ? Vector::Axis(axis) : -Vector::Axis(axis);
 			}
 		}
 

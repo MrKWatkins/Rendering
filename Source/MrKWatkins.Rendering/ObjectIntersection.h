@@ -1,17 +1,17 @@
 #pragma once
-#include "Intersection.h"
 #include "Object.h"
+#include "SurfaceIntersection.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
 
 namespace MrKWatkins::Rendering::Scene
 {
-	class ObjectIntersection : public Intersection
+	class ObjectIntersection : public SurfaceIntersection
 	{
 		const Object* object;
 
 	public:
-		ObjectIntersection(const Object* object, const Intersection& intersection);
+		ObjectIntersection(const SurfaceIntersection& surfaceIntersection, const Object* object);
 
 		const Object* Object() const noexcept { return object; }
 	};

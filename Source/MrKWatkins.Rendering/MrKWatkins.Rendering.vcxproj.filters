@@ -99,9 +99,6 @@
     <ClInclude Include="RayTracing.h">
       <Filter>Header Files\Algorithms</Filter>
     </ClInclude>
-    <ClInclude Include="Intersection.h">
-      <Filter>Header Files\Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="ShadingModel.h">
       <Filter>Header Files\Shading</Filter>
     </ClInclude>
@@ -171,6 +168,12 @@
     <ClInclude Include="ObjFile.h">
       <Filter>Header Files\IO</Filter>
     </ClInclude>
+    <ClInclude Include="RayIntersection.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="SurfaceIntersection.h">
+      <Filter>Header Files\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -208,9 +211,6 @@
     </ClCompile>
     <ClCompile Include="RayTracing.cpp">
       <Filter>Source Files\Algorithms</Filter>
-    </ClCompile>
-    <ClCompile Include="Intersection.cpp">
-      <Filter>Source Files\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Uniform.cpp">
       <Filter>Source Files\Shading</Filter>
@@ -265,6 +265,15 @@
     </ClCompile>
     <ClCompile Include="ObjFile.cpp">
       <Filter>Source Files\IO</Filter>
+    </ClCompile>
+    <ClCompile Include="RayIntersection.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="SurfaceIntersection.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Solid.cpp">
+      <Filter>Source Files\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

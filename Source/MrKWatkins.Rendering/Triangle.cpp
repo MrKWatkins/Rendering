@@ -10,7 +10,7 @@ namespace MrKWatkins::Rendering::Geometry
 	{
 	}
 
-	std::optional<Intersection> Triangle::NearestIntersection(const Ray& ray) const
+	std::optional<RayIntersection> Triangle::NearestRayIntersection(const Ray& ray) const
 	{
 		// See:
 		// https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
@@ -20,7 +20,7 @@ namespace MrKWatkins::Rendering::Geometry
 
 		if (Doubles::IsZero(determinant))
 		{
-			return std::optional<Intersection>();
+			return std::optional<RayIntersection>();
 		}
 
 		auto inverseDeterminant = 1 / determinant;
@@ -29,24 +29,29 @@ namespace MrKWatkins::Rendering::Geometry
 		auto u = t.Dot(p) * inverseDeterminant;
 		if (!Doubles::IsZeroToOne(u))	// TODO: Can we get away without tolerant checks here?
 		{
-			return std::optional<Intersection>();
+			return std::optional<RayIntersection>();
 		}
 
 		auto q = t.Cross(edge1);
 		auto v = ray.Direction().Dot(q) * inverseDeterminant;
 		if (Doubles::IsLessThanZero(v) || Doubles::IsGreaterThan(u + v, 1))	// TODO: Can we get away without tolerant checks here?
 		{
-			return std::optional<Intersection>();
+			return std::optional<RayIntersection>();
 		}
 
 		auto d = edge2.Dot(q) * inverseDeterminant;
 		if (Doubles::IsLessThanZero(d))
 		{
-			return std::optional<Intersection>();
+			return std::optional<RayIntersection>();
 		}
 
-		auto point = ray.Origin() + d * ray.Direction();
-		return Intersection(point, Doubles::IsLessThanZero(determinant) ? -normal : normal);
+		return RayIntersection(d, Doubles::IsGreaterThanZero(determinant));
+	}
+
+	// ReSharper disable once CppParameterNeverUsed - required for base class.
+	Vector Triangle::GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const
+	{
+		return rayIntersection.IntersectingOutside() ? normal : -normal;
 	}
 
 	const Point& Triangle::operator[](unsigned int index) const

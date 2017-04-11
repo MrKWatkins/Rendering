@@ -22,27 +22,34 @@ namespace MrKWatkins::Rendering::Geometry
 		}
 	}
 
-	std::optional<Intersection> Mesh::NearestIntersection(const Ray& ray) const
+	std::optional<RayIntersection> Mesh::NearestRayIntersection(const Ray& ray) const
 	{
 		if (!boundingBox.Intersects(ray))
 		{
-			return std::optional<Intersection>();
+			return std::optional<RayIntersection>();
 		}
 
-		for (const auto &triangle : triangles)
+		auto nearestIntersection = std::optional<RayIntersection>();
+		for (auto& triangle : triangles)
 		{
-			auto intersection = triangle.NearestIntersection(ray);
-			if (intersection.has_value())
+			auto intersection = triangle.NearestRayIntersection(ray);
+			if (intersection.has_value() &&
+				(!nearestIntersection.has_value() || intersection->D() < nearestIntersection->D()))
 			{
-				return intersection;
+				nearestIntersection = RayIntersection(intersection.value(), &triangle);
 			}
 		}
 
-		return std::optional<Intersection>();
+		return nearestIntersection;
 	}
 
 	Mesh Mesh::LoadObjFile(const std::wstring path)
 	{
 		return Mesh(IO::ObjFile::Load(path));
+	}
+
+	Vector Mesh::GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const
+	{
+		return rayIntersection.ChildSolid()->GetSurfaceNormal(rayIntersection, pointOnSurface);
 	}
 }

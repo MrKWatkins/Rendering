@@ -59,13 +59,17 @@ namespace MrKWatkins::Rendering::Geometry
         return vector * scalar;
     }
 
-    Vector Vector::operator/(double scalar) const
-    {
+	Vector Vector::operator/(double scalar) const
+	{
 		VERIFY_IS_FINITE(scalar);
-		VERIFY_NOT_ZERO(scalar);
 
-        return Vector(x / scalar, y / scalar, z / scalar);
-    }
+		// Don't use VERIFY_NOT_ZERO as that is a tolerance comparison which the compiler doesn't know about, causing us to get a C4273 'potential divide by 0'.
+		if (scalar == 0)
+		{
+			throw std::invalid_argument("scalar cannot be zero.");
+		}
+		return Vector(x / scalar, y / scalar, z / scalar);
+	}
 
 	double Vector::operator[](unsigned int index) const
 	{

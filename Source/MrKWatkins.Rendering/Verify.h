@@ -13,9 +13,15 @@ if (!std::isfinite(parameter)) \
 }
 
 #define VERIFY_NOT_ZERO(parameter) \
-if (parameter == 0)	/* TODO: Should this be a tolerant comparison? */ \
+if (!Doubles::IsZero(parameter)) \
 { \
 	throw std::invalid_argument(#parameter " cannot be zero."); \
+}
+
+#define VERIFY_NOT_NEGATIVE(parameter) \
+if (Doubles::IsLessThanZero(parameter)) \
+{ \
+	throw std::invalid_argument(#parameter " cannot be less than zero."); \
 }
 
 #define VERIFY_ZERO_TO_ONE(parameter) \
@@ -69,6 +75,7 @@ if (!condition) \
 
 #define VERIFY_IS_FINITE(parameter)
 #define VERIFY_NOT_ZERO(parameter)
+#define VERIFY_NOT_NEGATIVE(parameter)
 #define VERIFY_ZERO_TO_ONE(parameter)
 #define VERIFY_LESS_THAN(maximumExclusive, parameter)
 #define VERIFY_LESS_THAN_OR_EQUAL_TO(maximumExclusive, parameter)

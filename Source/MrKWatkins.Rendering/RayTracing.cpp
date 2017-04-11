@@ -76,19 +76,18 @@ namespace MrKWatkins::Rendering::Algorithms
 			}
 
 			// Check if there is an object in the way of the light.
-			// TODO: Try and do this the other way around to avoid having to do the - later on.
 			auto lightRay = light->GetRayToPoint(intersection.Point());
 			auto closestObjectToLight = scene->GetClosestIntersection(lightRay);
 			if (!closestObjectToLight.has_value())
 			{
 				throw std::logic_error("Light ray does not intersect any object.");
 			}
-			if (*closestObjectToLight.value().Object() != *intersection.Object())
+			if (*closestObjectToLight->Object() != *intersection.Object())
 			{
 				continue;
 			}
 
-			auto surfacePoint = SurfacePoint(material, intersection.SurfaceNormal(), -lightRay.Direction(), toViewer);
+			auto surfacePoint = SurfacePoint(material, intersection.Normal(), -lightRay.Direction(), toViewer);
 
 			colour = colour + shadingModel->ShadePoint(surfacePoint) * light->Colour() * intensity;
 		}
@@ -105,7 +104,7 @@ namespace MrKWatkins::Rendering::Algorithms
 
 		auto surfaceToRayOrigin = -ray.Direction();
 		auto reflectionOrigin = intersection.Point();
-		auto reflectionDirection = Vector::ReflectAboutNormal(surfaceToRayOrigin, intersection.SurfaceNormal());
+		auto reflectionDirection = Vector::ReflectAboutNormal(surfaceToRayOrigin, intersection.Normal());
 
 		auto reflection = Ray(reflectionOrigin, reflectionDirection);
 		return reflectivity * CalculateColour(reflection, intersection, recursionDepth + 1);
@@ -135,7 +134,7 @@ namespace MrKWatkins::Rendering::Algorithms
 	std::optional<Ray> RayTracing::CalculateExitRayForTransmittance(const Ray& refractedRay, const Material& material, const Scene::Object* object, int* recursionDepth) const
 	{
 		// This assumes there are no objects inside the object! TODO: Allow overlapping objects.
-		auto exitPoint = object->NearestIntersection(refractedRay);
+		auto exitPoint = object->Solid().NearestSurfaceIntersection(refractedRay);
 		if (!exitPoint.has_value())
 		{
 			// Must've been a 2D object.
@@ -143,7 +142,7 @@ namespace MrKWatkins::Rendering::Algorithms
 		}
 
 		auto internalRay = refractedRay;
-		auto exitDirection = CalculateRefractedDirection(material.RefractiveIndex(), 1, internalRay.Direction(), exitPoint->SurfaceNormal());
+		auto exitDirection = CalculateRefractedDirection(material.RefractiveIndex(), 1, internalRay.Direction(), exitPoint->Normal());
 		// If there is no value then we have total internal reflection.
 		while (!exitDirection.has_value())
 		{
@@ -153,10 +152,10 @@ namespace MrKWatkins::Rendering::Algorithms
 			}
 			*recursionDepth = *recursionDepth + 1;	// Being 100% sure I'm not incrementing the pointer here...
 
-			auto internalReflectionDirection = Vector::ReflectAboutNormal(-internalRay.Direction(), exitPoint->SurfaceNormal());
+			auto internalReflectionDirection = Vector::ReflectAboutNormal(-internalRay.Direction(), exitPoint->Normal());
 			internalRay = Ray(exitPoint->Point(), internalReflectionDirection);
-			exitPoint = object->NearestIntersection(internalRay);
-			exitDirection = CalculateRefractedDirection(material.RefractiveIndex(), 1, internalRay.Direction(), exitPoint->SurfaceNormal());
+			exitPoint = object->Solid().NearestSurfaceIntersection(internalRay);
+			exitDirection = CalculateRefractedDirection(material.RefractiveIndex(), 1, internalRay.Direction(), exitPoint->Normal());
 		}
 
 		return Ray(exitPoint->Point(), exitDirection.value());
@@ -170,7 +169,7 @@ namespace MrKWatkins::Rendering::Algorithms
 		}
 
 		// Work out the direction of refraction.
-		auto refractedDirection = CalculateRefractedDirection(1, material.RefractiveIndex(), ray.Direction(), intersection.SurfaceNormal());
+		auto refractedDirection = CalculateRefractedDirection(1, material.RefractiveIndex(), ray.Direction(), intersection.Normal());
 		if (!refractedDirection.has_value())
 		{
 			// Total internal reflection on the exterior. Return no Colour to indicate to that we should use the amount of transmittance for reflection instead.

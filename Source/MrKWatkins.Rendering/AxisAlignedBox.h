@@ -2,7 +2,7 @@
 #include "Solid.h"
 #include "Point.h"
 #include "Triangle.h"
-#include "Intersection.h"
+#include "RayIntersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -11,8 +11,6 @@ namespace MrKWatkins::Rendering::Geometry
 		Point minimum;
 		Point maximum;
 
-		bool Intersects(const Ray& ray, double& dNear, double& dFar) const;
-		Vector CalculateSurfaceNormal(const Point& intersection, bool insideBox) const;
 	public:
 		AxisAlignedBox(const Point& minimum, const Point& maximum);
 		AxisAlignedBox(const Point& closestCorner, double width, double height, double depth);
@@ -20,9 +18,11 @@ namespace MrKWatkins::Rendering::Geometry
 		const Point& Minimum() const noexcept { return minimum; }
 		const Point& Maximum() const noexcept { return maximum; }
 
-		std::optional<Intersection> NearestIntersection(const Ray& ray) const override;
-		bool Intersects(const Ray& ray) const;
+		std::optional<RayIntersection> NearestRayIntersection(const Ray& ray) const override;
 
+		Vector GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const override;
+
+		// Factory methods.
 		template <typename TContainer>
 		static AxisAlignedBox CreateBoundingBoxForPoints(TContainer points)
 		{

@@ -1,6 +1,6 @@
 #pragma once
 #include "Solid.h"
-#include "Intersection.h"
+#include "SurfaceIntersection.h"
 #include "Texture.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
@@ -22,7 +22,7 @@ namespace MrKWatkins::Rendering::Scene
         bool operator==(const Object& other) const;
         bool operator!=(const Object& other) const;
 
-		std::optional<Intersection> NearestIntersection(const Ray& ray) const;
+		const Solid& Solid() const noexcept { return *solid; }
 
 		Material GetMaterialAtPoint(const Point& point) const;
     };
