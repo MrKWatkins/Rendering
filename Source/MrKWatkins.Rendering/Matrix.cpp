@@ -142,6 +142,21 @@ namespace MrKWatkins::Rendering::Geometry
 		return Scale(factor, factor, factor);
 	}
 
+	Matrix Matrix::ScaleX(double factor)
+	{
+		return Scale(factor, 1.0, 1.0);
+	}
+
+	Matrix Matrix::ScaleY(double factor)
+	{
+		return Scale(1.0, factor, 1.0);
+	}
+
+	Matrix Matrix::ScaleZ(double factor)
+	{
+		return Scale(1.0, 1.0, factor);
+	}
+
 	Matrix Matrix::Scale(double xFactor, double yFactor, double zFactor)
 	{
 		VERIFY_NOT_NEGATIVE(xFactor);
@@ -153,6 +168,39 @@ namespace MrKWatkins::Rendering::Geometry
 		scale.elements[5] = yFactor;
 		scale.elements[10] = zFactor;
 		return scale;
+	}
+
+	Matrix Matrix::Translate(const Vector& vector)
+	{
+		return Translate(vector.X(), vector.Y(), vector.Z());
+	}
+
+	Matrix Matrix::TranslateX(double distance)
+	{
+		return Translate(distance, 0.0, 0.0);
+	}
+
+	Matrix Matrix::TranslateY(double distance)
+	{
+		return Translate(0.0, distance, 0.0);
+	}
+
+	Matrix Matrix::TranslateZ(double distance)
+	{
+		return Translate(0.0, 0.0, distance);
+	}
+
+	Matrix Matrix::Translate(double xDistance, double yDistance, double zDistance)
+	{
+		Matrix translation;
+		translation.elements[0] = 1.0;
+		translation.elements[5] = 1.0;
+		translation.elements[10] = 1.0;
+		translation.elements[12] = xDistance;
+		translation.elements[13] = yDistance;
+		translation.elements[14] = zDistance;
+		translation.elements[15] = 1.0;
+		return translation;
 	}
 
 	const Matrix& Matrix::Zero()
@@ -177,10 +225,10 @@ namespace MrKWatkins::Rendering::Geometry
 	const Matrix& Matrix::Identity()
 	{
 		static auto identity = Matrix(
-			1, 0, 0, 0,
-			0, 1, 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1);
+			1.0, 0.0, 0.0, 0.0,
+			0.0, 1.0, 0.0, 0.0,
+			0.0, 0.0, 1.0, 0.0,
+			0.0, 0.0, 0.0, 1.0);
 
 		return identity;
 	}

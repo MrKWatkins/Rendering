@@ -30,7 +30,16 @@ namespace MrKWatkins::Rendering::Geometry
 		double operator()(unsigned int i, unsigned int j) const;
 
 		static Matrix Scale(double factor);
+		static Matrix ScaleX(double factor);
+		static Matrix ScaleY(double factor);
+		static Matrix ScaleZ(double factor);
 		static Matrix Scale(double xFactor, double yFactor, double zFactor);
+
+		static Matrix Translate(const Vector& vector);
+		static Matrix TranslateX(double distance);
+		static Matrix TranslateY(double distance);
+		static Matrix TranslateZ(double distance);
+		static Matrix Translate(double xDistance, double yDistance, double zDistance);
 
 		static const Matrix& Zero();
 		bool IsZero() const;
