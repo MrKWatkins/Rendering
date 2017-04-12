@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Mesh.h"
 #include "Verify.h"
+#include "Matrix.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -20,6 +21,21 @@ namespace MrKWatkins::Rendering::Geometry
 		{
 			triangles.push_back(Triangle(vertices[f], vertices[f + 1], vertices[f + 2]));
 		}
+	}
+
+	Mesh Mesh::Normalize() const
+	{
+		return Transform(boundingBox.GetNormalizeTransform());
+	}
+
+	Mesh Mesh::Transform(const Matrix& transformation) const
+	{
+		std::vector<Triangle> transformedTriangles;
+		for (auto& triangle : triangles)
+		{
+			transformedTriangles.push_back(triangle.Transform(transformation));
+		}
+		return Mesh(transformedTriangles);
 	}
 
 	std::optional<RayIntersection> Mesh::NearestRayIntersection(const Ray& ray) const

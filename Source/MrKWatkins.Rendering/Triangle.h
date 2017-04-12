@@ -1,6 +1,7 @@
 #pragma once
 #include "Solid.h"
 #include "Point.h"
+#include "Matrix.h"
 #include "RayIntersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
@@ -27,6 +28,8 @@ namespace MrKWatkins::Rendering::Geometry
 		const Point& Corner2() const { return corner2; }
 
 		const Point& operator [](unsigned int index) const;
+
+		Triangle Transform(const Matrix& transformation) const;
 
 		typedef TriangleCornerIterator Iterator;
 

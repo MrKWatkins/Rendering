@@ -75,11 +75,39 @@ namespace MrKWatkins::Rendering::Tests::Geometry::AxisAlignedBoxTests
 		}
 	}
 
-	TEST_CASE("AxisAlignedBox - Bug", "[AxisAlignedBox]")
+	TEST_CASE("AxisAlignedBox - Width", "[AxisAlignedBox]")
 	{
-		auto box = AxisAlignedBox(Point(0.1, 0.9, 0.1), 0.8, 0.1, 1);
-		auto ray = Ray(Point(0.1, 1, 0.42551694027005382), Vector(0.20333247500773682, 0.25416559375967102, 0.94554521602936681));
+		CHECK(AxisAlignedBox(Point(0, 0, 0), Point(4.5, 0, 0)).Width() == Approx(4.5));
+		CHECK(AxisAlignedBox(Point(-4.5, 0, 0), Point(0, 0, 0)).Width() == Approx(4.5));
 
-		auto intersection = box.NearestSurfaceIntersection(ray);
+		CHECK(AxisAlignedBox(Point(2.2, 0, 0), Point(4.5, 0, 0)).Width() == Approx(2.3));
+		CHECK(AxisAlignedBox(Point(-4.5, 0, 0), Point(-2.2, 0, 0)).Width() == Approx(2.3));
+
+		CHECK(AxisAlignedBox(Point(-1.3, 0, 0), Point(4.5, 0, 0)).Width() == Approx(5.8));
+		CHECK(AxisAlignedBox(Point(-4.5, 0, 0), Point(1.3, 0, 0)).Width() == Approx(5.8));
+	}
+
+	TEST_CASE("AxisAlignedBox - Height", "[AxisAlignedBox]")
+	{
+		CHECK(AxisAlignedBox(Point(0, 0, 0), Point(0, 4.5, 0)).Height() == Approx(4.5));
+		CHECK(AxisAlignedBox(Point(0, -4.5, 0), Point(0, 0, 0)).Height() == Approx(4.5));
+
+		CHECK(AxisAlignedBox(Point(0, 2.2, 0), Point(0, 4.5, 0)).Height() == Approx(2.3));
+		CHECK(AxisAlignedBox(Point(0, -4.5, 0), Point(0, -2.2, 0)).Height() == Approx(2.3));
+
+		CHECK(AxisAlignedBox(Point(0, -1.3, 0), Point(0, 4.5, 0)).Height() == Approx(5.8));
+		CHECK(AxisAlignedBox(Point(0, -4.5, 0), Point(0, 1.3, 0)).Height() == Approx(5.8));
+	}
+
+	TEST_CASE("AxisAlignedBox - Depth", "[AxisAlignedBox]")
+	{
+		CHECK(AxisAlignedBox(Point(0, 0, 0), Point(0, 0, 4.5)).Depth() == Approx(4.5));
+		CHECK(AxisAlignedBox(Point(0, 0, -4.5), Point(0, 0, 0)).Depth() == Approx(4.5));
+
+		CHECK(AxisAlignedBox(Point(0, 0, 2.2), Point(0, 0, 4.5)).Depth() == Approx(2.3));
+		CHECK(AxisAlignedBox(Point(0, 0, -4.5), Point(0, 0, -2.2)).Depth() == Approx(2.3));
+
+		CHECK(AxisAlignedBox(Point(0, 0, -1.3), Point(0, 0, 4.5)).Depth() == Approx(5.8));
+		CHECK(AxisAlignedBox(Point(0, 0, -4.5), Point(0, 0, 1.3)).Depth() == Approx(5.8));
 	}
 }

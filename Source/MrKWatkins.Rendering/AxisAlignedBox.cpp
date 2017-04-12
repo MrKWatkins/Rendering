@@ -16,6 +16,24 @@ namespace MrKWatkins::Rendering::Geometry
 	{
 	}
 
+	Matrix AxisAlignedBox::GetNormalizeTransform() const
+	{
+		// To normalize we need to first move the mesh to start at (0, 0, 0).
+		auto translate = Matrix::Translate(-minimum.X(), -minimum.Y(), -minimum.Z());
+
+		// Then we need to scale it. We need to find the largest side of the box and scale by the inverse of that.
+		auto largestSide = std::max(std::max(Width(), Height()), Depth());
+		if (largestSide == 0)
+		{
+			// We could in theory return a zero volume mesh but it's far more likely we've done something stupid so throw instead.
+			throw std::logic_error("Mesh has zero volume.");
+		}
+
+		auto scale = Matrix::Scale(1.0 / largestSide);
+
+		return scale * translate;
+	}
+
 	std::optional<RayIntersection> AxisAlignedBox::NearestRayIntersection(const Ray& ray) const
 	{
 		// Use the slabs method (http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter3.htm) to find the intersection.

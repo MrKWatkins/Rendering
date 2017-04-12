@@ -8,6 +8,7 @@ namespace MrKWatkins::Rendering::IO
 	// TODO: Probably shouldn't be copyable.
 	class ObjFile
 	{
+		// TODO: Change to faces, mesh should change them to faces.
 		mutable std::vector<Triangle> triangles;
 
 		ObjFile();

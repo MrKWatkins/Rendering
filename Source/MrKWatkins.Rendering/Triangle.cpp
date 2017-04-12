@@ -69,6 +69,11 @@ namespace MrKWatkins::Rendering::Geometry
 		throw std::out_of_range("index equals " + std::to_string(index) + " which is not in the range 0 -> 2.");
 	}
 
+	Triangle Triangle::Transform(const Matrix& transformation) const
+	{
+		return Triangle(transformation.Transform(corner0), transformation.Transform(corner1), transformation.Transform(corner2));
+	}
+
 	Triangle::Iterator Triangle::begin() const
 	{
 		return Iterator(this);

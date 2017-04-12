@@ -3,6 +3,8 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
+	class Triangle;
+
 	class Matrix final
 	{
 		double elements[16];

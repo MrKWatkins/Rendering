@@ -42,7 +42,8 @@ namespace MrKWatkins::Rendering::UI
 		//scene->Add(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
 		//scene->Add(Sphere(0.9, 0.2, 0.75, 0.2), Material::Chrome());
 
-		scene->Add(Mesh::LoadObjFile(IO::ResolveModelPath(L"Teapot.obj")), Material::WhitePlastic());
+		auto teapot = Mesh::LoadObjFile(IO::ResolveModelPath(L"Teapot.obj")).Normalize().Transform(Matrix::Translate(0, 0, 0.5));
+		scene->Add(teapot, Material::WhitePlastic());
 
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(20), Colour(1, 1, 1));
 		scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));

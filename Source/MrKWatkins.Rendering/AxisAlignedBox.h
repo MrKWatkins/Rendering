@@ -18,6 +18,15 @@ namespace MrKWatkins::Rendering::Geometry
 		const Point& Minimum() const noexcept { return minimum; }
 		const Point& Maximum() const noexcept { return maximum; }
 
+		double Width() const noexcept { return abs(maximum.X() - minimum.X()); }
+		double Height() const noexcept { return abs(maximum.Y() - minimum.Y()); }
+		double Depth() const noexcept { return abs(maximum.Z() - minimum.Z()); }
+
+		/// <summary>
+		/// Returns a transformation that would normalize this box, i.e. move it so that the the minimum is at the origin and the maximum has it's largest axis at 1.
+		/// </summary>
+		Matrix GetNormalizeTransform() const;
+
 		std::optional<RayIntersection> NearestRayIntersection(const Ray& ray) const override;
 
 		Vector GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const override;

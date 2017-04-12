@@ -50,8 +50,7 @@ namespace MrKWatkins::Rendering::IO
 			throw std::runtime_error("Vertex line does not have enough components.");
 		}
 
-		// TODO: Remove the temporary scaling.
-		auto point = Point(ToDouble(components[1]) / 100 + 0.5, ToDouble(components[2]) / 100 + 0.5, ToDouble(components[3]) / 100 + 2.0);
+		auto point = Point(ToDouble(components[1]), ToDouble(components[2]), ToDouble(components[3]));
 		vertices.push_back(point);
 
 		return true;
