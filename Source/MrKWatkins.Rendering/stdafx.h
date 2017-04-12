@@ -3,6 +3,7 @@
 #include "targetver.h"
 
 #include <algorithm>
+#include <array>
 #include <fstream>
 #include <functional>
 #include <memory>

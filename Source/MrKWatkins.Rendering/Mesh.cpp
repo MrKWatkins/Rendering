@@ -9,7 +9,7 @@ namespace MrKWatkins::Rendering::Geometry
 	{
 	}
 
-	Mesh::Mesh(const IO::ObjFile& objFile) : Mesh(objFile.Triangles())
+	Mesh::Mesh(const IO::ObjFile& objFile) : Mesh(objFile.ToTriangles())
 	{
 	}
 

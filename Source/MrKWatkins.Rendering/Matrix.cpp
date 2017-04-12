@@ -118,6 +118,7 @@ namespace MrKWatkins::Rendering::Geometry
 
 	Point Matrix::Transform(const Point& point) const
 	{
+		// If we're transforming a point multiply a homongenous 4-vector of the form (x, y, z, 1).
 		return Point(
 			elements[0] * point.X() + elements[4] * point.Y() + elements[8] * point.Z() + elements[12],
 			elements[1] * point.X() + elements[5] * point.Y() + elements[9] * point.Z() + elements[13],
@@ -126,10 +127,11 @@ namespace MrKWatkins::Rendering::Geometry
 
 	Vector Matrix::Transform(const Vector& vector) const
 	{
+		// If we're transforming a vector multiply a homongenous 4-vector of the form (x, y, z, 0) - effectively removes the translation component.
 		return Vector(
-			elements[0] * vector.X() + elements[4] * vector.Y() + elements[8] * vector.Z() + elements[12],
-			elements[1] * vector.X() + elements[5] * vector.Y() + elements[9] * vector.Z() + elements[13],
-			elements[2] * vector.X() + elements[6] * vector.Y() + elements[10] * vector.Z() + elements[14]);
+			elements[0] * vector.X() + elements[4] * vector.Y() + elements[8] * vector.Z(),
+			elements[1] * vector.X() + elements[5] * vector.Y() + elements[9] * vector.Z(),
+			elements[2] * vector.X() + elements[6] * vector.Y() + elements[10] * vector.Z());
 	}
 
 	double Matrix::operator()(unsigned int i, unsigned int j) const

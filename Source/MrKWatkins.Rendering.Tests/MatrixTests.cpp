@@ -39,10 +39,10 @@ namespace MrKWatkins::Rendering::Tests::Geometry::MatrixTests
 	TEST_CASE("Matrix - Translate", "[Matrix]")
 	{
 		CHECK_THAT(Matrix::Translate(0.5, 1, -3).Transform(Point(5, 7, 3.1)), Equals(Point(5.5, 8, 0.1)));
-		CHECK_THAT(Matrix::Translate(-2.4, 0, 0.1).Transform(Vector(-5, 3.2, -3)), Equals(Vector(-7.4, 3.2, -2.9)));
+		CHECK_THAT(Matrix::Translate(-2.4, 0, 0.1).Transform(Vector(-5, 3.2, -3)), Equals(Vector(-5, 3.2, -3)));	// Translation is ignored for vectors as they represent a direction.
 
 		CHECK_THAT(Matrix::TranslateX(5).Transform(Point(12, 3.4, -6)), Equals(Point(17, 3.4, -6)));
-		CHECK_THAT(Matrix::TranslateY(5).Transform(Vector(12, 3.4, -6)), Equals(Vector(12, 8.4, -6)));
+		CHECK_THAT(Matrix::TranslateY(5).Transform(Point(12, 3.4, -6)), Equals(Point(12, 8.4, -6)));
 		CHECK_THAT(Matrix::TranslateZ(5).Transform(Point(12, 3.4, -6)), Equals(Point(12, 3.4, -1)));
 	}
 }

@@ -5,8 +5,13 @@
 
 namespace MrKWatkins::Rendering::Geometry
 {
-	Triangle::Triangle(const Point& corner0, const Point& corner1, const Point& corner2)
-		: corner0{ corner0 }, corner1{ corner1 }, corner2{ corner2 }, edge1{ corner1 - corner0 }, edge2{ corner2 - corner0 }, normal{ edge1.Cross(edge2) }
+	Triangle::Triangle(const Point& vertex0, const Point& vertex1, const Point& vertex2)
+		: vertices{ vertex0, vertex1, vertex2 }, edge1{ vertex1 - vertex0 }, edge2{ vertex2 - vertex0 }, vertexNormals{ edge1.Cross(edge2), vertexNormals[0], vertexNormals[0] }
+	{
+	}
+
+	Triangle::Triangle(const Point& vertex0, const Vector& vertexNormal0, const Point& vertex1, const Vector& vertexNormal1, const Point& vertex2, const Vector& vertexNormal2)
+		: vertices{ vertex0, vertex1, vertex2 }, edge1{ vertex1 - vertex0 }, edge2{ vertex2 - vertex0 }, vertexNormals{ vertexNormal0.Normalize(), vertexNormal1.Normalize(), vertexNormal2.Normalize() }
 	{
 	}
 
@@ -25,7 +30,7 @@ namespace MrKWatkins::Rendering::Geometry
 
 		auto inverseDeterminant = 1 / determinant;
 
-		auto t = ray.Origin() - corner0;
+		auto t = ray.Origin() - vertices[0];
 		auto u = t.Dot(p) * inverseDeterminant;
 		if (!Doubles::IsZeroToOne(u))	// TODO: Can we get away without tolerant checks here?
 		{
@@ -51,27 +56,20 @@ namespace MrKWatkins::Rendering::Geometry
 	// ReSharper disable once CppParameterNeverUsed - required for base class.
 	Vector Triangle::GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const
 	{
-		return rayIntersection.IntersectingOutside() ? normal : -normal;
+		return rayIntersection.IntersectingOutside() ? vertexNormals[0] : -vertexNormals[0];
 	}
 
 	const Point& Triangle::operator[](unsigned int index) const
 	{
-		switch (index)
-		{
-		case 0:
-			return corner0;
-		case 1:
-			return corner1;
-		case 2:
-			return corner2;
-		}
-
-		throw std::out_of_range("index equals " + std::to_string(index) + " which is not in the range 0 -> 2.");
+		return vertices[index];
 	}
 
 	Triangle Triangle::Transform(const Matrix& transformation) const
 	{
-		return Triangle(transformation.Transform(corner0), transformation.Transform(corner1), transformation.Transform(corner2));
+		return Triangle(
+			transformation.Transform(vertices[0]), transformation.Transform(vertexNormals[0]),
+			transformation.Transform(vertices[1]), transformation.Transform(vertexNormals[1]),
+			transformation.Transform(vertices[2]), transformation.Transform(vertexNormals[2]));
 	}
 
 	Triangle::Iterator Triangle::begin() const
@@ -85,7 +83,7 @@ namespace MrKWatkins::Rendering::Geometry
 		return Iterator();
 	}
 
-	void TriangleCornerIterator::Move()
+	void TriangleVertexIterator::Move()
 	{
 		VERIFY_CONDITION((triangle != nullptr), "Iteration finished.");
 		corner++;
@@ -95,44 +93,44 @@ namespace MrKWatkins::Rendering::Geometry
 		}
 	}
 
-	TriangleCornerIterator::TriangleCornerIterator() : triangle{ nullptr }, corner{ 3 }	// Default constructor generates end().
+	TriangleVertexIterator::TriangleVertexIterator() : triangle{ nullptr }, corner{ 3 }	// Default constructor generates end().
 	{
 	}
 
-	TriangleCornerIterator::TriangleCornerIterator(const Triangle* triangle) : triangle{ triangle }
+	TriangleVertexIterator::TriangleVertexIterator(const Triangle* triangle) : triangle{ triangle }
 	{
 	}
 
-	TriangleCornerIterator& TriangleCornerIterator::operator++()
+	TriangleVertexIterator& TriangleVertexIterator::operator++()
 	{
 		Move();
 		return *this;
 	}
 
-	TriangleCornerIterator TriangleCornerIterator::operator++(int)
+	TriangleVertexIterator TriangleVertexIterator::operator++(int)
 	{
 		auto copy(*this);
 		Move();
 		return copy;
 	}
 
-	bool TriangleCornerIterator::operator==(const TriangleCornerIterator& other) const
+	bool TriangleVertexIterator::operator==(const TriangleVertexIterator& other) const
 	{
 		return triangle == other.triangle && corner == other.corner;
 	}
 
-	bool TriangleCornerIterator::operator!=(const TriangleCornerIterator& other) const
+	bool TriangleVertexIterator::operator!=(const TriangleVertexIterator& other) const
 	{
 		return triangle != other.triangle || corner != other.corner;
 	}
 
-	const Point& TriangleCornerIterator::operator*() const
+	const Point& TriangleVertexIterator::operator*() const
 	{
 		VERIFY_CONDITION((triangle != nullptr), "Iteration finished.");
 		return triangle->operator[](corner);
 	}
 
-	const Point& TriangleCornerIterator::operator->() const
+	const Point& TriangleVertexIterator::operator->() const
 	{
 		VERIFY_CONDITION((triangle != nullptr), "Iteration finished.");
 		return triangle->operator[](corner);
