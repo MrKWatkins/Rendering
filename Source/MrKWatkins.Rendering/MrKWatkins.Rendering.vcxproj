@@ -149,6 +149,7 @@
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Gradient.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="SurfaceIntersection.h" />
     <ClInclude Include="Lambertian.h" />
     <ClInclude Include="Material.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="Gradient.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Solid.cpp" />
     <ClCompile Include="SurfaceIntersection.cpp" />
     <ClCompile Include="Lambertian.cpp" />

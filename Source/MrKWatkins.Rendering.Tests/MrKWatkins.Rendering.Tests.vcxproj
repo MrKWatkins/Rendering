@@ -168,6 +168,7 @@
     <ClCompile Include="AxisAlignedBoxTests.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Matchers.cpp" />
+    <ClCompile Include="MatrixTests.cpp" />
     <ClCompile Include="PlaneTests.cpp" />
     <ClCompile Include="PointTests.cpp" />
     <ClCompile Include="Random.cpp" />

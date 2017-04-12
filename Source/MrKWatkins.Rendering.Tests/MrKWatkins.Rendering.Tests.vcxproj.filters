@@ -71,5 +71,8 @@
     <ClCompile Include="TriangleTests.cpp">
       <Filter>Source Files\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="MatrixTests.cpp">
+      <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
