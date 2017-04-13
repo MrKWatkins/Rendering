@@ -13,5 +13,3 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
-
-#define VERIFY_ENABLED
