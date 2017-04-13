@@ -15,7 +15,7 @@ namespace MrKWatkins::Rendering::Geometry
 		AxisAlignedBox boundingBox;
 	public:
 		explicit Mesh(const std::vector<Triangle>& triangles);
-		Mesh(const IO::ObjFile& objFile);
+		explicit Mesh(const IO::ObjFile& objFile);
 		Mesh(const std::vector<Point>& vertices, const std::vector<int>& triangleLookup);
 
 		/// <summary>

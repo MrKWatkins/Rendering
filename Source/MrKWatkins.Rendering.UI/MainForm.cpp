@@ -32,11 +32,11 @@ namespace MrKWatkins::Rendering::UI
 
 	std::unique_ptr<Scene::Scene> BuildScene()
 	{
-		auto scene = std::make_unique<Scene::Scene>(Colour(0.25, 0.25, 0.25), Texture::Create<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8)));
+		auto scene = std::make_unique<Scene::Scene>(Colour(0.1, 0.1, 0.1), Texture::Create<SkyGradient>(Colour(0.8, 1, 1), Colour(0, 0.2, 0.8)));
 
-		Material red = Material::Build(Colour(0.1, 0.01, 0.01), Colour(1, 0, 0)).WithReflectivity(0.1);
-		Material black = Material::Build(Colour(0.01, 0.01, 0.01), Colour(0, 0, 0)).WithReflectivity(0.2);
-		scene->Add(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Texture::Create<Chequerboard>(red, black, 0.25));
+		Material blue = Material::Build(Colour(0.01, 0.01, 0.1), Colour(0, 0, 1)).WithReflectivity(0.2);
+		Material black = Material::Build(Colour(0, 0, 0)).WithReflectivity(0.1);
+		scene->Add(Plane(Point(0, 0, 0), Vector(0, 1, 0)), Texture::Create<Chequerboard>(blue, black, 0.25));
 
 		//scene->Add(Sphere(0.1, 0.2, 0.75, 0.2), Material::Chrome());
 		//scene->Add(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
@@ -46,7 +46,7 @@ namespace MrKWatkins::Rendering::UI
 		scene->Add(teapot, Material::WhitePlastic());
 
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(20), Colour(1, 1, 1));
-		scene->AddPointLight(Point(0, 1, 0), Attenuation::InverseSquare(10), Colour(0.5, 0.5, 0));
+		scene->AddPointLight(Point(0, 0.5, 0), Attenuation::InverseSquare(5), Colour(0.5, 0.5, 0));
 
 		return scene;
 	}

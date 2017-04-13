@@ -6,7 +6,7 @@
 namespace MrKWatkins::Rendering::Geometry
 {
 	Triangle::Triangle(const Point& vertex0, const Point& vertex1, const Point& vertex2)
-		: vertices{ vertex0, vertex1, vertex2 }, edge1{ vertex1 - vertex0 }, edge2{ vertex2 - vertex0 }, vertexNormals{ edge1.Cross(edge2), vertexNormals[0], vertexNormals[0] }
+		: vertices{ vertex0, vertex1, vertex2 }, edge1{ vertex1 - vertex0 }, edge2{ vertex2 - vertex0 }, vertexNormals{ edge1.Cross(edge2).Normalize(), vertexNormals[0], vertexNormals[0] }
 	{
 	}
 
@@ -50,13 +50,15 @@ namespace MrKWatkins::Rendering::Geometry
 			return std::optional<RayIntersection>();
 		}
 
-		return RayIntersection(d, Doubles::IsGreaterThanZero(determinant));
+		return RayIntersection(d, Doubles::IsGreaterThanZero(determinant), u, v);
 	}
 
 	// ReSharper disable once CppParameterNeverUsed - required for base class.
 	Vector Triangle::GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const
 	{
-		return rayIntersection.IntersectingOutside() ? vertexNormals[0] : -vertexNormals[0];
+		auto interpolatedNormal = rayIntersection.U() * vertexNormals[1] + rayIntersection.V() * vertexNormals[2] + rayIntersection.W() * vertexNormals[0];
+
+		return rayIntersection.IntersectingOutside() ? interpolatedNormal : -interpolatedNormal;
 	}
 
 	const Point& Triangle::operator[](unsigned int index) const
