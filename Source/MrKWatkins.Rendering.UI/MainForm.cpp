@@ -42,7 +42,7 @@ namespace MrKWatkins::Rendering::UI
 		//scene->Add(Sphere(0.5, 0.5, 0.75, 0.2), Material::Chrome());
 		//scene->Add(Sphere(0.9, 0.2, 0.75, 0.2), Material::Chrome());
 
-		auto mesh = Mesh::LoadObjFile(IO::ResolveModelPath(L"CthulhuStatuette.obj")).Normalize().Transform(Matrix::Translate(0.2, 0, 0.5));
+		auto mesh = Mesh::LoadObjFile(IO::ResolveModelPath(L"CthulhuStatuette.obj")).Normalize().Transform(Matrix::Translate(0.4, 0, 1.5) * Matrix::RotateY(2.5));
 		scene->Add(mesh, Material::Jade());
 
 		scene->AddPointLight(Point(1, 1, 0), Attenuation::InverseSquare(20), Colour(1, 1, 1));

@@ -43,6 +43,11 @@ namespace MrKWatkins::Rendering::Geometry
 		static Matrix TranslateZ(double distance);
 		static Matrix Translate(double xDistance, double yDistance, double zDistance);
 
+		// TODO: Be nice to have some type for angles with easy conversion to/from degrees/radians.
+		static Matrix RotateX(double radians);
+		static Matrix RotateY(double radians);
+		static Matrix RotateZ(double radians);
+
 		static const Matrix& Zero();
 		bool IsZero() const;
 

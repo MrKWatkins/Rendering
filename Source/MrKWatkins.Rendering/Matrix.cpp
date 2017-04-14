@@ -205,6 +205,51 @@ namespace MrKWatkins::Rendering::Geometry
 		return translation;
 	}
 
+	Matrix Matrix::RotateX(double radians)
+	{
+		auto sinRadians = sin(radians);
+		auto cosRadians = cos(radians);
+
+		Matrix translation;
+		translation.elements[0] = 1.0;
+		translation.elements[5] = cosRadians;
+		translation.elements[6] = sinRadians;
+		translation.elements[9] = -sinRadians;
+		translation.elements[10] = cosRadians;
+		translation.elements[15] = 1.0;
+		return translation;
+	}
+
+	Matrix Matrix::RotateY(double radians)
+	{
+		auto sinRadians = sin(radians);
+		auto cosRadians = cos(radians);
+
+		Matrix translation;
+		translation.elements[0] = cosRadians;
+		translation.elements[2] = -sinRadians;
+		translation.elements[5] = 1.0;
+		translation.elements[8] = sinRadians;
+		translation.elements[10] = cosRadians;
+		translation.elements[15] = 1.0;
+		return translation;
+	}
+
+	Matrix Matrix::RotateZ(double radians)
+	{
+		auto sinRadians = sin(radians);
+		auto cosRadians = cos(radians);
+
+		Matrix translation;
+		translation.elements[0] = cosRadians;
+		translation.elements[1] = sinRadians;
+		translation.elements[4] = -sinRadians;
+		translation.elements[5] = cosRadians;
+		translation.elements[10] = 1.0;
+		translation.elements[15] = 1.0;
+		return translation;
+	}
+
 	const Matrix& Matrix::Zero()
 	{
 		static auto zero = Matrix();
