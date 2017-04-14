@@ -199,25 +199,24 @@ namespace MrKWatkins::Rendering::IO
 		std::vector<Triangle> triangles;
 		for (auto& face : faces)
 		{
-			if (face.Vertices.size() != 3)
+			// Face elements can have any number of vertices. We therefore need to fan around the starting point to create the triangles.
+			for (auto f = 1; f < face.Vertices.size() - 1; f++)
 			{
-				continue;
+				auto vertex0 = vertices[face.Vertices[0].VertexNumber - 1].ToPoint();
+				auto vertex1 = vertices[face.Vertices[f].VertexNumber - 1].ToPoint();
+				auto vertex2 = vertices[face.Vertices[f + 1].VertexNumber - 1].ToPoint();
+
+				if (!face.Vertices[0].VertexNormalNumber.has_value())
+				{
+					triangles.push_back(Triangle(vertex0, vertex1, vertex2));
+					continue;
+				}
+
+				triangles.push_back(Triangle(
+					vertex0, vertexNormals[face.Vertices[0].VertexNormalNumber.value() - 1].ToVector(),
+					vertex1, vertexNormals[face.Vertices[f].VertexNormalNumber.value() - 1].ToVector(),
+					vertex2, vertexNormals[face.Vertices[f + 1].VertexNormalNumber.value() - 1].ToVector()));
 			}
-
-			auto vertex0 = vertices[face.Vertices[0].VertexNumber - 1].ToPoint();
-			auto vertex1 = vertices[face.Vertices[1].VertexNumber - 1].ToPoint();
-			auto vertex2 = vertices[face.Vertices[2].VertexNumber - 1].ToPoint();
-
-			if (!face.Vertices[0].VertexNormalNumber.has_value())
-			{
-				triangles.push_back(Triangle(vertex0, vertex1, vertex2));
-				continue;
-			}
-
-			triangles.push_back(Triangle(
-				vertex0, vertexNormals[face.Vertices[0].VertexNormalNumber.value() - 1].ToVector(),
-				vertex1, vertexNormals[face.Vertices[1].VertexNormalNumber.value() - 1].ToVector(),
-				vertex2, vertexNormals[face.Vertices[2].VertexNormalNumber.value() - 1].ToVector()));
 		}
 
 		return triangles;

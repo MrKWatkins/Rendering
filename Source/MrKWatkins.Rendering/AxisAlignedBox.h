@@ -35,6 +35,11 @@ namespace MrKWatkins::Rendering::Geometry
 		template <typename TContainer>
 		static AxisAlignedBox CreateBoundingBoxForPoints(TContainer points)
 		{
+			if (points.size() == 0)
+			{
+				throw std::invalid_argument("Container is empty.");
+			}
+
 			return CreateBoundingBoxForPoints(std::begin(points), std::end(points));
 		}
 
@@ -56,12 +61,22 @@ namespace MrKWatkins::Rendering::Geometry
 				maxZ = std::max(maxZ, point.Z());
 			}
 
+			if (isinf(minX))
+			{
+				throw std::invalid_argument("Iterator contained no points.");
+			}
+
 			return AxisAlignedBox(Point(minX, minY, minZ), Point(minX, minY, minZ));
 		}
 
 		template <typename TContainer>
 		static AxisAlignedBox CreateBoundingBoxForTriangles(TContainer triangles)
 		{
+			if (triangles.size() == 0)
+			{
+				throw std::invalid_argument("Container is empty.");
+			}
+
 			return CreateBoundingBoxForTriangles(std::begin(triangles), std::end(triangles));
 		}
 
@@ -89,6 +104,11 @@ namespace MrKWatkins::Rendering::Geometry
 					maxY = std::max(maxY, point.Y());
 					maxZ = std::max(maxZ, point.Z());
 				}
+			}
+
+			if (isinf(minX))
+			{
+				throw std::invalid_argument("Iterator contained no triangles.");
 			}
 
 			return AxisAlignedBox(Point(minX, minY, minZ), Point(maxX, maxY, maxZ));
