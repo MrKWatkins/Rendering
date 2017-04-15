@@ -1,11 +1,7 @@
 #pragma once
-#include "AxisAlignedBox.h"
 #include "Light.h"
 #include "Object.h"
 #include "ObjectIntersection.h"
-#include "Plane.h"
-#include "Sphere.h"
-#include "Triangle.h"
 #include "Flat.h"
 
 using namespace MrKWatkins::Rendering::Geometry;
@@ -24,9 +20,6 @@ namespace MrKWatkins::Rendering::Scene
         explicit Scene(const Colour& ambientLight);
         Scene(const Colour& ambientLight, const Colour& backgroundColour);
         Scene(const Colour& ambientLight, const std::shared_ptr<Texture> background);
-
-		// TODO: Use a template method for these.
-
 
 		template<typename TTexture, class... TConstructorArguments>
 		static std::shared_ptr<Texture> Create(TConstructorArguments&&... constructorArguments)
@@ -61,7 +54,7 @@ namespace MrKWatkins::Rendering::Scene
         const std::vector<std::unique_ptr<Object>>& Objects() const noexcept { return objects; }
         const std::vector<std::unique_ptr<Light>>& Lights() const noexcept { return lights; }
 
-		std::optional<ObjectIntersection> GetClosestIntersection(const Ray& ray, const std::optional<const Object*> exclude = std::optional<const Object*>()) const;
+		std::unique_ptr<ObjectIntersection> GetClosestIntersection(const Ray& ray, const std::optional<const Object*> exclude = std::optional<const Object*>()) const;
 
 		Colour GetBackground(const Ray& ray) const;
 

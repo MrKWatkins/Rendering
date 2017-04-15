@@ -2,7 +2,6 @@
 #include "Solid.h"
 #include "Point.h"
 #include "Triangle.h"
-#include "RayIntersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -11,9 +10,14 @@ namespace MrKWatkins::Rendering::Geometry
 		Point minimum;
 		Point maximum;
 
+		bool AxisAlignedBox::NearestIntersection(const Ray& ray, double& dNear, double& dFar) const;
 	public:
 		AxisAlignedBox(const Point& minimum, const Point& maximum);
 		AxisAlignedBox(const Point& closestCorner, double width, double height, double depth);
+
+		bool Intersects(const Ray& ray) const override;
+
+		std::unique_ptr<Intersection> NearestIntersection(const Ray& ray) const override;
 
 		const Point& Minimum() const noexcept { return minimum; }
 		const Point& Maximum() const noexcept { return maximum; }
@@ -26,10 +30,6 @@ namespace MrKWatkins::Rendering::Geometry
 		/// Returns a transformation that would normalize this box, i.e. move it so that the the minimum is at the origin and the maximum has it's largest axis at 1.
 		/// </summary>
 		Matrix GetNormalizeTransform() const;
-
-		std::optional<RayIntersection> NearestRayIntersection(const Ray& ray) const override;
-
-		Vector GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const override;
 
 		// Factory methods.
 		template <typename TContainer>
@@ -46,8 +46,12 @@ namespace MrKWatkins::Rendering::Geometry
 		template <typename TIterator>
 		static AxisAlignedBox CreateBoundingBoxForPoints(TIterator start, TIterator end)
 		{
-			double minX, minY, minZ = std::numeric_limits<double>::infinity();
-			double maxX, maxY, maxZ = -std::numeric_limits<double>::infinity();
+			auto minX = std::numeric_limits<double>::infinity();
+			auto minY = std::numeric_limits<double>::infinity();
+			auto minZ = std::numeric_limits<double>::infinity();
+			auto maxX = -std::numeric_limits<double>::infinity();
+			auto maxY = -std::numeric_limits<double>::infinity();
+			auto maxZ = -std::numeric_limits<double>::infinity();
 
 			for (auto iterator = start; iterator != end; ++iterator)
 			{

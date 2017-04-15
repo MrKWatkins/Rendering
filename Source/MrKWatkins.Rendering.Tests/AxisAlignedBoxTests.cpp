@@ -8,7 +8,7 @@ using namespace MrKWatkins::Rendering::Geometry;
 
 namespace MrKWatkins::Rendering::Tests::Geometry::AxisAlignedBoxTests
 {
-	TEST_CASE("AxisAlignedBox - NearestSurfaceIntersection", "[AxisAlignedBox]")
+	TEST_CASE("AxisAlignedBox - NearestIntersection", "[AxisAlignedBox]")
 	{
 		auto nearCorner = Random::Point();
 		auto width = Random::Positive();
@@ -24,54 +24,54 @@ namespace MrKWatkins::Rendering::Tests::Geometry::AxisAlignedBoxTests
 			auto rayOriginX = nearCorner.X() - Random::GreaterThanZero();
 
 			// Box in front on x-axis, outside of box in y-axis.
-			CHECK(!box.NearestSurfaceIntersection(Ray(Point(rayOriginX, box.Maximum().Y() + Random::GreaterThanZero(), pointInside.Z()), Vector::I())).has_value());
-			CHECK(!box.NearestSurfaceIntersection(Ray(Point(rayOriginX, box.Minimum().Y() - Random::GreaterThanZero(), pointInside.Z()), Vector::I())).has_value());
+			CHECK(box.NearestIntersection(Ray(Point(rayOriginX, box.Maximum().Y() + Random::GreaterThanZero(), pointInside.Z()), Vector::I())) == nullptr);
+			CHECK(box.NearestIntersection(Ray(Point(rayOriginX, box.Minimum().Y() - Random::GreaterThanZero(), pointInside.Z()), Vector::I())) == nullptr);
 
 			// Box in front on x-axis, outside of box in z-axis.
-			CHECK(!box.NearestSurfaceIntersection(Ray(Point(rayOriginX, pointInside.Y(), box.Maximum().Z() + Random::GreaterThanZero()), Vector::I())).has_value());
-			CHECK(!box.NearestSurfaceIntersection(Ray(Point(rayOriginX, pointInside.Y(), box.Minimum().Z() - Random::GreaterThanZero()), Vector::I())).has_value());
+			CHECK(box.NearestIntersection(Ray(Point(rayOriginX, pointInside.Y(), box.Maximum().Z() + Random::GreaterThanZero()), Vector::I())) == nullptr);
+			CHECK(box.NearestIntersection(Ray(Point(rayOriginX, pointInside.Y(), box.Minimum().Z() - Random::GreaterThanZero()), Vector::I())) == nullptr);
 
 			// Box in front on x-axis.
-			auto result = box.NearestSurfaceIntersection(Ray(Point(rayOriginX, pointInside.Y(), pointInside.Z()), Vector::I()));
-			REQUIRE(result.has_value());
-			CHECK_THAT(result->Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
-			CHECK_THAT(result->Normal(), Equals(-Vector::I()));
+			auto inFront = box.NearestIntersection(Ray(Point(rayOriginX, pointInside.Y(), pointInside.Z()), Vector::I()));
+			REQUIRE(inFront != nullptr);
+			CHECK_THAT(inFront->Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(inFront->Normal(), Equals(-Vector::I()));
 
 			// Box behind on x-axis.
-			CHECK(!box.NearestSurfaceIntersection(Ray(Point(box.Maximum().X() + Random::GreaterThanZero(), pointInside.Y(), pointInside.Z()), Vector::I())).has_value());
+			CHECK(box.NearestIntersection(Ray(Point(box.Maximum().X() + Random::GreaterThanZero(), pointInside.Y(), pointInside.Z()), Vector::I())) == nullptr);
 
 			// Box behind on x-axis, ray pointing backwards.
-			result = box.NearestSurfaceIntersection(Ray(Point(box.Maximum().X() + Random::GreaterThanZero(), pointInside.Y(), pointInside.Z()), -Vector::I()));
-			REQUIRE(result.has_value());
-			CHECK_THAT(result->Point(), Equals(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z())));
-			CHECK_THAT(result->Normal(), Equals(Vector::I()));
+			auto behind = box.NearestIntersection(Ray(Point(box.Maximum().X() + Random::GreaterThanZero(), pointInside.Y(), pointInside.Z()), -Vector::I()));
+			REQUIRE(behind != nullptr);
+			CHECK_THAT(behind->Point(), Equals(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(behind->Normal(), Equals(Vector::I()));
 		}
 
 		SECTION("Inside box with rays parallel to the x-axis")
 		{
 			// Facing maximum side.
-			auto result = box.NearestSurfaceIntersection(Ray(pointInside, Vector::I()));
-			REQUIRE(result.has_value());
-			CHECK_THAT(result->Point(), Equals(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z())));
-			CHECK_THAT(result->Normal(), Equals(-Vector::I()));
+			auto facingMax = box.NearestIntersection(Ray(pointInside, Vector::I()));
+			REQUIRE(facingMax != nullptr);
+			CHECK_THAT(facingMax->Point(), Equals(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(facingMax->Normal(), Equals(-Vector::I()));
 
 			// Facing minimum side.
-			result = box.NearestSurfaceIntersection(Ray(pointInside, -Vector::I()));
-			REQUIRE(result.has_value());
-			CHECK_THAT(result->Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
-			CHECK_THAT(result->Normal(), Equals(Vector::I()));
+			auto facingMin = box.NearestIntersection(Ray(pointInside, -Vector::I()));
+			REQUIRE(facingMin != nullptr);
+			CHECK_THAT(facingMin->Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(facingMin->Normal(), Equals(Vector::I()));
 
 			// On minimum side, facing maximum side - intersection should be with the maximum side and not the side we're overlapping.
-			result = box.NearestSurfaceIntersection(Ray(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z()), Vector::I()));
-			REQUIRE(result.has_value());
-			CHECK_THAT(result->Point(), Equals(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z())));
-			CHECK_THAT(result->Normal(), Equals(-Vector::I()));
+			auto onMinFacingMax = box.NearestIntersection(Ray(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z()), Vector::I()));
+			REQUIRE(onMinFacingMax != nullptr);
+			CHECK_THAT(onMinFacingMax->Point(), Equals(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(onMinFacingMax->Normal(), Equals(-Vector::I()));
 
 			// On maximum side, facing minimum side - intersection should be with the minimum side and not the side we're overlapping.
-			result = box.NearestSurfaceIntersection(Ray(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z()), -Vector::I()));
-			REQUIRE(result.has_value());
-			CHECK_THAT(result->Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
-			CHECK_THAT(result->Normal(), Equals(Vector::I()));
+			auto onMaxFacingMin = box.NearestIntersection(Ray(Point(box.Maximum().X(), pointInside.Y(), pointInside.Z()), -Vector::I()));
+			REQUIRE(onMaxFacingMin != nullptr);
+			CHECK_THAT(onMaxFacingMin->Point(), Equals(Point(box.Minimum().X(), pointInside.Y(), pointInside.Z())));
+			CHECK_THAT(onMaxFacingMin->Normal(), Equals(Vector::I()));
 		}
 	}
 

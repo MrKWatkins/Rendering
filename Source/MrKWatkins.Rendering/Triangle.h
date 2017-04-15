@@ -2,7 +2,6 @@
 #include "Solid.h"
 #include "Point.h"
 #include "Matrix.h"
-#include "RayIntersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -18,13 +17,14 @@ namespace MrKWatkins::Rendering::Geometry
 		Triangle(const Point& vertex0, const Point& vertex1, const Point& vertex2);
 		Triangle(const Point& vertex0, const Vector& vertexNormal0, const Point& vertex1, const Vector& vertexNormal1, const Point& vertex2, const Vector& vertexNormal2);
 
-		std::optional<RayIntersection> NearestRayIntersection(const Ray& ray) const override;
-
-		Vector GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const override;
+		std::unique_ptr<Intersection> NearestIntersection(const Ray& ray) const override;
 
 		const Point& Vertex0() const { return vertices[0]; }
 		const Point& Vertex1() const { return vertices[1]; }
 		const Point& Vertex2() const { return vertices[2]; }
+		const Vector& VertexNormal0() const { return vertexNormals[0]; }
+		const Vector& VertexNormal1() const { return vertexNormals[1]; }
+		const Vector& VertexNormal2() const { return vertexNormals[2]; }
 
 		const Point& operator [](unsigned int index) const;
 

@@ -38,34 +38,45 @@ namespace MrKWatkins::Rendering::Geometry
 		return Mesh(transformedTriangles);
 	}
 
-	std::optional<RayIntersection> Mesh::NearestRayIntersection(const Ray& ray) const
-	{
-		if (!boundingBox.Intersects(ray))
-		{
-			return std::optional<RayIntersection>();
-		}
-
-		auto nearestIntersection = std::optional<RayIntersection>();
-		for (auto& triangle : triangles)
-		{
-			auto intersection = triangle.NearestRayIntersection(ray);
-			if (intersection.has_value() &&
-				(!nearestIntersection.has_value() || intersection->D() < nearestIntersection->D()))
-			{
-				nearestIntersection = RayIntersection(intersection.value(), &triangle);
-			}
-		}
-
-		return nearestIntersection;
-	}
-
 	Mesh Mesh::LoadObjFile(const std::wstring path)
 	{
 		return Mesh(IO::ObjFile::Load(path));
 	}
 
-	Vector Mesh::GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const
+	class MeshIntersection final : public Intersection
 	{
-		return rayIntersection.ChildSolid()->GetSurfaceNormal(rayIntersection, pointOnSurface);
+		std::unique_ptr<Intersection> triangleIntersection;
+
+	protected:
+		Vector CalculateNormal() const override
+		{
+			return triangleIntersection->Normal();
+		}
+	public:
+		explicit MeshIntersection(std::unique_ptr<Intersection> triangleIntersection)
+			: Intersection(triangleIntersection->Ray(), triangleIntersection->DistanceAlongRay()), triangleIntersection { move(triangleIntersection) }
+		{
+		}
+	};
+
+	std::unique_ptr<Intersection> Mesh::NearestIntersection(const Ray& ray) const
+	{
+		if (!boundingBox.Intersects(ray))
+		{
+			return nullptr;
+		}
+
+		std::unique_ptr<MeshIntersection> nearestIntersection = nullptr;
+		for (auto& triangle : triangles)
+		{
+			auto intersection = triangle.NearestIntersection(ray);
+			if (intersection != nullptr &&
+				(nearestIntersection == nullptr || intersection->DistanceAlongRay() < nearestIntersection->DistanceAlongRay()))
+			{
+				nearestIntersection.reset(new MeshIntersection(move(intersection)));
+			}
+		}
+
+		return nearestIntersection;
 	}
 }

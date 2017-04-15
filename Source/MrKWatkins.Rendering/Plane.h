@@ -1,7 +1,6 @@
 #pragma once
 #include "Solid.h"
 #include "Point.h"
-#include "RayIntersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -12,12 +11,9 @@ namespace MrKWatkins::Rendering::Geometry
     public:
         Plane(const Point& pointOnPlane, const Vector& normal);
 
-	    std::optional<RayIntersection> NearestRayIntersection(const Ray& ray) const override;
+		std::unique_ptr<Intersection> NearestIntersection(const Ray& ray) const override;
 
         const Point& PointOnPlane() const { return pointOnPlane; }
-
         const Vector& Normal() const { return normal; }
-
-		Vector GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const override;
     };
 }

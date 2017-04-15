@@ -3,7 +3,7 @@
 namespace MrKWatkins::Rendering::Doubles
 {
 	// Using a flat tolerance for now. Could replace with a better tolerance if needed, e.g. one that takes the double's size into account.
-	const double Tolerance = 0.000000000000001;
+	const double Tolerance = 0.0000000000001;
 
 	/// <summary>
 	///	Are the two doubles equal within floating point tolerance?

@@ -1,8 +1,7 @@
 #pragma once
-#include <optional>	// Needs to be here for some reason despite being in stdafx.h.
+#include "stdafx.h"
 #include "Ray.h"
-#include "RayIntersection.h"
-#include "SurfaceIntersection.h"
+#include "Intersection.h"
 
 namespace MrKWatkins::Rendering::Geometry
 {
@@ -14,24 +13,19 @@ namespace MrKWatkins::Rendering::Geometry
     public:
         virtual ~Solid() = default;
 
-		bool Intersects(const Ray& ray) const;
+		/// <summary>
+		/// Does the specified <see cref="Ray" /> intersect with this <see cref="Solid" />?
+		/// </summary>
+		virtual bool Intersects(const Ray& ray) const;
 
 		/// <summary>
-		/// Finds details of the nearest intersection with the specified ray. Prefer this method to NearestSurfaceIntersection if possible as that
-		/// has extra work to do to find the exact point and surface normal.
+		/// Find the nearest <see cref="Intersection" /> between the specified <see cref="Ray" /> and this <see cref="Solid" /> or <c>nullptr</c> if
+		/// the ray does not intersect.
 		/// </summary>
-        virtual std::optional<RayIntersection> NearestRayIntersection(const Ray& ray) const = 0;
-
-		/// <summary>
-		/// Finds details of the surface at the nearest intersection pointwith the specified ray. 
-		/// </summary>
-        std::optional<SurfaceIntersection> NearestSurfaceIntersection(const Ray& ray) const;
-
-		/// <summary>
-		/// Get the full details of the specified intersection on the surface of the solid from the ray intersection.
-		/// </summary>
-		SurfaceIntersection GetSurfaceIntersection(const Ray& ray, const RayIntersection& rayIntersection) const;
-
-		virtual Vector GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const = 0;
+		/// <remarks>
+		/// Would be nice to use <see cref="std::optional" /> instead of a pointer as the return type but I had issues with it working with sub types
+		/// of <see cref="Intersection" />.
+		/// </remarks>
+        virtual std::unique_ptr<Intersection> NearestIntersection(const Ray& ray) const = 0;
     };
 }

@@ -7,6 +7,7 @@
 #include <Chequerboard.h>
 #include "Mesh.h"
 #include "IO.h"
+#include "Plane.h"
 
 using namespace nana;
 using namespace MrKWatkins::Rendering::Shading;

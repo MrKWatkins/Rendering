@@ -10,30 +10,30 @@ namespace MrKWatkins::Rendering::Tests::Random
 
     double Double()
     {
-		static const auto distribution = std::uniform_real_distribution<double>{ -1000, 1000 };
+		static const auto doubleDistribution = std::uniform_real_distribution<double>{ -1000, 1000 };
 
-        return distribution(generator);
+        return doubleDistribution(generator);
     }
 
 	double Range(double minimum, double maximum)
 	{
-		auto distribution = std::uniform_real_distribution<double>{ minimum, maximum };
+		auto rangeDistribution = std::uniform_real_distribution<double>{ minimum, maximum };
 
-		return distribution(generator);
+		return rangeDistribution(generator);
 	}
 
 	double Positive()
     {
-		static const auto distribution = std::uniform_real_distribution<double>{ 0, 1000 };
+		static const auto positiveDistribution = std::uniform_real_distribution<double>{ 0, 1000 };
 
-        return distribution(generator);
+        return positiveDistribution(generator);
     }
 
 	double GreaterThanZero()
 	{
-		static const auto distribution = std::uniform_real_distribution<double>{ 0.001, 1000 };
+		static const auto greaterThanZeroDistribution = std::uniform_real_distribution<double>{ 0.001, 1000 };
 
-		return distribution(generator);
+		return greaterThanZeroDistribution(generator);
 	}
 
 	double Negative()
@@ -48,9 +48,9 @@ namespace MrKWatkins::Rendering::Tests::Random
 
 	double ZeroToOne()
 	{
-		static const auto distribution = std::uniform_real_distribution<double>{ 0, 1 };
+		static const auto zeroToOneDistribution = std::uniform_real_distribution<double>{ 0, 1 };
 
-		return distribution(generator);
+		return zeroToOneDistribution(generator);
 	}
 
 	Geometry::Vector Vector()

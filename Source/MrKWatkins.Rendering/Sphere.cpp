@@ -15,7 +15,24 @@ namespace MrKWatkins::Rendering::Geometry
 		VERIFY_GREATER_THAN(0, radius);
 	}
 
-	std::optional<RayIntersection> Sphere::NearestRayIntersection(const Ray& ray) const
+	class SphereIntersection final : public SolidIntersection<Sphere>
+	{
+		bool outsideSphere;
+
+	protected:
+		Vector CalculateNormal() const override
+		{
+			// The normal at the surface will be the vector from the centre to the intersection point, unless we're inside the sphere in which case it will be in the opposite direction.
+			return (outsideSphere ? Point() - solid->Centre() : solid->Centre() - Point()).Normalize();
+		}
+	public:
+		SphereIntersection(const Geometry::Ray& ray, double distanceAlongRay, const Sphere* solid, bool outsideSphere)
+			: SolidIntersection<Sphere>(ray, distanceAlongRay, solid), outsideSphere(outsideSphere)
+		{
+		}
+	};
+
+	std::unique_ptr<Intersection> Sphere::NearestIntersection(const Ray& ray) const
 	{
 		// Ray => R = O + dD.
 		// Sphere => (S - C).(S - C) = r * r.
@@ -33,7 +50,7 @@ namespace MrKWatkins::Rendering::Geometry
 		auto discriminant = DM * DM - c;
 		if (discriminant < 0)
 		{
-			return std::optional<RayIntersection>();
+			return nullptr;
 		}
 
 		// Smallest solution is the one closest to the ray; will occur with the negative solution as the result of the sqrt will always be positive. (Or zero)
@@ -41,15 +58,9 @@ namespace MrKWatkins::Rendering::Geometry
 		auto d = outsideSphere ? -DM - sqrt(discriminant) : -DM + sqrt(discriminant);
 		if (d < 0)
 		{
-			return std::optional<RayIntersection>();
+			return nullptr;
 		}
 
-		return RayIntersection(d, outsideSphere);
-	}
-
-	Vector Sphere::GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const
-	{
-		// The normal at the surface will be the vector from the centre to the intersection point, unless we're inside the sphere in which case it will be in the opposite direction.
-		return rayIntersection.IntersectingOutside() ? pointOnSurface - centre : centre - pointOnSurface;
+		return std::make_unique<SphereIntersection>(ray, d, this, outsideSphere);
 	}
 }

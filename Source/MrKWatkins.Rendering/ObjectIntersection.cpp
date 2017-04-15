@@ -4,7 +4,8 @@
 
 namespace MrKWatkins::Rendering::Scene
 {
-	ObjectIntersection::ObjectIntersection(const SurfaceIntersection& surfaceIntersection, const Scene::Object* object) : SurfaceIntersection(surfaceIntersection), object { object }
+	ObjectIntersection::ObjectIntersection(const Scene::Object* object, std::unique_ptr<Geometry::Intersection>&& intersection)
+		: object { object }, intersection { move(intersection) }
 	{
 	}
 }

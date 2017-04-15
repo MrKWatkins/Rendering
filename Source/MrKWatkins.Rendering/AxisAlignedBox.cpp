@@ -34,11 +34,11 @@ namespace MrKWatkins::Rendering::Geometry
 		return scale * translate;
 	}
 
-	std::optional<RayIntersection> AxisAlignedBox::NearestRayIntersection(const Ray& ray) const
+	bool AxisAlignedBox::NearestIntersection(const Ray& ray, double& dNear, double& dFar) const
 	{
 		// Use the slabs method (http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter3.htm) to find the intersection.
-		auto dNear = -std::numeric_limits<double>::infinity();
-		auto dFar = std::numeric_limits<double>::infinity();
+		dNear = -std::numeric_limits<double>::infinity();
+		dFar = std::numeric_limits<double>::infinity();
 
 		for (unsigned int axis = 0; axis < 3; axis++)
 		{
@@ -62,7 +62,7 @@ namespace MrKWatkins::Rendering::Geometry
 			// Ray is parallel to the axis. The ray's origin in that axis therefore needs to lie be inside the box's boundaries.
 			else if (origin < minimum[axis] || origin > maximum[axis])
 			{
-				return std::optional<RayIntersection>();
+				return false;
 			}
 		}
 
@@ -70,33 +70,63 @@ namespace MrKWatkins::Rendering::Geometry
 		// the origin of the ray.
 		if (dFar < 0.0 || dFar < dNear)
 		{
-			return std::optional<RayIntersection>();
+			return false;
+		}
+
+		return true;
+	}
+
+	bool AxisAlignedBox::Intersects(const Ray& ray) const
+	{
+		// Common case is to just test intersection true/false so we specialise here to avoid allocation of an Intersection instance.
+		double dNear, dFar;
+		return NearestIntersection(ray, dNear, dFar);
+	}
+
+	class AxisAlignedBoxIntersection final : public SolidIntersection<AxisAlignedBox>
+	{
+		bool outsideBox;
+	protected:
+		Vector CalculateNormal() const override
+		{
+			auto pointOnSurface = Point();
+
+			// Test both sides in each axis to find the one we intersect. If we intersect multiple, i.e. an edge or corner, then just return the first one we find. We don't try to do
+			// anything complex (and arguably wrong!) like have the normal at an angle.
+			for (unsigned int axis = 0; axis < 3; axis++)
+			{
+				// Are we intersecting on the near side?
+				if (Doubles::AreEqual(pointOnSurface[axis], solid->Minimum()[axis]))
+				{
+					return outsideBox ? -Vector::Axis(axis) : Vector::Axis(axis);
+				}
+
+				// What about the far side?
+				if (Doubles::AreEqual(pointOnSurface[axis], solid->Maximum()[axis]))
+				{
+					return outsideBox ? Vector::Axis(axis) : -Vector::Axis(axis);
+				}
+			}
+
+			throw std::logic_error("Could not determine side of box for intersection.");
+		}
+	public:
+		AxisAlignedBoxIntersection(const Geometry::Ray& ray, double distanceAlongRay, const AxisAlignedBox* solid, bool outsideBox)
+			: SolidIntersection<AxisAlignedBox>(ray, distanceAlongRay, solid), outsideBox { outsideBox }
+		{
+		}
+	};
+
+	std::unique_ptr<Intersection> AxisAlignedBox::NearestIntersection(const Ray& ray) const
+	{
+		double dNear, dFar;
+		if (!NearestIntersection(ray, dNear, dFar))
+		{
+			return nullptr;
 		}
 
 		// If dNear is less than zero then it is behind the ray's origin - therefore the ray starts inside the box.
 		auto intersectsOutside = Doubles::IsGreaterThanZero(dNear);
-		return RayIntersection(intersectsOutside ? dNear : dFar, intersectsOutside);
-	}
-
-	Vector AxisAlignedBox::GetSurfaceNormal(const RayIntersection& rayIntersection, const Point& pointOnSurface) const
-	{
-		// Test both sides in each axis to find the one we intersect. If we intersect multiple, i.e. an edge or corner, then just return the first one we find. We don't try to do
-		// anything complex (and arguably wrong!) like have the normal at an angle.
-		for (unsigned int axis = 0; axis < 3; axis++)
-		{
-			// Are we intersecting on the near side?
-			if (Doubles::AreEqual(pointOnSurface[axis], minimum[axis]))
-			{
-				return rayIntersection.IntersectingOutside() ? -Vector::Axis(axis) : Vector::Axis(axis);
-			}
-
-			// What about the far side?
-			if (Doubles::AreEqual(pointOnSurface[axis], maximum[axis]))
-			{
-				return rayIntersection.IntersectingOutside() ? Vector::Axis(axis) : -Vector::Axis(axis);
-			}
-		}
-
-		throw std::logic_error("Could not determine side of box for intersection.");
+		return std::make_unique<AxisAlignedBoxIntersection>(ray, intersectsOutside ? dNear : dFar, this, intersectsOutside);
 	}
 }

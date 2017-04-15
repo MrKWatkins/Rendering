@@ -25,10 +25,9 @@ namespace MrKWatkins::Rendering::Scene
         return *this;
     }
 
-	std::optional<ObjectIntersection> Scene::GetClosestIntersection(const Ray & ray, const std::optional<const Object*> exclude) const
+	std::unique_ptr<ObjectIntersection> Scene::GetClosestIntersection(const Ray & ray, const std::optional<const Object*> exclude) const
 	{
-		Object* closestObject = nullptr;
-		auto closestRayIntersection = std::optional<RayIntersection>();
+		std::unique_ptr<ObjectIntersection> closestIntersection;
 
 		for (auto const& object : objects)
 		{
@@ -37,25 +36,19 @@ namespace MrKWatkins::Rendering::Scene
 				continue;
 			}
 
-			auto rayIntersection = object->Solid().NearestRayIntersection(ray);
-			if (!rayIntersection.has_value())
+			auto intersection = object->Solid().NearestIntersection(ray);
+			if (intersection == nullptr)
 			{
 				continue;
 			}
 
-			if (!closestRayIntersection.has_value() || rayIntersection->D() < closestRayIntersection->D())
+			if (closestIntersection == nullptr || intersection->DistanceAlongRay() < closestIntersection->Intersection()->DistanceAlongRay())
 			{
-				closestObject = object.get();
-				closestRayIntersection = rayIntersection;
+				closestIntersection.reset(new ObjectIntersection(object.get(), move(intersection)));
 			}
 		}
 
-		if (closestRayIntersection.has_value())
-		{
-			return ObjectIntersection(closestObject->Solid().GetSurfaceIntersection(ray, closestRayIntersection.value()), closestObject);
-		}
-
-		return std::optional<ObjectIntersection>();
+		return closestIntersection;
 	}
 
 	Colour Scene::GetBackground(const Ray& ray) const

@@ -1,6 +1,5 @@
 #pragma once
 #include "Solid.h"
-#include "SurfaceIntersection.h"
 #include "Texture.h"
 
 using namespace MrKWatkins::Rendering::Geometry;

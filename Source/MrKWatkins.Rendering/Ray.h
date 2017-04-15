@@ -11,6 +11,11 @@ namespace MrKWatkins::Rendering::Geometry
     public:
         Ray(const Point& origin, const Vector& direction);
 
+		/// <summary>
+		/// Resolves a distance along the ray into a point.
+		/// </summary>
+		Point ResolveDistance(double distance) const;
+
         /// <summary>
         /// The origin of the ray.
         /// </summary>

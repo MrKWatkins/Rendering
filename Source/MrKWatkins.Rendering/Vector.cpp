@@ -42,7 +42,7 @@ namespace MrKWatkins::Rendering::Geometry
 
     Vector Vector::operator-() const
     {
-        return Vector(-x, -y, -z);
+        return Vector(-x, -y, -z, isNormalized);
     }
 
     Vector Vector::operator*(double scalar) const
