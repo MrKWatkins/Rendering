@@ -12,16 +12,18 @@ To add transmittance I've added a transmittance value to our materials, similar 
 
 ![Transmittance Without Refractive Index](/../Images/2017-03-30 Transmittance Without Refractive Index.png)
 
-However in real life when a light ray enters a transparent object it usually refracts to a new angle. The size of this refraction is governed by [Snell's Law](https://en.wikipedia.org/wiki/Snell%27s_law). This can be expressed in [vector form](https://en.wikipedia.org/wiki/Snell%27s_law#Vector_form)
 
-> **R** = *r* **L** + **N** (*r* *c* - √(1 - *r*²(1 - *c*²))
+However in real life when a light ray enters a transparent object it usually refracts to a new angle. The size of this refraction is governed by [Snell's Law](https://en.wikipedia.org/wiki/Snell%27s_law). This can be expressed in [vector form](https://en.wikipedia.org/wiki/Snell%27s_law#Vector_form) as:
+
+\\\[ \\hat{\\mathbf{R}} = r \\hat{\\mathbf{L}} + \\hat{\\mathbf{N}} (r c - \\sqrt{1 - r^2(1 - c^2)}) \\\]
 
 Where:
-* **R** is the direction of the refracted ray.
-* *r* is the ratio of refractive index of source material (*r<sub>s</sub>*), i.e. the material the ray is currently inside, to the refractive index of targ. material (*r<sub>t</sub>*), i.e. the material the ray is passing into. *r* = *r<sub>s</sub>*/*r<sub>t</sub>*.
-* **L** is the direction of incoming ray of light.
-* **N** is the surface normal.
-* *c* = -**N**.**L**.
+
+* \\\( \\hat{\\mathbf{R}} \\\) is the direction of the refracted ray.
+* \\\( r \\\) is the ratio of refractive index of source material (\\\( r\_s \\\)), i.e. the material the ray is currently inside, to the refractive index of target material (\\\( r\_t \\\)), i.e. the material the ray is passing into. \\\( r = \frac{r\_s}{r\_t} \\\).
+* \\\( \\hat{\\mathbf{L}} \\\) is the direction of incoming ray of light.
+* \\\( \\hat{\\mathbf{N}} \\\) is the surface normal.
+* \\\( c = - \\hat{\\mathbf{N}} . \\hat{\\mathbf{L}} \\\).
 
 Taking this direction and the intersection point gives us our ray into the object. We then reuse the equation on the exit point with the refractive indices reversed, to find the direction of the exit ray. This gives us more realistic transparent spheres:
 
@@ -35,13 +37,13 @@ To test total internal reflection I needed a new shape, a box.
 
 ## Axis Aligned Box ##
 
-The type of box I decided to add was an axis aligned box, i.e, one where the sides of the box lie along the three axes x, y and z. Whilst this is fairly restrictive to use in a scene it will be useful later on when to optimise things when we have more complex shapes to work out intersections for.
+The type of box I decided to add was an axis aligned box, i.e, one where the sides of the box lie along the three axes \\\( x \\\), \\\( y \\\) and \\\( z \\\). Whilst this is fairly restrictive to use in a scene it will be useful later on when to optimise things when we have more complex shapes to work out intersections for.
 
 One way to calculate the intersection between a ray and a box is to use the [slabs method](http://www.siggraph.org/education/materials/HyperGraph/raytrace/rtinter3.htm). We think of the box as three overlapping slabs, where a slab is the space between the two parallel planes that make up opposite sides of the box.
 
-For each slab we calculate the value of *d* from our ray equation **R** = **O** + *d***D** that corresponds to the intersection with the near and far side. For each of the three axes we take the *largest* near intersection and the *smallest* far intersection. (If the ray is parallel to the axis then we just check it's origin in that axis fits inside the bounds of the box; if not it cannot intersect.) Then if the final near intersection has a greater value of *d* that the final far intersection the ray has missed the box. Also if *d* < 0 for the far intersection then both points are behind the origin of the ray and it misses the box. (Related to this - if *d* < 0 for near but not far then the near point is behind the origin but not the far point, i.e. the ray starts inside the box.)
+For each slab we calculate the value of \\\( d \\\) from our ray equation \\\( \\mathbf{R} = \\mathbf{O} + d \\hat{\\mathbf{D}} \\\) that corresponds to the intersection with the near and far side. For each of the three axes we take the *largest* near intersection and the *smallest* far intersection. (If the ray is parallel to the axis then we just check it's origin in that axis fits inside the bounds of the box; if not it cannot intersect.) Then if the final near intersection has a greater value of \\\( d \\\) that the final far intersection the ray has missed the box. Also if \\\( d < 0 \\\) for the far intersection then both points are behind the origin of the ray and it misses the box. (Related to this - if \\\( d < 0\\\) for near but not far then the near point is behind the origin but not the far point, i.e. the ray starts inside the box.)
 
-To ray trace the box we also need to find out exactly where on the box it hits. To do this we can plug our value of *d* (the near one unless the ray starts inside the box; then use the far one) to find the intersection point. One of the components of the intersection point must match one of the components for a side of the box - we can use this to work out which side and therefore the surface normal. The ray could intersect on an edge or corner of course - I have just returned the first normal found in this case rather than having the normal point out from the edge or corner.
+To ray trace the box we also need to find out exactly where on the box it hits. To do this we can plug our value of \\\( d \\\) (the near one unless the ray starts inside the box; then use the far one) to find the intersection point. One of the components of the intersection point must match one of the components for a side of the box - we can use this to work out which side and therefore the surface normal. The ray could intersect on an edge or corner of course - I have just returned the first normal found in this case rather than having the normal point out from the edge or corner.
 
 With all this we can now place a transparent box in the sky and get some total internal reflection:
 

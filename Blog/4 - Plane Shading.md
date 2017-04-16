@@ -1,47 +1,46 @@
-# Rendering - Plane Shading #
-
 To make things look a bit more 3D we need to have a more realistic shading model and add some lights.
 
 ## Types for Lighting ##
 
 Let's add some more types:
 
-* Light. Base class for all types of light. Stores the colour of the light (I'm not doing anything more complicated for now) and defines an abstract method `GetLightRayToPoint` - this will return the ray of light that heads from the light towards the point.
-* PointLight. Implementation of light that emits from a point in space.
+* `Light`. Base class for all types of light. Stores the colour of the light (I'm not doing anything more complicated for now) and defines an abstract method `GetLightRayToPoint` - this will return the ray of light that heads from the light towards the point.
+* `PointLight`. Implementation of light that emits from a point in space.
 
 Our scenes will probably need a general ambient light as well, however I haven't made a class for this that extends light. Reason being is that ambient light is quite different as it is the same in all directions and does not cast shadows. I've found it simpler to treat it as just a colour value for the scene.
 
-Our Scene class has also been extended to keep a list of all the lights in the scene.
+Our `Scene` class has also been extended to keep a list of all the lights in the scene.
 
 ## Types for Shading ##
 
 Now onto the shading:
 
-* ShadingModel. Base class for different shading models. Designed to be plugged into the RayTracing algorithm class so that the same scene can be rendered with different shading models. Defines a single abstract method so far, `ShadePoint`. This determines the shading for a given point on a given scene object.
-* Uniform. Implementation of ShadingModel that just returns the colour of the scene object, irrespective of the point on it or any lights in the scene. This is effectively the model we had already - plugging it in will produce the boring blue sphere we've already created.
-* Lambertian. Implementation of ShadingModel that uses [Lambertian reflectance](https://en.wikipedia.org/wiki/Lambertian_reflectance).
+* `ShadingModel`. Base class for different shading models. Designed to be plugged into the `RayTracing` algorithm class so that the same scene can be rendered with different shading models. Defines a single abstract method so far, `ShadePoint`. This determines the shading for a given point on a given scene object.
+* `Uniform`. Implementation of `ShadingModel` that just returns the colour of the scene object, irrespective of the point on it or any lights in the scene. This is effectively the model we had already - plugging it in will produce the boring blue sphere we've already created.
+* `Lambertian`. Implementation of `ShadingModel` that uses [Lambertian reflectance](https://en.wikipedia.org/wiki/Lambertian_reflectance).
 
 ## Lambertian Reflectance ##
 
 This is a simple shading model that models an ideal diffusely reflecting surface. This can be expressed as follows:
 
-> *C* = **L**.**N** *C<sub>S</sub>* *C<sub>L</sub>* *I*
+\\\[ C = \\mathbf{L} . \\mathbf{N} C\_S C\_L I \\\]
 
 Where:
-* *C* is the final colour of the point.
-* **L** is the normal vector from the point to the light.
-* **N** is the normal vector from the surface.
-* *C<sub>S</sub>* is the colour of the surface.
-* *C<sub>L</sub>* is the colour of the light.
-* *I* is the intensity of the light at the point.
 
-Our Light class gives us a ray (**R**) from the light to the point, therefore **R** = -**L**. And for now our lights have constant intensity (i.e. the intensity doesn't decrease with distance) so the equation becomes:
+* \\\( C \\\) is the final colour of the point.
+* \\\( \\mathbf{L} \\\) is the normal vector from the point to the light.
+* \\\( \\mathbf{N} \\\) is the normal vector from the surface.
+* \\\( C\_S \\\) is the colour of the surface.
+* \\\( C\_L \\\) is the colour of the light.
+* \\\( I \\\) is the intensity of the light at the point.
 
-> *C* = -**R**.**N** *C<sub>S</sub>* *C<sub>L</sub>*
+Our Light class gives us a ray (\\\( \\mathbf{R} \\\)) from the light to the point, therefore \\\( \\mathbf{R} = -\\mathbf{L} \\\). And for now our lights have constant intensity (i.e. the intensity doesn't decrease with distance) so the equation becomes:
 
-This is per light of course so we need to sum over all the lights and we need to add the ambient light (*C<sub>A</sub>*) giving us:
+\\\[ C = -\\mathbf{R} . \\mathbf{N} C\_S C\_L \\\]
 
-> *C* = *C<sub>S</sub>* *C<sub>A</sub>* + Σ -**R.N** *C<sub>S</sub>* *C<sub>L</sub>*
+This is per light of course so we need to sum over all the lights and we need to add the ambient light (\\\( C\_A \\\)) giving us:
+
+\\\[ C = C\_S C\_A - \\sum\_{i} \\mathbf{R} . \\mathbf{N} C\_S C\_{Li} \\\]
 
 We have all the values for this except the surface normals. We can tweak the `NearestIntersection` method on our Object class to return this as well as the point of intersection. We only have one shape so far, spheres, and calculating the surface normals for those is simple - it will just be the (normalized) vector from the centre to the point of intersection.
 
@@ -61,23 +60,24 @@ A flat surface would show shadows much better though, so let's add plane as anot
 
 The equation of a plane is:
 
-> (**P** - **p**).**n** = 0
+\\\[ \( \\mathbf{P} - \\mathbf{p} \) . \\hat{\\mathbf{n}} = 0 \\\]
 
 Where:
-* **P** is a vector to a general point on the plane.
-* **p** is a vector to a specified point on the plane.
-* **n** is the normal vector to the plane.
 
-As with the sphere we will need to work out where a ray intersects with the plane. Taking our ray equation **R** = **O** + *d***D** the intersection will be when **P** = **R**. Plugging the equations together and rearranging for *d* gives us:
+* \\\( \\mathbf{P} \\\) is a vector to a general point on the plane.
+* \\\( \\mathbf{p} \\\) is a vector to a specified point on the plane.
+* \\\( \\hat{\\mathbf{n}} \\\) is the normal vector to the plane.
 
-> *d* = (**p** - **O**).**n** / **D**.**n**
+As with the sphere we will need to work out where a ray intersects with the plane. Taking our ray equation \\\( \\mathbf{R} = \\mathbf{O} + d \\hat{\\mathbf{D}} \\\) the intersection will be when \\\( \\mathbf{P} = \\mathbf{R} \\\). Plugging the equations together and rearranging for \\\( d \\\) gives us:
 
-If **D**.**n** is zero the ray must be parallel to the plane - no intersection. The one exception to this would be if (**p** - **O**).**n** was also zero - that would mean the ray was in the plane. We'll treat this case as no intersection too. Lastly if *d* is negative then the line of the ray only meets the plane behind the ray's origin - no intersection.
+\\\[ d = \\frac{ \(\\mathbf{p} - \\mathbf{O}\) . \\hat{\\mathbf{n}} }{ \\mathbf{D} . \\hat{\\mathbf{n}} } \\\]
 
-To calculate the surface normal we need to know if the ray intersects above or below the plane, where 'above' is defined as being in the direction of the surface normal. If we we considered a vector from the intersection point *to* the light (**L**) then **L**.**n** would be positive if the angle between the two (*θ*) was 0° -> 90° (i.e. above) and negative if the angle was below (i.e. 90° -> 180°) as **L**.**n** = ||**L**|| ||**n**|| cos *θ*. Our vector goes in the opposite direction (from the light to the point) so therefore:
+If \\\( \\mathbf{D} . \\hat{\\mathbf{n}} \\\) is zero the ray must be parallel to the plane - no intersection. The one exception to this would be if \\\( \(\\mathbf{p} - \\mathbf{O}\) . \\hat{\\mathbf{n}} \\\) was also zero - that would mean the ray was in the plane. We'll treat this case as no intersection too. Lastly if \\( d \\\) is negative then the line of the ray only meets the plane behind the ray's origin - no intersection.
 
-* If **D**.**n** < 0 the surface normal = **n**.
-* If **D**.**n** > 0 the surface normal = -**n**.
+To calculate the surface normal we need to know if the ray intersects above or below the plane, where 'above' is defined as being in the direction of the surface normal. If we we considered a vector from the intersection point *to* the light (\\\( \\mathbf{L} \\\)) then \\\( \\mathbf{L} . \\hat{\\mathbf{n}} \\\) would be positive if the angle between the two (\\\( \theta \\\)) was 0° -> 90° (i.e. above) and negative if the angle was below (i.e. 90° -> 180°) as \\\( \\mathbf{L} . \\hat{\\mathbf{n}} =  \\| \\mathbf{L} \\| \\| \\mathbf{\\hat{\\mathbf{n}}} \\| \\cos\\theta \\\). Our vector goes in the opposite direction (from the light to the point) so therefore:
+
+* If \\\( \\mathbf{D} . \\hat{\\mathbf{n}} < 0 \\\) the surface normal = \\\( \\hat{\\mathbf{n}} \\\).
+* If \\\( \\mathbf{D} . \\hat{\\mathbf{n}} > 0 \\\) the surface normal = \\\( -\\hat{\\mathbf{n}} \\\).
 
 ## The Camera ##
 

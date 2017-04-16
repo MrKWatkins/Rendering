@@ -6,25 +6,26 @@ Next up is improving the shading model and adding in reflections.
 
 The [Phong reflection model](https://en.wikipedia.org/wiki/Phong_reflection_model) adds to Lambertian reflectance to with a term for [specular highlights](https://en.wikipedia.org/wiki/Specular_highlight), the sharp highlights you see on shiny surfaces. The equation for Phong reflectance is:
 
-> *C* = *k<sub>A</sub>* *C<sub>A</sub>* + ∑(*k<sub>D</sub>* **L**.**N** + *k<sub>S</sub>* (**R**.**V**)<sup>*α*</sup>) *C<sub>L</sub>* *I*
+\\\[ C = k\_A C\_A + \\sum\_{i} (k\_D \\hat{\\mathbf{L}} . \\hat{\\mathbf{N}} + k\_S (\\hat{\\mathbf{R}} . \\hat{\\mathbf{V}})^\\alpha ) C\_{L,i} I\_i \\\]
 
 Where:
-* *C* is the final colour of the point.
-* *k<sub>A</sub>* is the ambient colour of the surface.
-* *C<sub>A</sub>* is the ambient light colour.
-* *k<sub>D</sub>* is the diffuse colour of the surface.
-* **L** is the normal vector from the point to the light.
-* **N** is the normal vector from the surface.
-* *k<sub>S</sub>* is the specular colour of the surface.
-* **R** is the direction a ray from the light would go if it was perfectly reflected at the point.
-* **V** is the direction from the point to the viewer.
-* *α* is the shininess of the surface. The higher the value the smaller the specular reflection.
-* *C<sub>L</sub>* is the colour of the light.
-* *I<sub>L</sub>* is the intensity of the light at the point.
 
-All vectors are normalised and the sum is over all lights in the scene. I've kept the specular and diffuse intensities for the lights the same to keep things simple. The reflection vector **R** is straightforward to calculate:
+* \\\( C \\\) is the final colour of the point.
+* \\\( k\_A \\\) is the ambient colour of the surface.
+* \\\( C\_A \\\) is the ambient light colour.
+* \\\( k\_D \\\) is the diffuse colour of the surface.
+* \\\( \\hat{\\mathbf{L}} \\\) is the normal vector from the point to the light.
+* \\\( \\hat{\\mathbf{N}} \\\) is the normal vector from the surface.
+* \\\( k\_S \\\) is the specular colour of the surface.
+* \\\( \\hat{\\mathbf{R}} \\\) is the direction a ray from the light would go if it was perfectly reflected at the point.
+* \\\( \\hat{\\mathbf{V}} \\\) is the direction from the point to the viewer.
+* \\\( \\alpha \\\) is the shininess of the surface. The higher the value the smaller the specular reflection.
+* \\\( C\_{L,i} \\\) is the colour of light \\\( i \\\).
+* \\\( I\_i\\\) is the intensity of light \\\( i \\\) at the point.
 
-> **R** = 2(**L**.**N**)**N** - **L**
+All vectors are normalised and the sum is over all lights in the scene. I've kept the specular and diffuse intensities for the lights the same to keep things simple. The reflection vector \\\( \\hat{\\mathbf{R}} \\\) is straightforward to calculate:
+
+\\\[ \\hat{\\mathbf{R}} = 2 ( \\hat{\\mathbf{L}} . \\hat{\\mathbf{N}}) \\hat{\\mathbf{N}} - \\hat{\\mathbf{L}} \\\]
 
 Note that our materials now have three colours - one for the ambient light, one for the diffuse light and one for the specular light. By having separate colours for the different light contributions it enables us to create materials that, for example, are blue with white specular highlight.
 
@@ -34,7 +35,7 @@ Creating a new ShadingModel subclass using the formula above gives us nice specu
 
 ## Reflections ##
 
-Where would a ray tracer be without reflections? To add them to the ray tracer is fairly straightforward as we've already done the hard work. We can give our materials a reflectivity value between 0 and 1 which describes the amount of light that comes from a reflection. Therefore the amount that comes from direct lighting will be 1 - reflectivity. To work out the light coming from the reflected direction we can reuse our ray tracing algorithm, but this time we place our camera at the point on the surface and make the direction it is pointing the reflected ray **R**. Of course the point showing in the reflection might also be reflective so we would then have to perform the same procedure recursively.
+Where would a ray tracer be without reflections? To add them to the ray tracer is fairly straightforward as we've already done the hard work. We can give our materials a reflectivity value between 0 and 1 which describes the amount of light that comes from a reflection. Therefore the amount that comes from direct lighting will be 1 - reflectivity. To work out the light coming from the reflected direction we can reuse our ray tracing algorithm, but this time we place our camera at the point on the surface and make the direction it is pointing the reflected ray \\\( \\hat{\\mathbf{R}} \\\). Of course the point showing in the reflection might also be reflective so we would then have to perform the same procedure recursively.
 
 We can now render the obligatory 'reflective spheres over a chequerboard' picture that all ray tracers should produce:
 
