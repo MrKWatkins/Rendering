@@ -5,7 +5,7 @@
     <LibpngSource Condition=" '$(LibpngSource)' == '' ">$(SolutionDir)ThirdParty\libpng-1.6.28\</LibpngSource>
   </PropertyGroup>
   <PropertyGroup>
-    <NanaSource Condition=" '$(NanaSource)' == '' ">$(SolutionDir)ThirdParty\nana-1.4.1\</NanaSource>
+    <NanaSource Condition=" '$(NanaSource)' == '' ">$(SolutionDir)ThirdParty\nana-1.5.0\</NanaSource>
   </PropertyGroup>
   <PropertyGroup>
     <IntDir>$(NanaSource)$(Platform)\$(Configuration)\</IntDir>
@@ -105,8 +105,9 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>STD_CODECVT_NOT_SUPPORTED;NANA_ENABLE_PNG;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NANA_ENABLE_PNG;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(NanaSource);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -120,8 +121,9 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>STD_CODECVT_NOT_SUPPORTED;NANA_ENABLE_PNG;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NANA_ENABLE_PNG;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(NanaSource);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -140,8 +142,9 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>STD_CODECVT_NOT_SUPPORTED;NANA_ENABLE_PNG;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NANA_ENABLE_PNG;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(NanaSource);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -159,8 +162,9 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>STD_CODECVT_NOT_SUPPORTED;NANA_ENABLE_PNG;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NANA_ENABLE_PNG;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(NanaSource);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -183,6 +187,7 @@
     <ClCompile Include="$(NanaSource)source\charset.cpp" />
     <ClCompile Include="$(NanaSource)source\datetime.cpp" />
     <ClCompile Include="$(NanaSource)source\deploy.cpp" />
+    <ClCompile Include="$(NanaSource)source\detail\platform_abstraction.cpp" />
     <ClCompile Include="$(NanaSource)source\detail\platform_spec_windows.cpp" />
     <ClCompile Include="$(NanaSource)source\filesystem\filesystem.cpp" />
     <ClCompile Include="$(NanaSource)source\gui\animation.cpp" />
@@ -228,6 +233,7 @@
     <ClCompile Include="$(NanaSource)source\gui\widgets\picture.cpp" />
     <ClCompile Include="$(NanaSource)source\gui\widgets\progress.cpp" />
     <ClCompile Include="$(NanaSource)source\gui\widgets\scroll.cpp" />
+    <ClCompile Include="$(NanaSource)source\gui\widgets\skeletons\content_view.cpp" />
     <ClCompile Include="$(NanaSource)source\gui\widgets\skeletons\text_editor.cpp" />
     <ClCompile Include="$(NanaSource)source\gui\widgets\slider.cpp" />
     <ClCompile Include="$(NanaSource)source\gui\widgets\spinbox.cpp" />
@@ -245,6 +251,7 @@
     <ClCompile Include="$(NanaSource)source\paint\image_process_selector.cpp" />
     <ClCompile Include="$(NanaSource)source\paint\pixel_buffer.cpp" />
     <ClCompile Include="$(NanaSource)source\paint\text_renderer.cpp" />
+    <ClCompile Include="$(NanaSource)source\stdc++.cpp" />
     <ClCompile Include="$(NanaSource)source\system\dataexch.cpp" />
     <ClCompile Include="$(NanaSource)source\system\platform.cpp" />
     <ClCompile Include="$(NanaSource)source\system\timepiece.cpp" />

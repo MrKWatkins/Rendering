@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Define a path to the nana source folder. -->
   <PropertyGroup>
-    <NanaSource Condition=" '$(NanaSource)' == '' ">$(SolutionDir)ThirdParty\nana-1.4.1\</NanaSource>
+    <NanaSource Condition=" '$(NanaSource)' == '' ">$(SolutionDir)ThirdParty\nana-1.5.0\</NanaSource>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -205,7 +205,7 @@
       <Project>{d6973076-9317-4ef2-a0b8-b7a18ac0713e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\ThirdParty\nana.vcxproj">
-      <Project>{25b21068-491b-4a9f-b99f-6c27bf31baad}</Project>
+      <Project>{25B21068-491B-4A9F-B99F-6C27BF31BAAD}</Project>
     </ProjectReference>
     <ProjectReference Include="..\ThirdParty\zlib.vcxproj">
       <Project>{745dec58-ebb3-47a9-a9b8-4c6627c01bf8}</Project>
