@@ -1,11 +1,14 @@
 #pragma once
-#include "ShadingModel.h"
+#include "Brdf.h"
 
-namespace MrKWatkins::Rendering::Shading
+namespace MrKWatkins::Rendering::Materials
 {
-    class Lambertian final : public ShadingModel
-    {
-    public:
-		Colour ShadePoint(const SurfacePoint& surfacePoint) const override;
-    };
+	class Lambertian final : public Brdf
+	{
+		Colour colour;
+	public:
+		explicit Lambertian(const Colour& colour);
+
+		Colour Evaluate(const Vector& incoming, const Intersection& intersection, const Vector& outgoing) const override;
+	};
 }

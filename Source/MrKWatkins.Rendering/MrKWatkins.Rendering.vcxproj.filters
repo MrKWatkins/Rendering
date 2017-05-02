@@ -55,6 +55,12 @@
     <Filter Include="Source Files\IO">
       <UniqueIdentifier>{b685589c-9ce4-4c0d-ba36-e5608ab570f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Materials">
+      <UniqueIdentifier>{ad4fc398-24cc-4dd6-8503-a2020c344d6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Materials">
+      <UniqueIdentifier>{867a7f55-71ff-4e32-9a84-f4c473fb9e89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -103,9 +109,6 @@
       <Filter>Header Files\Shading</Filter>
     </ClInclude>
     <ClInclude Include="Uniform.h">
-      <Filter>Header Files\Shading</Filter>
-    </ClInclude>
-    <ClInclude Include="Lambertian.h">
       <Filter>Header Files\Shading</Filter>
     </ClInclude>
     <ClInclude Include="Plane.h">
@@ -174,6 +177,15 @@
     <ClInclude Include="Intersection.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Brdf.h">
+      <Filter>Header Files\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="LambertianShadingModel.h">
+      <Filter>Header Files\Shading</Filter>
+    </ClInclude>
+    <ClInclude Include="Lambertian.h">
+      <Filter>Header Files\Materials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -213,9 +225,6 @@
       <Filter>Source Files\Algorithms</Filter>
     </ClCompile>
     <ClCompile Include="Uniform.cpp">
-      <Filter>Source Files\Shading</Filter>
-    </ClCompile>
-    <ClCompile Include="Lambertian.cpp">
       <Filter>Source Files\Shading</Filter>
     </ClCompile>
     <ClCompile Include="Plane.cpp">
@@ -274,6 +283,12 @@
     </ClCompile>
     <ClCompile Include="Intersection.cpp">
       <Filter>Source Files\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="LambertianShadingModel.cpp">
+      <Filter>Source Files\Shading</Filter>
+    </ClCompile>
+    <ClCompile Include="Lambertian.cpp">
+      <Filter>Source Files\Materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
